@@ -4,9 +4,9 @@ import { getSupabaseServerClient } from "@/lib/supabaseServer";
 
 export async function GET(
   _request: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await params;
 
   const supabase = getSupabaseServerClient();
   if (!supabase) {
