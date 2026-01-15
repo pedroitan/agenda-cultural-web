@@ -54,8 +54,7 @@ export default async function Home() {
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
         .gt("start_datetime", nowIso)
-        .order("start_datetime", { ascending: true })
-        .limit(100),
+        .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
         .select("ended_at")
