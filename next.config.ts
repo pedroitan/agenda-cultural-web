@@ -1,7 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "assets.bileto.sympla.com.br",
+      },
+      {
+        protocol: "https",
+        hostname: "images.sympla.com.br",
+      },
+      {
+        protocol: "https",
+        hostname: "discovery-next.svc.sympla.com.br",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
