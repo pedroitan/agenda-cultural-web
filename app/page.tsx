@@ -15,6 +15,7 @@ type EventRow = {
   image_url: string | null;
   price_text: string | null;
   is_free: boolean;
+  category: string | null;
   url: string;
 };
 
@@ -50,7 +51,7 @@ export default async function Home() {
       supabase
         .from("events")
         .select(
-          "id,title,start_datetime,venue_name,image_url,price_text,is_free,url"
+          "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
         .gt("start_datetime", nowIso)
         .order("start_datetime", { ascending: true })
@@ -148,9 +149,16 @@ export default async function Home() {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-zinc-500">
-                      {date} • {time}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium text-zinc-500">
+                        {date} • {time}
+                      </p>
+                      {ev.category && (
+                        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+                          {ev.category}
+                        </span>
+                      )}
+                    </div>
                     <h2 className="mt-1 line-clamp-2 text-base font-semibold">
                       {ev.title}
                     </h2>
