@@ -18,6 +18,24 @@ type EventRow = {
   url: string;
 };
 
+// Format date as "16 Janeiro" and time as "19:00"
+function formatEventDate(dateStr: string): { date: string; time: string } {
+  const d = new Date(dateStr);
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const day = d.getDate();
+  const month = months[d.getMonth()];
+  const hours = d.getHours().toString().padStart(2, "0");
+  const minutes = d.getMinutes().toString().padStart(2, "0");
+  
+  return {
+    date: `${day} ${month}`,
+    time: `${hours}:${minutes}`,
+  };
+}
+
 export default async function Home() {
   const supabase = getSupabaseServerClient();
 
@@ -104,43 +122,50 @@ export default async function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {events.map((ev) => (
-              <article
-                key={ev.id}
-                className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4"
-              >
-                <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
-                  {ev.image_url ? (
-                    <Image
-                      src={ev.image_url}
-                      alt={ev.title}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                    />
-                  ) : null}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-zinc-500">
-                    {new Date(ev.start_datetime).toLocaleString("pt-BR")}
-                  </p>
-                  <h2 className="mt-1 line-clamp-2 text-base font-semibold">
-                    <Link
-                      href={`/r/${ev.id}`}
-                      className="hover:underline"
-                    >
+            {events.map((ev) => {
+              const { date, time } = formatEventDate(ev.start_datetime);
+              return (
+                <Link
+                  key={ev.id}
+                  href={`/r/${ev.id}`}
+                  className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-shadow hover:shadow-md"
+                >
+                  <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
+                    {ev.image_url ? (
+                      <Image
+                        src={ev.image_url}
+                        alt={ev.title}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-zinc-400">
+                        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium text-zinc-500">
+                      {date} • {time}
+                    </p>
+                    <h2 className="mt-1 line-clamp-2 text-base font-semibold">
                       {ev.title}
-                    </Link>
-                  </h2>
-                  <p className="mt-1 text-sm text-zinc-600">
-                    {ev.venue_name ?? "Local a confirmar"}
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-700">
-                    {ev.is_free ? "Gratuito" : ev.price_text ?? "Consulte"}
-                  </p>
-                </div>
-              </article>
-            ))}
+                    </h2>
+                    <p className="mt-1 text-sm text-zinc-600">
+                      {ev.venue_name ?? "Local a confirmar"}
+                    </p>
+                    {ev.is_free && (
+                      <p className="mt-1 text-sm font-medium text-green-600">
+                        Gratuito
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </main>
