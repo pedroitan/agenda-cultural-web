@@ -28,7 +28,7 @@ export default async function Home() {
   if (supabase) {
     const nowIso = new Date().toISOString();
 
-    const [{ data: eventsData }, { data: lastRunData }] = await Promise.all([
+    const [eventsResult, lastRunResult] = await Promise.all([
       supabase
         .from("events")
         .select(
@@ -46,8 +46,16 @@ export default async function Home() {
         .maybeSingle(),
     ]);
 
-    events = (eventsData ?? []) as EventRow[];
-    lastUpdatedAt = (lastRunData?.ended_at as string | null) ?? null;
+    // Debug logging
+    console.log("Events query result:", JSON.stringify(eventsResult));
+    console.log("Now ISO:", nowIso);
+
+    if (eventsResult.error) {
+      console.error("Events query error:", eventsResult.error);
+    }
+
+    events = (eventsResult.data ?? []) as EventRow[];
+    lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
   return (
