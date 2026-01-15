@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "discovery-next.svc.sympla.com.br",
       },
+      {
+        protocol: "https",
+        hostname: "elcabong.com.br",
+      },
     ],
   },
 };
