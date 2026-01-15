@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 const categories = [
   "Todos",
@@ -31,6 +31,9 @@ export default function EventFilters() {
   const currentDate = searchParams.get("data") || "";
   const currentSearch = searchParams.get("busca") || "";
 
+  // Local state for search input (for instant typing)
+  const [searchInput, setSearchInput] = useState(currentSearch);
+
   const updateFilters = useCallback(
     (key: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -44,6 +47,17 @@ export default function EventFilters() {
     [router, searchParams]
   );
 
+  // Debounce search input - only update URL after 500ms of no typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchInput !== currentSearch) {
+        updateFilters("busca", searchInput);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput, currentSearch, updateFilters]);
+
   return (
     <div className="mb-6 space-y-4">
       {/* Search */}
@@ -51,8 +65,8 @@ export default function EventFilters() {
         <input
           type="text"
           placeholder="Buscar evento..."
-          value={currentSearch}
-          onChange={(e) => updateFilters("busca", e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="w-full rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm focus:border-zinc-400 focus:outline-none"
         />
       </div>
