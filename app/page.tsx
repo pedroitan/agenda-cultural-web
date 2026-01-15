@@ -92,14 +92,6 @@ export default async function Home() {
                 : "Supabase ainda não configurado"}
             </p>
           </div>
-          <a
-            className="text-sm font-medium text-zinc-700 hover:text-zinc-950"
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
         </div>
       </header>
 
