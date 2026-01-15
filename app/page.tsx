@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
+import EventFilters from "./components/EventFilters";
 
 // Disable caching to always fetch fresh data
 export const dynamic = "force-dynamic";
@@ -37,7 +39,74 @@ function formatEventDate(dateStr: string): { date: string; time: string } {
   };
 }
 
-export default async function Home() {
+// Filter events based on search params
+function filterEvents(
+  events: EventRow[],
+  categoria: string | null,
+  data: string | null,
+  busca: string | null
+): EventRow[] {
+  let filtered = events;
+
+  // Filter by category
+  if (categoria && categoria !== "Todos") {
+    filtered = filtered.filter((e) => e.category === categoria);
+  }
+
+  // Filter by date
+  if (data) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    if (data === "today") {
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      filtered = filtered.filter((e) => {
+        const eventDate = new Date(e.start_datetime);
+        return eventDate >= today && eventDate < tomorrow;
+      });
+    } else if (data === "week") {
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      filtered = filtered.filter((e) => {
+        const eventDate = new Date(e.start_datetime);
+        return eventDate >= today && eventDate < nextWeek;
+      });
+    } else if (data === "month") {
+      const nextMonth = new Date(today);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      filtered = filtered.filter((e) => {
+        const eventDate = new Date(e.start_datetime);
+        return eventDate >= today && eventDate < nextMonth;
+      });
+    }
+  }
+
+  // Filter by search text
+  if (busca) {
+    const searchLower = busca.toLowerCase();
+    filtered = filtered.filter(
+      (e) =>
+        e.title.toLowerCase().includes(searchLower) ||
+        e.venue_name?.toLowerCase().includes(searchLower)
+    );
+  }
+
+  return filtered;
+}
+
+type SearchParams = { [key: string]: string | string[] | undefined };
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const categoria = typeof params.categoria === "string" ? params.categoria : null;
+  const data = typeof params.data === "string" ? params.data : null;
+  const busca = typeof params.busca === "string" ? params.busca : null;
+
   const supabase = getSupabaseServerClient();
 
   let events: EventRow[] = [];
@@ -76,6 +145,9 @@ export default async function Home() {
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
+  // Apply filters
+  const filteredEvents = filterEvents(events, categoria, data, busca);
+
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
       <header className="border-b border-zinc-200 bg-white">
@@ -86,9 +158,7 @@ export default async function Home() {
             </h1>
             <p className="text-sm text-zinc-600">
               {hasSupabase
-                ? lastUpdatedAt
-                  ? `Última atualização: ${new Date(lastUpdatedAt).toLocaleString("pt-BR")}`
-                  : "Última atualização: —"
+                ? `${filteredEvents.length} eventos encontrados`
                 : "Supabase ainda não configurado"}
             </p>
           </div>
@@ -96,6 +166,12 @@ export default async function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-4xl px-4 py-8">
+        {hasSupabase && (
+          <Suspense fallback={<div className="mb-6 h-24 animate-pulse rounded-lg bg-zinc-100" />}>
+            <EventFilters />
+          </Suspense>
+        )}
+
         {!hasSupabase ? (
           <div className="rounded-xl border border-zinc-200 bg-white p-5">
             <h2 className="text-base font-semibold">Próximo passo</h2>
@@ -105,16 +181,18 @@ export default async function Home() {
               (ou configure no deploy). Depois reinicie o dev server.
             </p>
           </div>
-        ) : events.length === 0 ? (
+        ) : filteredEvents.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 bg-white p-5">
             <h2 className="text-base font-semibold">Nenhum evento encontrado</h2>
             <p className="mt-2 text-sm text-zinc-600">
-              Quando o scraper rodar e persistir eventos, eles vão aparecer aqui.
+              {events.length > 0
+                ? "Tente ajustar os filtros para ver mais eventos."
+                : "Quando o scraper rodar e persistir eventos, eles vão aparecer aqui."}
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {events.map((ev) => {
+            {filteredEvents.map((ev) => {
               const { date, time } = formatEventDate(ev.start_datetime);
               return (
                 <Link
