@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
 interface InstagramEvent {
   projeto?: string
   atracoes?: string
@@ -87,6 +84,16 @@ function parsePrice(priceStr: string): { is_free: boolean; price_text: string | 
 
 export async function POST(request: NextRequest) {
   try {
+    // Read environment variables inside the function
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    console.log('Environment check:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseServiceKey,
+      urlValue: supabaseUrl?.substring(0, 30) + '...',
+    })
+
     // Validate Supabase credentials
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase credentials')
