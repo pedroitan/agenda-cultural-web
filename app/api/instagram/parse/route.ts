@@ -120,7 +120,17 @@ export async function POST(request: NextRequest) {
       console.log('No date found in post, using today:', baseDate)
     }
 
-    const blocks = postText.split(/_{5,}|─{5,}/).filter((b: string) => b.trim())
+    // Clean Instagram UI noise from text
+    let cleanedText = postText
+      .replace(/\d+\s*h\s*\d*\s*(curtida|Responder|curtidas)?/gi, '') // Remove "3 h", "1 curtida", etc
+      .replace(/há\s+\d+\s+horas?/gi, '') // Remove "há 3 horas"
+      .replace(/Adicione um comentário\.\.\./gi, '') // Remove comment prompt
+      .replace(/Curtido por .+ e outras pessoas/gi, '') // Remove likes info
+      .replace(/Página inicial|Pesquisa|Explorar|Reels|Mensagens|Notificações|Criar|Painel|Perfil|Mais/gi, '') // Remove navigation
+      .replace(/Também da Meta|Meta|Sobre|Blog|Carreiras|Ajuda|API|Privacidade|Termos/gi, '') // Remove footer
+      .replace(/Português \(Brasil\)|© \d+ Instagram from Meta/gi, '') // Remove language/copyright
+
+    const blocks = cleanedText.split(/_{5,}|─{5,}/).filter((b: string) => b.trim())
     console.log('Found blocks:', blocks.length)
     
     const events = []
