@@ -88,12 +88,12 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
     
     const primary = group[0];
     const sources = group.map(e => e.url).join('|');
-    const allIds = group.map(e => e.id).join(',');
     
     return {
       ...primary,
       url: sources,
-      id: allIds, // Store all IDs comma-separated
+      // Keep only primary ID - clicking will increment only this event
+      // This is acceptable since deduplicated events represent the same event from different sources
     };
   });
 }
@@ -211,11 +211,11 @@ export default async function Home({
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
-  // TEMPORARILY DISABLED: Deduplicate events first
-  // const dedupedEvents = deduplicateEvents(events);
+  // Deduplicate events first
+  const dedupedEvents = deduplicateEvents(events);
 
-  // Apply filters (using raw events without deduplication for debugging)
-  const filteredEvents = filterEvents(events, categoria, data, busca);
+  // Apply filters
+  const filteredEvents = filterEvents(dedupedEvents, categoria, data, busca);
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">

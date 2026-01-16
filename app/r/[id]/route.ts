@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
-
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
+
+// Simple in-memory cache to prevent double-counting within 2 seconds
+const recentClicks = new Map<string, number>();
 
 export async function GET(
   _request: Request,
@@ -8,42 +10,39 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  console.log('[CLICK TRACKING] Event ID(s):', id);
-
   const supabase = getSupabaseServerClient();
   if (!supabase) {
     redirect("/");
   }
 
-  // ID can be comma-separated for deduplicated events
-  const ids = id.split(',');
-  const primaryId = ids[0];
-
   const { data: event, error } = await supabase
     .from("events")
-    .select("id,url,title")
-    .eq("id", primaryId)
+    .select("id,url")
+    .eq("id", id)
     .maybeSingle();
 
   if (error || !event?.url) {
-    console.error('[CLICK TRACKING] Error fetching event:', error);
     redirect("/");
   }
 
-  console.log('[CLICK TRACKING] Incrementing clicks for', ids.length, 'event(s):', event.title);
-
-  // Increment click count for all IDs in the group
-  for (const eventId of ids) {
-    const { error: rpcError } = await supabase.rpc("increment_event_click", { event_id: eventId });
+  // Check if this event was clicked recently (within 2 seconds)
+  const now = Date.now();
+  const lastClick = recentClicks.get(event.id);
+  
+  if (!lastClick || now - lastClick > 2000) {
+    // Increment click count only if not a duplicate within 2 seconds
+    await supabase.rpc("increment_event_click", { event_id: event.id });
+    recentClicks.set(event.id, now);
     
-    if (rpcError) {
-      console.error('[CLICK TRACKING] Error incrementing click for ID', eventId, ':', rpcError);
-    } else {
-      console.log('[CLICK TRACKING] Click incremented for ID:', eventId);
+    // Clean up old entries (older than 5 seconds)
+    for (const [key, timestamp] of recentClicks.entries()) {
+      if (now - timestamp > 5000) {
+        recentClicks.delete(key);
+      }
     }
   }
 
-  // Use first URL from the event (they should all point to same place for deduplicated events)
+  // Use first URL if multiple sources (deduplicated events)
   const firstUrl = event.url.split('|')[0];
   redirect(firstUrl);
 }
