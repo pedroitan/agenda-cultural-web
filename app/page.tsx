@@ -120,21 +120,27 @@ function filterEvents(
       tomorrow.setDate(tomorrow.getDate() + 1);
       filtered = filtered.filter((e) => {
         const eventDate = new Date(e.start_datetime);
-        return eventDate >= today && eventDate < tomorrow;
+        // Show events that haven't started yet OR started less than 4 hours ago
+        const fourHoursAgo = new Date(now.getTime() - (4 * 60 * 60 * 1000));
+        return eventDate >= fourHoursAgo && eventDate < tomorrow;
       });
     } else if (data === "week") {
       const nextWeek = new Date(today);
       nextWeek.setDate(nextWeek.getDate() + 7);
       filtered = filtered.filter((e) => {
         const eventDate = new Date(e.start_datetime);
-        return eventDate >= today && eventDate < nextWeek;
+        // Show events that haven't started yet OR started less than 4 hours ago
+        const fourHoursAgo = new Date(now.getTime() - (4 * 60 * 60 * 1000));
+        return eventDate >= fourHoursAgo && eventDate < nextWeek;
       });
     } else if (data === "month") {
       const nextMonth = new Date(today);
       nextMonth.setMonth(nextMonth.getMonth() + 1);
       filtered = filtered.filter((e) => {
         const eventDate = new Date(e.start_datetime);
-        return eventDate >= today && eventDate < nextMonth;
+        // Show events that haven't started yet OR started less than 4 hours ago
+        const fourHoursAgo = new Date(now.getTime() - (4 * 60 * 60 * 1000));
+        return eventDate >= fourHoursAgo && eventDate < nextMonth;
       });
     }
   }
