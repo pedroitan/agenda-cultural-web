@@ -284,6 +284,7 @@ export default async function Home({
                 <Link
                   key={ev.id}
                   href={`/r/${ev.id}`}
+                  prefetch={false}
                   className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-shadow hover:shadow-md"
                 >
                   <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
