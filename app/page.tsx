@@ -88,10 +88,12 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
     
     const primary = group[0];
     const sources = group.map(e => e.url).join('|');
+    const allIds = group.map(e => e.id).join(',');
     
     return {
       ...primary,
       url: sources,
+      id: allIds, // Store all IDs comma-separated
     };
   });
 }

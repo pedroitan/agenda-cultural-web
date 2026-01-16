@@ -8,17 +8,21 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  console.log('[CLICK TRACKING] Event ID:', id);
+  console.log('[CLICK TRACKING] Event ID(s):', id);
 
   const supabase = getSupabaseServerClient();
   if (!supabase) {
     redirect("/");
   }
 
+  // ID can be comma-separated for deduplicated events
+  const ids = id.split(',');
+  const primaryId = ids[0];
+
   const { data: event, error } = await supabase
     .from("events")
     .select("id,url,title")
-    .eq("id", id)
+    .eq("id", primaryId)
     .maybeSingle();
 
   if (error || !event?.url) {
@@ -26,15 +30,20 @@ export async function GET(
     redirect("/");
   }
 
-  console.log('[CLICK TRACKING] Incrementing click for:', event.title, 'ID:', event.id);
+  console.log('[CLICK TRACKING] Incrementing clicks for', ids.length, 'event(s):', event.title);
 
-  const { error: rpcError } = await supabase.rpc("increment_event_click", { event_id: event.id });
-  
-  if (rpcError) {
-    console.error('[CLICK TRACKING] Error incrementing click:', rpcError);
-  } else {
-    console.log('[CLICK TRACKING] Click incremented successfully');
+  // Increment click count for all IDs in the group
+  for (const eventId of ids) {
+    const { error: rpcError } = await supabase.rpc("increment_event_click", { event_id: eventId });
+    
+    if (rpcError) {
+      console.error('[CLICK TRACKING] Error incrementing click for ID', eventId, ':', rpcError);
+    } else {
+      console.log('[CLICK TRACKING] Click incremented for ID:', eventId);
+    }
   }
 
-  redirect(event.url);
+  // Use first URL from the event (they should all point to same place for deduplicated events)
+  const firstUrl = event.url.split('|')[0];
+  redirect(firstUrl);
 }
