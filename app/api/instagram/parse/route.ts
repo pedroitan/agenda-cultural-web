@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
           /^(Projeto:|Atra[çc][õo](?:es)?:|Local:)/i.test(l.trim())
         )
         
-        if (eventStartIndex > 0) {
+        if (eventStartIndex >= 0) {
           const eventText = lines.slice(eventStartIndex).join('\n')
           const parsed = parseEventBlock(eventText)
           if (parsed) {
