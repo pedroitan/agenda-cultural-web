@@ -228,6 +228,17 @@ export default async function Home({
                 ? `${filteredEvents.length} eventos encontrados`
                 : "Supabase ainda não configurado"}
             </p>
+            {lastUpdatedAt && (
+              <p className="text-xs text-zinc-500">
+                Última atualização: {new Date(lastUpdatedAt).toLocaleString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            )}
           </div>
         </div>
       </header>
