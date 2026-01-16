@@ -114,18 +114,10 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    // Get start of today in Brazil timezone (UTC-3)
+    // Get current time minus 4 hours to show events that started recently
     const now = new Date();
-    const brazilOffset = -3; // UTC-3
-    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const brazilTime = new Date(utcTime + (3600000 * brazilOffset));
-    
-    // Set to start of day in Brazil time
-    brazilTime.setHours(0, 0, 0, 0);
-    
-    // Convert back to UTC for database query
-    const todayStartUTC = new Date(brazilTime.getTime() - (3600000 * brazilOffset));
-    const todayIso = todayStartUTC.toISOString();
+    const fourHoursAgo = new Date(now.getTime() - (4 * 60 * 60 * 1000)); // 4 hours in milliseconds
+    const fourHoursAgoIso = fourHoursAgo.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -133,7 +125,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gte("start_datetime", todayIso)
+        .gte("start_datetime", fourHoursAgoIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -146,7 +138,7 @@ export default async function Home({
 
     // Debug logging
     console.log("Events query result:", JSON.stringify(eventsResult));
-    console.log("Today ISO:", todayIso);
+    console.log("Four hours ago ISO:", fourHoursAgoIso);
 
     if (eventsResult.error) {
       console.error("Events query error:", eventsResult.error);
