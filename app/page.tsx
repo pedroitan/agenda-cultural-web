@@ -114,10 +114,16 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
+    // Show events from start of today (Brazil time) onwards
     const now = new Date();
-    const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
-    const queryWindowStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const queryWindowStartIso = queryWindowStart.toISOString();
+    
+    // Get start of today in Brazil (UTC-3)
+    const todayBrazil = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    todayBrazil.setHours(0, 0, 0, 0);
+    
+    // Convert to UTC for database query
+    const todayStartUTC = new Date(todayBrazil.getTime() - (3 * 60 * 60 * 1000));
+    const todayStartIso = todayStartUTC.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -125,7 +131,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gte("start_datetime", queryWindowStartIso)
+        .gte("start_datetime", todayStartIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -140,10 +146,7 @@ export default async function Home({
       console.error("Events query error:", eventsResult.error);
     }
 
-    events = ((eventsResult.data ?? []) as EventRow[]).filter((ev) => {
-      const start = new Date(ev.start_datetime);
-      return start.getTime() >= fourHoursAgo.getTime();
-    });
+    events = (eventsResult.data ?? []) as EventRow[];
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
