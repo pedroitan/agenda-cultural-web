@@ -158,10 +158,28 @@ export async function POST(request: NextRequest) {
 
     // Insert events into Supabase
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
-    const { error } = await supabase.from('events').upsert(events, {
-      onConflict: 'external_id',
-      ignoreDuplicates: false,
-    })
+    
+    // Check for existing events to avoid duplicates
+    const externalIds = events.map(e => e.external_id)
+    const { data: existing } = await supabase
+      .from('events')
+      .select('external_id')
+      .in('external_id', externalIds)
+    
+    const existingIds = new Set(existing?.map(e => e.external_id) || [])
+    const newEvents = events.filter(e => !existingIds.has(e.external_id))
+    
+    console.log(`Found ${existing?.length || 0} existing events, inserting ${newEvents.length} new events`)
+    
+    if (newEvents.length === 0) {
+      return NextResponse.json({ 
+        success: true, 
+        count: 0,
+        message: 'All events already exist in database'
+      })
+    }
+    
+    const { error } = await supabase.from('events').insert(newEvents)
 
     if (error) {
       console.error('Supabase error:', error)
@@ -174,8 +192,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ 
       success: true, 
-      count: events.length,
-      events: events.map(e => ({ title: e.title, start_datetime: e.start_datetime }))
+      count: newEvents.length,
+      events: newEvents.map(e => ({ title: e.title, start_datetime: e.start_datetime }))
     })
 
   } catch (error) {
