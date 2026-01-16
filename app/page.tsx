@@ -114,16 +114,12 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    // Show events from start of today (Brazil time) onwards
+    // Events in DB are stored as BRT time but without timezone (treated as UTC by Postgres)
+    // So we need to adjust: current BRT time - 3h offset - 4h window
     const now = new Date();
-    
-    // Get start of today in Brazil (UTC-3)
-    const todayBrazil = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-    todayBrazil.setHours(0, 0, 0, 0);
-    
-    // Convert to UTC for database query
-    const todayStartUTC = new Date(todayBrazil.getTime() - (3 * 60 * 60 * 1000));
-    const todayStartIso = todayStartUTC.toISOString();
+    const nowBRT = new Date(now.getTime() - (3 * 60 * 60 * 1000)); // Convert UTC to BRT equivalent
+    const fourHoursAgo = new Date(nowBRT.getTime() - (4 * 60 * 60 * 1000));
+    const fourHoursAgoIso = fourHoursAgo.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -131,7 +127,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gte("start_datetime", todayStartIso)
+        .gte("start_datetime", fourHoursAgoIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
