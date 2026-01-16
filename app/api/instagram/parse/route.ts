@@ -232,13 +232,8 @@ function buildEvent(parsed: InstagramEvent, baseDate: Date, postUrl: string) {
   const idString = `${title}-${start_datetime}-${parsed.local || ''}`
   const external_id = `instagram-${Buffer.from(idString).toString('base64').slice(0, 32)}`
 
-  // Use Instagram profile picture as thumbnail
-  // Extract username from post URL or use default
-  let image_url: string | undefined
-  if (postUrl && postUrl.includes('instagram.com')) {
-    // Use Agenda Alternativa Salvador's profile picture
-    image_url = 'https://instagram.com/agendaalternativasalvador/profile_picture'
-  }
+  // Use local Agenda Alternativa logo for Instagram events
+  const image_url = '/agenda-alternativa-logo.png'
 
   return {
     external_id,
