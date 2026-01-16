@@ -217,8 +217,49 @@ export default async function Home({
   // Apply filters
   const filteredEvents = filterEvents(dedupedEvents, categoria, data, busca);
 
+  // Generate JSON-LD structured data for events
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": filteredEvents.slice(0, 20).map((event, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Event",
+        "name": event.title,
+        "startDate": event.start_datetime,
+        "location": {
+          "@type": "Place",
+          "name": event.venue_name || "Salvador, BA",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Salvador",
+            "addressRegion": "BA",
+            "addressCountry": "BR"
+          }
+        },
+        "offers": event.is_free ? {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL",
+          "availability": "https://schema.org/InStock"
+        } : event.price_text ? {
+          "@type": "Offer",
+          "price": event.price_text,
+          "priceCurrency": "BRL"
+        } : undefined,
+        "image": event.image_url || undefined,
+        "url": event.url.split('|')[0]
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-5">
           <div className="flex flex-col gap-1">

@@ -14,8 +14,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agenda Cultural Salvador",
-  description: "Eventos culturais futuros em Salvador",
+  title: "Agenda Cultural Salvador - 630+ Eventos em Salvador",
+  description: "Descubra os melhores eventos culturais em Salvador. Shows, teatro, exposições e muito mais. Atualizado diariamente com eventos do Sympla, El Cabong e Instagram.",
+  keywords: ["eventos salvador", "shows salvador", "agenda cultural", "teatro salvador", "eventos culturais", "o que fazer em salvador"],
+  authors: [{ name: "Agenda Cultural Salvador" }],
+  openGraph: {
+    title: "Agenda Cultural Salvador",
+    description: "630+ eventos culturais em Salvador - Atualizado diariamente",
+    url: "https://agendaculturalsalvador.com.br",
+    siteName: "Agenda Cultural Salvador",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Agenda Cultural Salvador",
+    description: "630+ eventos culturais em Salvador",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default function RootLayout({
