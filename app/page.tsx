@@ -39,6 +39,39 @@ function formatEventDate(dateStr: string): { date: string; time: string } {
   };
 }
 
+// Deduplicate events by title + date + venue
+function deduplicateEvents(events: EventRow[]): EventRow[] {
+  const grouped = new Map<string, EventRow[]>();
+  
+  events.forEach((event) => {
+    // Normalize title for comparison (remove extra spaces, lowercase)
+    const normalizedTitle = event.title.toLowerCase().trim().replace(/\s+/g, ' ');
+    const dateKey = event.start_datetime.split('T')[0]; // YYYY-MM-DD
+    const venueKey = (event.venue_name || '').toLowerCase().trim();
+    
+    const key = `${normalizedTitle}|${dateKey}|${venueKey}`;
+    
+    if (!grouped.has(key)) {
+      grouped.set(key, []);
+    }
+    grouped.get(key)!.push(event);
+  });
+  
+  // For each group, keep the first event but merge sources
+  return Array.from(grouped.values()).map((group) => {
+    if (group.length === 1) return group[0];
+    
+    // Multiple sources - keep first event but add source info
+    const primary = group[0];
+    const sources = group.map(e => e.url).join('|'); // Store all URLs
+    
+    return {
+      ...primary,
+      url: sources, // Store multiple URLs separated by |
+    };
+  });
+}
+
 // Filter events based on search params
 function filterEvents(
   events: EventRow[],
@@ -146,8 +179,11 @@ export default async function Home({
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
+  // Deduplicate events first
+  const dedupedEvents = deduplicateEvents(events);
+
   // Apply filters
-  const filteredEvents = filterEvents(events, categoria, data, busca);
+  const filteredEvents = filterEvents(dedupedEvents, categoria, data, busca);
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
@@ -195,6 +231,14 @@ export default async function Home({
           <div className="grid grid-cols-1 gap-4">
             {filteredEvents.map((ev) => {
               const { date, time } = formatEventDate(ev.start_datetime);
+              const urls = ev.url.split('|');
+              const sources = urls.map(url => {
+                if (url.includes('sympla.com')) return 'Sympla';
+                if (url.includes('elcabong.com')) return 'El Cabong';
+                return 'Outro';
+              });
+              const hasMultipleSources = urls.length > 1;
+              
               return (
                 <Link
                   key={ev.id}
@@ -220,13 +264,18 @@ export default async function Home({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <p className="text-xs font-medium text-zinc-500">
                         {date} • {time}
                       </p>
                       {ev.category && (
                         <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
                           {ev.category}
+                        </span>
+                      )}
+                      {hasMultipleSources && (
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                          {sources.join(' + ')}
                         </span>
                       )}
                     </div>
