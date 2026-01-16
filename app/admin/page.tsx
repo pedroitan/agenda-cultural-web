@@ -170,6 +170,53 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           ))}
         </div>
 
+        {/* Analytics Overview */}
+        <h2 className="text-xl font-semibold mb-4">📊 Analytics & Métricas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <a
+            href="https://dash.cloudflare.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-white text-sm font-medium">Cloudflare Analytics</p>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </div>
+            <p className="text-white text-2xl font-bold mb-1">Web Analytics</p>
+            <p className="text-orange-100 text-xs">Tráfego, origem, performance</p>
+          </a>
+
+          <a
+            href="https://vercel.com/pedroitans-projects/agenda-cultural-web/analytics"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-br from-black to-gray-800 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-white text-sm font-medium">Vercel Analytics</p>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </div>
+            <p className="text-white text-2xl font-bold mb-1">Core Web Vitals</p>
+            <p className="text-gray-300 text-xs">Performance detalhada</p>
+          </a>
+
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-white text-sm font-medium">Engajamento</p>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
+            </div>
+            <p className="text-white text-2xl font-bold mb-1">{totalClicks}</p>
+            <p className="text-purple-100 text-xs">Total de cliques em eventos</p>
+          </div>
+        </div>
+
         {/* Top Clicked Events */}
         {topClicked && topClicked.length > 0 && (
           <>
