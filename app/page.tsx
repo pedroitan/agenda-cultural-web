@@ -114,15 +114,10 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    // Get current time minus 5 hours to show events that started recently
     const now = new Date();
-    const fiveHoursAgo = new Date(now.getTime() - (5 * 60 * 60 * 1000)); // 5 hours in milliseconds
-    const fiveHoursAgoIso = fiveHoursAgo.toISOString();
-    
-    // Debug: log times
-    console.log("Current time (local):", now.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
-    console.log("5 hours ago (local):", fiveHoursAgo.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
-    console.log("5 hours ago (ISO/UTC):", fiveHoursAgoIso);
+    const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
+    const queryWindowStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const queryWindowStartIso = queryWindowStart.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -130,7 +125,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gte("start_datetime", fiveHoursAgoIso)
+        .gte("start_datetime", queryWindowStartIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -141,15 +136,14 @@ export default async function Home({
         .maybeSingle(),
     ]);
 
-    // Debug logging
-    console.log("Events query result:", JSON.stringify(eventsResult));
-    console.log("Five hours ago ISO:", fiveHoursAgoIso);
-
     if (eventsResult.error) {
       console.error("Events query error:", eventsResult.error);
     }
 
-    events = (eventsResult.data ?? []) as EventRow[];
+    events = ((eventsResult.data ?? []) as EventRow[]).filter((ev) => {
+      const start = new Date(ev.start_datetime);
+      return start.getTime() >= fourHoursAgo.getTime();
+    });
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
