@@ -111,13 +111,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Post text is required' }, { status: 400 })
     }
 
-    const baseDate = extractDateFromTitle(postText)
+    let baseDate = extractDateFromTitle(postText)
     console.log('Extracted date:', baseDate)
     
+    // If no date found in post, use today's date
     if (!baseDate) {
-      return NextResponse.json({ 
-        error: 'Could not extract date from post. Make sure the post includes a date like "16 de Janeiro"' 
-      }, { status: 400 })
+      baseDate = new Date()
+      console.log('No date found in post, using today:', baseDate)
     }
 
     const blocks = postText.split(/_{5,}|─{5,}/).filter((b: string) => b.trim())
