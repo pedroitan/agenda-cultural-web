@@ -118,8 +118,18 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">Dashboard Admin</h1>
-        <p className="text-gray-400 mb-8">Agenda Cultural Salvador</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Dashboard Admin</h1>
+            <p className="text-gray-400">Agenda Cultural Salvador</p>
+          </div>
+          <a
+            href="/admin/instagram"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            + Adicionar Eventos do Instagram
+          </a>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
