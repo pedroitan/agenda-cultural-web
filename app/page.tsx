@@ -118,6 +118,11 @@ export default async function Home({
     const now = new Date();
     const fiveHoursAgo = new Date(now.getTime() - (5 * 60 * 60 * 1000)); // 5 hours in milliseconds
     const fiveHoursAgoIso = fiveHoursAgo.toISOString();
+    
+    // Debug: log times
+    console.log("Current time (local):", now.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
+    console.log("5 hours ago (local):", fiveHoursAgo.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }));
+    console.log("5 hours ago (ISO/UTC):", fiveHoursAgoIso);
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
