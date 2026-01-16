@@ -211,11 +211,11 @@ export default async function Home({
     lastUpdatedAt = (lastRunResult.data?.ended_at as string | null) ?? null;
   }
 
-  // Deduplicate events first
-  const dedupedEvents = deduplicateEvents(events);
+  // TEMPORARILY DISABLED: Deduplicate events first
+  // const dedupedEvents = deduplicateEvents(events);
 
-  // Apply filters
-  const filteredEvents = filterEvents(dedupedEvents, categoria, data, busca);
+  // Apply filters (using raw events without deduplication for debugging)
+  const filteredEvents = filterEvents(events, categoria, data, busca);
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
