@@ -143,7 +143,9 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           </div>
           {counts.map((c) => (
             <div key={c.source} className="bg-gray-800 rounded-lg p-6">
-              <p className="text-gray-400 text-sm capitalize">{c.source}</p>
+              <p className="text-gray-400 text-sm">
+                {c.source === 'instagram' ? 'Instagram (Manual)' : c.source.charAt(0).toUpperCase() + c.source.slice(1)}
+              </p>
               <p className="text-4xl font-bold text-purple-400">{c.count}</p>
             </div>
           ))}
