@@ -100,7 +100,7 @@ function parsePrice(priceStr: string): { is_free: boolean; price_text: string | 
 export async function POST(request: NextRequest) {
   try {
     // Validate Supabase credentials
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       console.error('Missing Supabase credentials')
       return NextResponse.json({ 
         error: 'Server configuration error',
