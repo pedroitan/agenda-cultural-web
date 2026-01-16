@@ -44,12 +44,28 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
   const grouped = new Map<string, EventRow[]>();
   
   events.forEach((event) => {
-    // Normalize title for comparison (remove extra spaces, lowercase)
-    const normalizedTitle = event.title.toLowerCase().trim().replace(/\s+/g, ' ');
-    const dateKey = event.start_datetime.split('T')[0]; // YYYY-MM-DD
-    const venueKey = (event.venue_name || '').toLowerCase().trim();
+    // Normalize title: lowercase, remove special chars, get first significant words
+    const titleNormalized = event.title
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+      .replace(/[^a-z0-9\s]/g, ' ') // Remove special chars
+      .trim()
+      .replace(/\s+/g, ' ');
     
-    const key = `${normalizedTitle}|${dateKey}|${venueKey}`;
+    // Use first 2-3 significant words for matching (skip common words)
+    const words = titleNormalized.split(' ').filter(w => w.length > 2);
+    const titleKey = words.slice(0, 3).join(' ');
+    
+    const dateKey = event.start_datetime.split('T')[0]; // YYYY-MM-DD
+    
+    // Normalize venue (remove city/state suffixes)
+    const venueNormalized = (event.venue_name || '')
+      .toLowerCase()
+      .replace(/\s*-\s*salvador.*$/i, '')
+      .replace(/\s*-\s*ba.*$/i, '')
+      .trim();
+    
+    const key = `${titleKey}|${dateKey}|${venueNormalized}`;
     
     if (!grouped.has(key)) {
       grouped.set(key, []);
@@ -57,17 +73,19 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
     grouped.get(key)!.push(event);
   });
   
-  // For each group, keep the first event but merge sources
+  // For each group, keep the longest title (more descriptive) and merge sources
   return Array.from(grouped.values()).map((group) => {
     if (group.length === 1) return group[0];
     
-    // Multiple sources - keep first event but add source info
+    // Sort by title length (descending) to keep most descriptive
+    group.sort((a, b) => b.title.length - a.title.length);
+    
     const primary = group[0];
-    const sources = group.map(e => e.url).join('|'); // Store all URLs
+    const sources = group.map(e => e.url).join('|');
     
     return {
       ...primary,
-      url: sources, // Store multiple URLs separated by |
+      url: sources,
     };
   });
 }
