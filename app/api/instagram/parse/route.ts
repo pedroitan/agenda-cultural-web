@@ -232,14 +232,12 @@ function buildEvent(parsed: InstagramEvent, baseDate: Date, postUrl: string) {
   const idString = `${title}-${start_datetime}-${parsed.local || ''}`
   const external_id = `instagram-${Buffer.from(idString).toString('base64').slice(0, 32)}`
 
-  // Extract Instagram post shortcode from URL to build image URL
+  // Use Instagram profile picture as thumbnail
+  // Extract username from post URL or use default
   let image_url: string | undefined
-  if (postUrl && postUrl.includes('instagram.com/p/')) {
-    const shortcodeMatch = postUrl.match(/\/p\/([^\/\?]+)/)
-    if (shortcodeMatch) {
-      // Use Instagram's CDN URL format for post images
-      image_url = `https://www.instagram.com/p/${shortcodeMatch[1]}/media/?size=l`
-    }
+  if (postUrl && postUrl.includes('instagram.com')) {
+    // Use Agenda Alternativa Salvador's profile picture
+    image_url = 'https://instagram.com/agendaalternativasalvador/profile_picture'
   }
 
   return {
