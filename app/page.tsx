@@ -114,10 +114,10 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    // Get current time minus 4 hours to show events that started recently
+    // Get current time minus 5 hours to show events that started recently
     const now = new Date();
-    const fourHoursAgo = new Date(now.getTime() - (4 * 60 * 60 * 1000)); // 4 hours in milliseconds
-    const fourHoursAgoIso = fourHoursAgo.toISOString();
+    const fiveHoursAgo = new Date(now.getTime() - (5 * 60 * 60 * 1000)); // 5 hours in milliseconds
+    const fiveHoursAgoIso = fiveHoursAgo.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -125,7 +125,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gte("start_datetime", fourHoursAgoIso)
+        .gte("start_datetime", fiveHoursAgoIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -138,7 +138,7 @@ export default async function Home({
 
     // Debug logging
     console.log("Events query result:", JSON.stringify(eventsResult));
-    console.log("Four hours ago ISO:", fourHoursAgoIso);
+    console.log("Five hours ago ISO:", fiveHoursAgoIso);
 
     if (eventsResult.error) {
       console.error("Events query error:", eventsResult.error);
