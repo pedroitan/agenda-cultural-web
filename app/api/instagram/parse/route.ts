@@ -165,7 +165,11 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Supabase error:', error)
-      return NextResponse.json({ error: 'Failed to save events' }, { status: 500 })
+      return NextResponse.json({ 
+        error: 'Failed to save events',
+        details: error.message,
+        code: error.code 
+      }, { status: 500 })
     }
 
     return NextResponse.json({ 
