@@ -30,6 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# local env files
+.env*.local
+
+# windsurf settings
+.windsurf/
+
 # env files (can opt-in for committing if needed)
 .env*
 

@@ -114,7 +114,10 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    const nowIso = new Date().toISOString();
+    // Get start of today to include all events from today onwards
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayIso = today.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
@@ -122,7 +125,7 @@ export default async function Home({
         .select(
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
-        .gt("start_datetime", nowIso)
+        .gte("start_datetime", todayIso)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -135,7 +138,7 @@ export default async function Home({
 
     // Debug logging
     console.log("Events query result:", JSON.stringify(eventsResult));
-    console.log("Now ISO:", nowIso);
+    console.log("Today ISO:", todayIso);
 
     if (eventsResult.error) {
       console.error("Events query error:", eventsResult.error);
