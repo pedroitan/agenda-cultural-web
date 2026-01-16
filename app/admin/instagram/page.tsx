@@ -32,9 +32,12 @@ export default function InstagramAdminPage() {
         setPostText("")
         setPostUrl("")
       } else {
+        const errorMsg = data.details 
+          ? `${data.error}: ${data.details}` 
+          : data.error
         setResult({
           success: false,
-          message: `❌ Erro: ${data.error}`,
+          message: `❌ Erro: ${errorMsg}`,
         })
       }
     } catch (error) {

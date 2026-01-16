@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('Missing Supabase credentials:', { 
+    hasUrl: !!supabaseUrl, 
+    hasKey: !!supabaseServiceKey 
+  })
+}
 
 interface InstagramEvent {
   projeto?: string
@@ -87,6 +94,15 @@ function parsePrice(priceStr: string): { is_free: boolean; price_text: string | 
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate Supabase credentials
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase credentials')
+      return NextResponse.json({ 
+        error: 'Server configuration error',
+        details: 'Missing database credentials. Please contact administrator.' 
+      }, { status: 500 })
+    }
+
     const { postText, postUrl } = await request.json()
 
     console.log('Received post text length:', postText?.length)
