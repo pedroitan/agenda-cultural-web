@@ -19,6 +19,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "elcabong.com.br",
       },
+      {
+        protocol: "https",
+        hostname: "www.instagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "scontent.cdninstagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cdninstagram.com",
+      },
     ],
   },
 };

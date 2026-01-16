@@ -232,6 +232,16 @@ function buildEvent(parsed: InstagramEvent, baseDate: Date, postUrl: string) {
   const idString = `${title}-${start_datetime}-${parsed.local || ''}`
   const external_id = `instagram-${Buffer.from(idString).toString('base64').slice(0, 32)}`
 
+  // Extract Instagram post shortcode from URL to build image URL
+  let image_url: string | undefined
+  if (postUrl && postUrl.includes('instagram.com/p/')) {
+    const shortcodeMatch = postUrl.match(/\/p\/([^\/\?]+)/)
+    if (shortcodeMatch) {
+      // Use Instagram's CDN URL format for post images
+      image_url = `https://www.instagram.com/p/${shortcodeMatch[1]}/media/?size=l`
+    }
+  }
+
   return {
     external_id,
     source: 'instagram',
@@ -239,7 +249,7 @@ function buildEvent(parsed: InstagramEvent, baseDate: Date, postUrl: string) {
     title,
     start_datetime,
     venue_name: parsed.local || undefined,
-    image_url: undefined,
+    image_url,
     url: postUrl,
     price_text: price_text || undefined,
     is_free,
