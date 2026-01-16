@@ -58,12 +58,18 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
     
     const dateKey = event.start_datetime.split('T')[0]; // YYYY-MM-DD
     
-    // Normalize venue (remove city/state suffixes)
+    // Normalize venue (remove city/state suffixes and get first significant words)
     const venueNormalized = (event.venue_name || '')
       .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
       .replace(/\s*-\s*salvador.*$/i, '')
       .replace(/\s*-\s*ba.*$/i, '')
-      .trim();
+      .replace(/\s*-\s*rio\s+vermelho.*$/i, '')
+      .replace(/\s*-\s*pelourinho.*$/i, '')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 3) // First 3 words only
+      .join(' ');
     
     const key = `${titleKey}|${dateKey}|${venueNormalized}`;
     
