@@ -114,10 +114,18 @@ export default async function Home({
   let hasSupabase = Boolean(supabase);
 
   if (supabase) {
-    // Get start of today to include all events from today onwards
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayIso = today.toISOString();
+    // Get start of today in Brazil timezone (UTC-3)
+    const now = new Date();
+    const brazilOffset = -3; // UTC-3
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const brazilTime = new Date(utcTime + (3600000 * brazilOffset));
+    
+    // Set to start of day in Brazil time
+    brazilTime.setHours(0, 0, 0, 0);
+    
+    // Convert back to UTC for database query
+    const todayStartUTC = new Date(brazilTime.getTime() - (3600000 * brazilOffset));
+    const todayIso = todayStartUTC.toISOString();
 
     const [eventsResult, lastRunResult] = await Promise.all([
       supabase
