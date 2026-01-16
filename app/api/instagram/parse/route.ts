@@ -84,8 +84,8 @@ function parsePrice(priceStr: string): { is_free: boolean; price_text: string | 
 
 export async function POST(request: NextRequest) {
   try {
-    // Read environment variables inside the function
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    // Use same env var names as the rest of the project (without NEXT_PUBLIC_ prefix)
+    const supabaseUrl = process.env.SUPABASE_URL
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
     console.log('Environment check:', {
