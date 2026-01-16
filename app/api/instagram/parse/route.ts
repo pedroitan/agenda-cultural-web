@@ -89,16 +89,24 @@ export async function POST(request: NextRequest) {
   try {
     const { postText, postUrl } = await request.json()
 
+    console.log('Received post text length:', postText?.length)
+
     if (!postText) {
       return NextResponse.json({ error: 'Post text is required' }, { status: 400 })
     }
 
     const baseDate = extractDateFromTitle(postText)
+    console.log('Extracted date:', baseDate)
+    
     if (!baseDate) {
-      return NextResponse.json({ error: 'Could not extract date from post' }, { status: 400 })
+      return NextResponse.json({ 
+        error: 'Could not extract date from post. Make sure the post includes a date like "16 de Janeiro"' 
+      }, { status: 400 })
     }
 
     const blocks = postText.split(/_{5,}|─{5,}/).filter((b: string) => b.trim())
+    console.log('Found blocks:', blocks.length)
+    
     const events = []
 
     for (const block of blocks) {
@@ -124,8 +132,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log('Parsed events:', events.length)
+
     if (events.length === 0) {
-      return NextResponse.json({ error: 'No events found in post' }, { status: 400 })
+      return NextResponse.json({ 
+        error: 'No events found in post. Make sure the text includes event details like "Projeto:", "Atrações:", "Local:", etc.' 
+      }, { status: 400 })
     }
 
     // Insert events into Supabase
@@ -148,7 +160,11 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Parse error:', error)
-    return NextResponse.json({ error: 'Failed to parse post' }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ 
+      error: 'Failed to parse post',
+      details: errorMessage 
+    }, { status: 500 })
   }
 }
 
