@@ -80,7 +80,7 @@ export default function InstagramAdminPage() {
                 value={postUrl}
                 onChange={(e) => setPostUrl(e.target.value)}
                 placeholder="https://www.instagram.com/p/..."
-                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm text-black placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -107,7 +107,7 @@ Atrações: Magary e Convidados
 Local: Mariposa Vilas
 Quanto: R$40
 Horário: 20h"
-                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-mono text-zinc-900 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-mono text-black placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <p className="mt-1 text-xs text-zinc-500">
                 Cole o texto exatamente como aparece no Instagram, incluindo emojis e separadores
