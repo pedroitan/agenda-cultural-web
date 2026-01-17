@@ -4,8 +4,7 @@ import { NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
     
     const title = searchParams.get('title') || 'Evento em Salvador';
     const venue = searchParams.get('venue') || 'Salvador';
@@ -178,11 +177,4 @@ export async function GET(request: NextRequest) {
         height: 1080,
       }
     );
-  } catch (e: unknown) {
-    const error = e as Error;
-    console.error('Error generating card:', error.message);
-    return new Response(`Failed to generate image: ${error.message}`, {
-      status: 500,
-    });
-  }
 }
