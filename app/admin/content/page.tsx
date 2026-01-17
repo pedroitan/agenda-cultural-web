@@ -12,6 +12,7 @@ import {
   weekendListCopy,
   freeEventsListCopy,
 } from "@/lib/instagram-copy";
+import { CopyButton } from "./CopyButton";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -101,12 +102,7 @@ async function ContentPreview() {
                   <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
                     {singleEventCopy(highlightEvent)}
                   </pre>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(singleEventCopy(highlightEvent))}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Copiar Copy
-                  </button>
+                  <CopyButton text={singleEventCopy(highlightEvent)} />
                 </div>
               </div>
             </div>
@@ -138,12 +134,7 @@ async function ContentPreview() {
                   <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
                     {todayListCopy(todayEvents)}
                   </pre>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(todayListCopy(todayEvents))}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Copiar Copy
-                  </button>
+                  <CopyButton text={todayListCopy(todayEvents)} />
                 </div>
               </div>
             </div>
@@ -175,12 +166,7 @@ async function ContentPreview() {
                   <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
                     {weekendListCopy(weekendEvents)}
                   </pre>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(weekendListCopy(weekendEvents))}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Copiar Copy
-                  </button>
+                  <CopyButton text={weekendListCopy(weekendEvents)} />
                 </div>
               </div>
             </div>
@@ -212,12 +198,7 @@ async function ContentPreview() {
                   <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
                     {freeEventsListCopy(freeEvents)}
                   </pre>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(freeEventsListCopy(freeEvents))}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Copiar Copy
-                  </button>
+                  <CopyButton text={freeEventsListCopy(freeEvents)} />
                 </div>
               </div>
             </div>
