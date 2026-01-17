@@ -23,17 +23,31 @@ export async function GET(request: NextRequest) {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#0f172a',
-            color: 'white',
-            padding: '60px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            padding: '80px',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            <h1 style={{ fontSize: '64px', margin: 0, fontWeight: 'bold', lineHeight: 1.2 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', textAlign: 'center' }}>
+            <h1 style={{ 
+              fontSize: '72px', 
+              margin: 0, 
+              fontWeight: 'bold', 
+              lineHeight: 1.2,
+              color: 'white',
+              textShadow: '0 4px 6px rgba(0,0,0,0.3)',
+            }}>
               {title}
             </h1>
             
-            <div style={{ fontSize: '32px', opacity: 0.9, lineHeight: 1.6 }}>
+            <div style={{ 
+              fontSize: '48px', 
+              lineHeight: 1.6,
+              color: 'white',
+              fontWeight: '600',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            }}>
               {venue}
             </div>
           </div>
@@ -41,13 +55,15 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               position: 'absolute',
-              bottom: '40px',
+              bottom: '50px',
               right: '60px',
-              fontSize: '24px',
-              opacity: 0.6,
+              fontSize: '28px',
+              color: 'white',
+              opacity: 0.8,
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
             }}
           >
             @agendaculturalssa
@@ -69,8 +85,7 @@ export async function GET(request: NextRequest) {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0f172a',
-          color: 'white',
+          background: imageUrl ? '#0f172a' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         }}
       >
         {imageUrl && (
@@ -98,7 +113,7 @@ export async function GET(request: NextRequest) {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(15,23,42,0.8) 100%)',
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(15,23,42,0.9) 100%)',
               }}
             />
           </div>
@@ -120,22 +135,35 @@ export async function GET(request: NextRequest) {
               margin: 0,
               lineHeight: 1.2,
               fontWeight: 'bold',
-              background: 'linear-gradient(to right, #a855f7, #ec4899)',
-              backgroundClip: 'text',
-              color: 'transparent',
+              color: 'white',
+              textShadow: '0 4px 6px rgba(0,0,0,0.3)',
             }}
           >
             {title}
           </h1>
           
           {date && (
-            <div style={{ fontSize: '32px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ 
+              fontSize: '32px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '10px',
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            }}>
               📅 {date} {time && `• ${time}`}
             </div>
           )}
           
           {venue && (
-            <div style={{ fontSize: '32px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ 
+              fontSize: '32px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '10px',
+              color: 'white',
+              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            }}>
               📍 {venue}
             </div>
           )}
@@ -148,7 +176,8 @@ export async function GET(request: NextRequest) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                color: '#10b981',
+                color: '#4ade80',
+                textShadow: '0 2px 4px rgba(0,0,0,0.3)',
               }}
             >
               💰 {price}
@@ -162,10 +191,12 @@ export async function GET(request: NextRequest) {
             bottom: '30px',
             right: '50px',
             fontSize: '24px',
-            opacity: 0.6,
+            color: 'white',
+            opacity: 0.8,
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)',
           }}
         >
           @agendaculturalssa
