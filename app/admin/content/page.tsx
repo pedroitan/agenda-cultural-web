@@ -63,14 +63,14 @@ async function ContentPreview() {
   const freeEvents = await getFreeEventsToday();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-white p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <Link href="/admin" className="text-blue-600 hover:underline">
+          <Link href="/admin" className="text-blue-600 hover:underline font-semibold">
             ← Voltar para Admin
           </Link>
-          <h1 className="text-3xl font-bold mt-4">Preview de Conteúdo Instagram</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold mt-4 text-black">Preview de Conteúdo Instagram</h1>
+          <p className="text-gray-800 mt-2">
             Visualize os cards e copies gerados automaticamente
           </p>
         </div>
@@ -78,11 +78,11 @@ async function ContentPreview() {
         <div className="space-y-12">
           {/* Highlight Event */}
           {highlightEvent && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold mb-4">1. Evento em Destaque</h2>
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-4 text-black">1. Evento em Destaque</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-semibold mb-2">Card:</h3>
+                  <h3 className="font-semibold mb-2 text-black">Card:</h3>
                   <img
                     src={buildCardUrl(highlightEvent)}
                     alt="Highlight Event Card"
@@ -98,8 +98,8 @@ async function ContentPreview() {
                   </a>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Copy:</h3>
-                  <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
+                  <h3 className="font-semibold mb-2 text-black">Copy:</h3>
+                  <pre className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-sm text-black border border-gray-300">
                     {singleEventCopy(highlightEvent)}
                   </pre>
                   <CopyButton text={singleEventCopy(highlightEvent)} />
@@ -110,11 +110,11 @@ async function ContentPreview() {
 
           {/* Today's Events */}
           {todayEvents.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold mb-4">2. Hoje em Salvador ({todayEvents.length} eventos)</h2>
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-4 text-black">2. Hoje em Salvador ({todayEvents.length} eventos)</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-semibold mb-2">Card:</h3>
+                  <h3 className="font-semibold mb-2 text-black">Card:</h3>
                   <img
                     src={buildListCardUrl('O que fazer HOJE em Salvador', `${todayEvents.length} eventos`)}
                     alt="Today Events Card"
@@ -130,8 +130,8 @@ async function ContentPreview() {
                   </a>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Copy:</h3>
-                  <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
+                  <h3 className="font-semibold mb-2 text-black">Copy:</h3>
+                  <pre className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-sm text-black border border-gray-300">
                     {todayListCopy(todayEvents)}
                   </pre>
                   <CopyButton text={todayListCopy(todayEvents)} />
@@ -142,11 +142,11 @@ async function ContentPreview() {
 
           {/* Weekend Events */}
           {weekendEvents.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold mb-4">3. Fim de Semana ({weekendEvents.length} eventos)</h2>
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-4 text-black">3. Fim de Semana ({weekendEvents.length} eventos)</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-semibold mb-2">Card:</h3>
+                  <h3 className="font-semibold mb-2 text-black">Card:</h3>
                   <img
                     src={buildListCardUrl('Fim de Semana em Salvador', `${weekendEvents.length} eventos`)}
                     alt="Weekend Events Card"
@@ -162,8 +162,8 @@ async function ContentPreview() {
                   </a>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Copy:</h3>
-                  <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
+                  <h3 className="font-semibold mb-2 text-black">Copy:</h3>
+                  <pre className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-sm text-black border border-gray-300">
                     {weekendListCopy(weekendEvents)}
                   </pre>
                   <CopyButton text={weekendListCopy(weekendEvents)} />
@@ -174,11 +174,11 @@ async function ContentPreview() {
 
           {/* Free Events */}
           {freeEvents.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-bold mb-4">4. Gratuitos Hoje ({freeEvents.length} eventos)</h2>
+            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-4 text-black">4. Gratuitos Hoje ({freeEvents.length} eventos)</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-semibold mb-2">Card:</h3>
+                  <h3 className="font-semibold mb-2 text-black">Card:</h3>
                   <img
                     src={buildListCardUrl('Rolês GRATUITOS em Salvador', `${freeEvents.length} eventos`)}
                     alt="Free Events Card"
@@ -194,8 +194,8 @@ async function ContentPreview() {
                   </a>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Copy:</h3>
-                  <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm">
+                  <h3 className="font-semibold mb-2 text-black">Copy:</h3>
+                  <pre className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-sm text-black border border-gray-300">
                     {freeEventsListCopy(freeEvents)}
                   </pre>
                   <CopyButton text={freeEventsListCopy(freeEvents)} />
