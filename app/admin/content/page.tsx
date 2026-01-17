@@ -18,8 +18,6 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 function buildCardUrl(event: any): string {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
   const date = new Date(event.start_datetime);
   const months = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -41,19 +39,17 @@ function buildCardUrl(event: any): string {
     params.set('image', event.image_url);
   }
   
-  return `${baseUrl}/api/generate-card?${params.toString()}`;
+  return `/api/generate-card?${params.toString()}`;
 }
 
 function buildListCardUrl(title: string, description: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
   const params = new URLSearchParams({
     title,
     venue: description,
     type: 'list',
   });
   
-  return `${baseUrl}/api/generate-card?${params.toString()}`;
+  return `/api/generate-card?${params.toString()}`;
 }
 
 async function ContentPreview() {
