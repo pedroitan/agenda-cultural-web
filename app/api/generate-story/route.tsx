@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     ),
     {
       width: 1080,
-      height: 1920,
+      height: 1080,
     }
   );
   } catch (error) {
