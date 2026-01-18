@@ -3,30 +3,23 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-interface Event {
-  title: string;
-  venue: string;
-  date: string;
-  time: string;
-  price: string;
-}
-
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  
-  const storyType = searchParams.get('type') || 'today';
-  const eventsParam = searchParams.get('events') || '[]';
-  
-  let events: Event[] = [];
   try {
-    events = JSON.parse(decodeURIComponent(eventsParam));
-  } catch (e) {
-    return new Response('Invalid events parameter', { status: 400 });
-  }
-  
-  if (events.length === 0) {
-    return new Response('No events provided', { status: 400 });
-  }
+    const { searchParams } = new URL(request.url);
+    
+    const storyType = searchParams.get('type') || 'today';
+    const eventsParam = searchParams.get('events') || '[]';
+    
+    let events: any[] = [];
+    try {
+      events = JSON.parse(decodeURIComponent(eventsParam));
+    } catch (e) {
+      events = [];
+    }
+    
+    if (events.length === 0) {
+      events = [{ title: 'Sem eventos', venue: 'Salvador', date: 'Hoje', time: '00:00', price: 'Grátis' }];
+    }
 
   // Definir título e cor baseado no tipo
   const storyConfig = {
@@ -303,4 +296,7 @@ export async function GET(request: NextRequest) {
       height: 1920,
     }
   );
+  } catch (error) {
+    return new Response('Error generating story: ' + error, { status: 500 });
+  }
 }
