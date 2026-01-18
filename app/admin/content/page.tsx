@@ -52,6 +52,33 @@ function buildListCardUrl(title: string, description: string): string {
   return `/api/generate-card?${params.toString()}`;
 }
 
+function buildStoryUrl(type: string, events: any[]): string {
+  const formattedEvents = events.map(event => {
+    const date = new Date(event.start_datetime);
+    const months = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const dateStr = `${date.getDate()} de ${months[date.getMonth()]}`;
+    const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    
+    return {
+      title: event.title,
+      venue: event.venue_name || 'Salvador',
+      date: dateStr,
+      time: timeStr,
+      price: event.price_text || 'Consulte',
+    };
+  });
+
+  const params = new URLSearchParams({
+    type,
+    events: encodeURIComponent(JSON.stringify(formattedEvents)),
+  });
+  
+  return `/api/generate-story?${params.toString()}`;
+}
+
 async function ContentPreview() {
   const highlightEvent = await getHighlightEvent();
   const todayEvents = await getEventsToday();
@@ -199,6 +226,100 @@ async function ContentPreview() {
               </div>
             </div>
           )}
+
+          {/* Instagram Stories Section */}
+          <div className="mt-16 pt-8 border-t-4 border-purple-500">
+            <h2 className="text-3xl font-bold mb-6 text-purple-600">📱 Instagram Stories (Formato Vertical)</h2>
+            <p className="text-gray-700 mb-8">
+              Stories verticais (1080x1920) com eventos listados diretamente na arte gráfica
+            </p>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Story: Destaque */}
+              {highlightEvent && (
+                <div className="bg-white rounded-lg shadow-lg p-4 border border-purple-200">
+                  <h3 className="font-bold mb-3 text-purple-700">⭐ Destaque do Dia</h3>
+                  <img
+                    src={buildStoryUrl('highlight', [highlightEvent])}
+                    alt="Highlight Story"
+                    className="w-full rounded-lg shadow-md"
+                    style={{ aspectRatio: '9/16' }}
+                  />
+                  <a
+                    href={buildStoryUrl('highlight', [highlightEvent])}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-purple-600 hover:underline mt-2 block"
+                  >
+                    Abrir Story
+                  </a>
+                </div>
+              )}
+
+              {/* Story: Hoje */}
+              {todayEvents.length > 0 && (
+                <div className="bg-white rounded-lg shadow-lg p-4 border border-blue-200">
+                  <h3 className="font-bold mb-3 text-blue-700">🎉 Hoje ({todayEvents.length})</h3>
+                  <img
+                    src={buildStoryUrl('today', todayEvents)}
+                    alt="Today Story"
+                    className="w-full rounded-lg shadow-md"
+                    style={{ aspectRatio: '9/16' }}
+                  />
+                  <a
+                    href={buildStoryUrl('today', todayEvents)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline mt-2 block"
+                  >
+                    Abrir Story
+                  </a>
+                </div>
+              )}
+
+              {/* Story: Fim de Semana */}
+              {weekendEvents.length > 0 && (
+                <div className="bg-white rounded-lg shadow-lg p-4 border border-pink-200">
+                  <h3 className="font-bold mb-3 text-pink-700">🎊 Fim de Semana ({weekendEvents.length})</h3>
+                  <img
+                    src={buildStoryUrl('weekend', weekendEvents)}
+                    alt="Weekend Story"
+                    className="w-full rounded-lg shadow-md"
+                    style={{ aspectRatio: '9/16' }}
+                  />
+                  <a
+                    href={buildStoryUrl('weekend', weekendEvents)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-pink-600 hover:underline mt-2 block"
+                  >
+                    Abrir Story
+                  </a>
+                </div>
+              )}
+
+              {/* Story: Gratuitos */}
+              {freeEvents.length > 0 && (
+                <div className="bg-white rounded-lg shadow-lg p-4 border border-green-200">
+                  <h3 className="font-bold mb-3 text-green-700">💚 Gratuitos ({freeEvents.length})</h3>
+                  <img
+                    src={buildStoryUrl('free', freeEvents)}
+                    alt="Free Events Story"
+                    className="w-full rounded-lg shadow-md"
+                    style={{ aspectRatio: '9/16' }}
+                  />
+                  <a
+                    href={buildStoryUrl('free', freeEvents)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-green-600 hover:underline mt-2 block"
+                  >
+                    Abrir Story
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
