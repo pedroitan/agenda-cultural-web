@@ -11,9 +11,15 @@ export async function GET(request: NextRequest) {
     
     let events: any[] = [];
     try {
-      events = JSON.parse(decodeURIComponent(eventsParam));
+      // Tenta parse direto primeiro (URLSearchParams já decodifica)
+      events = JSON.parse(eventsParam);
     } catch {
-      events = [];
+      // Se falhar, tenta com decodeURIComponent
+      try {
+        events = JSON.parse(decodeURIComponent(eventsParam));
+      } catch {
+        events = [];
+      }
     }
     
     if (events.length === 0) {
