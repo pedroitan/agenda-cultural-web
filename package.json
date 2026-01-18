@@ -10,7 +10,7 @@
     "generate-content": "tsx scripts/generate-daily-content.ts"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.7.1",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.2",
     "geist": "^1.3.0",
     "next": "16.1.1",
