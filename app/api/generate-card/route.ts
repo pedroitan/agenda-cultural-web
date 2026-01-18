@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas';
+import { createCanvas, loadImage } from 'canvas';
 
 export const runtime = 'nodejs';
 
