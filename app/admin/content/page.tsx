@@ -70,7 +70,7 @@ function buildStoryUrl(type: string, events: any[]): string {
 
   const params = new URLSearchParams({
     type,
-    events: encodeURIComponent(JSON.stringify(formattedEvents)),
+    events: JSON.stringify(formattedEvents),
   });
   
   return `/api/generate-story?${params.toString()}`;
