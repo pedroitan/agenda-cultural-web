@@ -11,15 +11,12 @@ export async function GET(request: NextRequest) {
     
     let events: any[] = [];
     try {
-      // Tenta parse direto primeiro (URLSearchParams já decodifica)
+      // searchParams.get() já decodifica automaticamente
       events = JSON.parse(eventsParam);
-    } catch {
-      // Se falhar, tenta com decodeURIComponent
-      try {
-        events = JSON.parse(decodeURIComponent(eventsParam));
-      } catch {
-        events = [];
-      }
+    } catch (e) {
+      // Se falhar, usar evento padrão
+      console.error('Failed to parse events:', e);
+      events = [];
     }
     
     if (events.length === 0) {
@@ -107,6 +104,13 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
-    return new Response('Error: ' + String(error), { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to generate story', details: errorMessage }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 }
