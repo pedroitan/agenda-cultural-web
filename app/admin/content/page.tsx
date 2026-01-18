@@ -53,11 +53,24 @@ function buildListCardUrl(title: string, description: string): string {
 }
 
 function buildStoryUrl(type: string, events: any[]): string {
-  const eventIds = events.map(event => event.id).join(',');
-  
+  const formattedEvents = events.slice(0, 5).map(event => {
+    const date = new Date(event.start_datetime);
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const dateStr = `${date.getDate()} ${months[date.getMonth()]}`;
+    const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    
+    return {
+      title: event.title.substring(0, 60),
+      venue: (event.venue_name || 'Salvador').substring(0, 30),
+      date: dateStr,
+      time: timeStr,
+      price: (event.price_text || 'Consulte').substring(0, 20),
+    };
+  });
+
   const params = new URLSearchParams({
     type,
-    eventIds,
+    events: encodeURIComponent(JSON.stringify(formattedEvents)),
   });
   
   return `/api/generate-story?${params.toString()}`;

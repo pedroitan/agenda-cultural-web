@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'edge';
 
@@ -16,48 +15,18 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   
   const storyType = searchParams.get('type') || 'today';
-  const eventIdsParam = searchParams.get('eventIds') || '';
+  const eventsParam = searchParams.get('events') || '[]';
   
-  // Se não houver IDs, retornar erro
-  if (!eventIdsParam) {
-    return new Response('Missing eventIds parameter', { status: 400 });
+  let events: Event[] = [];
+  try {
+    events = JSON.parse(decodeURIComponent(eventsParam));
+  } catch (e) {
+    return new Response('Invalid events parameter', { status: 400 });
   }
-
-  // Buscar eventos do Supabase
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-
-  const eventIds = eventIdsParam.split(',');
-  const { data: eventsData } = await supabase
-    .from('events')
-    .select('*')
-    .in('id', eventIds)
-    .limit(5);
-
-  if (!eventsData || eventsData.length === 0) {
-    return new Response('No events found', { status: 404 });
+  
+  if (events.length === 0) {
+    return new Response('No events provided', { status: 400 });
   }
-
-  // Formatar eventos
-  const events: Event[] = eventsData.map(event => {
-    const date = new Date(event.start_datetime);
-    const months = [
-      "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-      "Jul", "Ago", "Set", "Out", "Nov", "Dez"
-    ];
-    const dateStr = `${date.getDate()} ${months[date.getMonth()]}`;
-    const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-    
-    return {
-      title: event.title,
-      venue: event.venue_name || 'Salvador',
-      date: dateStr,
-      time: timeStr,
-      price: event.price_text || 'Consulte',
-    };
-  });
 
   // Definir título e cor baseado no tipo
   const storyConfig = {
