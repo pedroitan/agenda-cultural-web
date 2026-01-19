@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     if (!supabaseUrl || !supabaseKey) {
+      console.log('Missing Supabase credentials');
       return NextResponse.json({ stories: [] });
     }
 
@@ -89,21 +90,27 @@ export async function GET() {
       });
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Supabase storage error:', error);
       return NextResponse.json({ stories: [] });
     }
 
-    if (!data) {
+    if (!data || data.length === 0) {
+      console.log('No stories found in bucket');
       return NextResponse.json({ stories: [] });
     }
 
-    const stories = data.map(file => ({
-      name: file.name,
-      url: `${supabaseUrl}/storage/v1/object/public/instagram-stories/${file.name}`,
-      createdAt: file.created_at,
-      size: file.metadata?.size,
-    }));
+    console.log(`Found ${data.length} stories in bucket`);
 
+    const stories = data
+      .filter(file => file.name.endsWith('.png')) // Apenas PNGs
+      .map(file => ({
+        name: file.name,
+        url: `${supabaseUrl}/storage/v1/object/public/instagram-stories/${file.name}`,
+        createdAt: file.created_at,
+        size: file.metadata?.size,
+      }));
+
+    console.log(`Returning ${stories.length} stories`);
     return NextResponse.json({ stories });
 
   } catch (error) {
