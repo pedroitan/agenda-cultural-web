@@ -22,8 +22,12 @@ export function StoriesManager() {
   async function fetchStories() {
     try {
       setLoading(true);
+      console.log('Fetching stories from API...');
       const response = await fetch('/api/generate-stories-on-demand');
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('API response:', data);
+      console.log('Stories count:', data.stories?.length || 0);
       setStories(data.stories || []);
     } catch (error) {
       console.error('Erro ao buscar stories:', error);
