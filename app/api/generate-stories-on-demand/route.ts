@@ -5,7 +5,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export async function POST(request: NextRequest) {
   try {
@@ -74,6 +74,10 @@ export async function POST(request: NextRequest) {
 // GET para listar Stories gerados
 export async function GET() {
   try {
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json({ stories: [] });
+    }
+
     const supabase = createClient(supabaseUrl, supabaseKey);
     
     const { data, error } = await supabase
@@ -86,10 +90,11 @@ export async function GET() {
 
     if (error) {
       console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Erro ao buscar stories' },
-        { status: 500 }
-      );
+      return NextResponse.json({ stories: [] });
+    }
+
+    if (!data) {
+      return NextResponse.json({ stories: [] });
     }
 
     const stories = data.map(file => ({
@@ -103,9 +108,6 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching stories:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar stories' },
-      { status: 500 }
-    );
+    return NextResponse.json({ stories: [] });
   }
 }
