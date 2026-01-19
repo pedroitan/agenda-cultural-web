@@ -13,6 +13,7 @@ import {
   freeEventsListCopy,
 } from "@/lib/instagram-copy";
 import { CopyButton } from "./CopyButton";
+import { StoriesManager } from "./StoriesManager";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -68,12 +69,11 @@ function buildStoryUrl(type: string, events: any[]): string {
     };
   });
 
-  const params = new URLSearchParams({
-    type,
-    events: JSON.stringify(formattedEvents),
-  });
+  // Usar encodeURIComponent manualmente para garantir UTF-8 correto
+  const eventsJson = JSON.stringify(formattedEvents);
+  const eventsEncoded = encodeURIComponent(eventsJson);
   
-  return `/api/generate-story?${params.toString()}`;
+  return `/api/generate-story?type=${type}&events=${eventsEncoded}`;
 }
 
 async function ContentPreview() {
@@ -224,9 +224,14 @@ async function ContentPreview() {
             </div>
           )}
 
-          {/* Instagram Stories Section */}
+          {/* Stories Manager */}
           <div className="mt-16 pt-8 border-t-4 border-purple-500">
-            <h2 className="text-3xl font-bold mb-6 text-purple-600">📱 Instagram Stories (Formato Vertical)</h2>
+            <StoriesManager />
+          </div>
+
+          {/* Instagram Stories Preview Section */}
+          <div className="mt-12">
+            <h2 className="text-3xl font-bold mb-6 text-purple-600">📱 Preview de Stories (Formato Vertical)</h2>
             <p className="text-gray-700 mb-8">
               Stories verticais (1080x1920) com eventos listados diretamente na arte gráfica
             </p>

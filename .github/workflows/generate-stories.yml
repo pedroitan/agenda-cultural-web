@@ -1,0 +1,59 @@
+name: Generate Instagram Stories
+
+on:
+  schedule:
+    # Roda diariamente às 04:00 BRT (07:00 UTC) - 1h após o scraper
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      story_types:
+        description: 'Tipos de stories para gerar (separados por vírgula)'
+        required: false
+        default: 'week,free,weekend,today'
+
+jobs:
+  generate-stories:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Generate Stories
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          STORY_TYPES: ${{ github.event.inputs.story_types || 'week,free,weekend,today' }}
+        run: node scripts/generate-stories-workflow.js
+
+      - name: Upload Stories to Supabase Storage
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/upload-stories.js
+
+      - name: Archive generated stories
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-stories-${{ github.run_number }}
+          path: stories/*.png
+          retention-days: 7
+
+      - name: Notify completion
+        if: success()
+        run: |
+          echo "✅ Stories gerados com sucesso!"
+          echo "📊 Tipos: ${{ env.STORY_TYPES }}"
+          echo "🕐 Timestamp: $(date)"
