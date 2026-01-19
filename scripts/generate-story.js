@@ -32,16 +32,14 @@ function generateHTML(events, storyType = 'week') {
     highlight: { title: 'Evento em', subtitle: 'Destaque', gradient: ['#ff6b35', '#f59e0b'] },
   };
   const config = storyConfig[storyType] || storyConfig.week;
-  const eventItems = events.map(event => `
+  const numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'];
+  
+  const eventItems = events.map((event, index) => `
     <div class="event-item">
-      <div class="event-date">
-        <span class="event-day">${event.day}</span>
-        <span class="event-month">${event.month}</span>
-      </div>
-      <div class="event-divider"></div>
-      <div class="event-info">
+      <div class="event-number">${numberEmojis[index] || `${index + 1}️⃣`}</div>
+      <div class="event-content">
         <div class="event-title">${event.title}</div>
-        <div class="event-details">${event.venue}, ${event.time}</div>
+        <div class="event-details">${event.dayOfWeek} • ${event.time} • ${event.venue} • ${event.price}</div>
       </div>
     </div>
   `).join('');
@@ -118,50 +116,35 @@ function generateHTML(events, storyType = 'week') {
     }
     .event-item {
       display: flex;
-      align-items: center;
-      gap: 30px;
+      align-items: flex-start;
+      gap: 20px;
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       padding: 25px 30px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.2);
     }
-    .event-date {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      min-width: 180px;
-    }
-    .event-day {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 72px;
-      color: white;
+    .event-number {
+      font-size: 48px;
       line-height: 1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      margin-top: 5px;
     }
-    .event-month {
+    .event-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .event-title {
       font-size: 32px;
       font-weight: 700;
-      color: rgba(255,255,255,0.9);
-      text-transform: uppercase;
-    }
-    .event-divider {
-      width: 3px;
-      height: 80px;
-      background: rgba(255,255,255,0.4);
-      border-radius: 2px;
-    }
-    .event-info { flex: 1; }
-    .event-title {
-      font-size: 36px;
-      font-weight: 700;
       color: white;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       line-height: 1.2;
     }
     .event-details {
-      font-size: 28px;
-      color: rgba(255,255,255,0.85);
+      font-size: 24px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.4;
     }
     .footer {
       text-align: center;
@@ -217,10 +200,10 @@ function generateHTML(events, storyType = 'week') {
 
 // Exemplo de uso
 const sampleEvents = [
-  { day: '26', month: 'Jan', title: 'Ensaio do Olodum', venue: 'Pelourinho', time: '19h' },
-  { day: '28', month: 'Jan', title: 'Show Ivete Sangalo', venue: 'Arena Fonte Nova', time: '20h' },
-  { day: '29', month: 'Jan', title: 'Festival de Jazz', venue: 'Teatro Castro Alves', time: '21h' },
-  { day: '30', month: 'Jan', title: 'Carnaval de Rua', venue: 'Barra-Ondina', time: '18h' },
+  { title: 'Ensaio do Olodum', dayOfWeek: 'Sábado', time: '19:00', venue: 'Pelourinho', price: 'Grátis' },
+  { title: 'Show Ivete Sangalo', dayOfWeek: 'Domingo', time: '20:00', venue: 'Arena Fonte Nova', price: 'Consulte' },
+  { title: 'Festival de Jazz', dayOfWeek: 'Sábado', time: '21:00', venue: 'Teatro Castro Alves', price: 'R$ 50' },
+  { title: 'Carnaval de Rua', dayOfWeek: 'Domingo', time: '18:00', venue: 'Barra-Ondina', price: 'Grátis' },
 ];
 
 // Executar se chamado diretamente

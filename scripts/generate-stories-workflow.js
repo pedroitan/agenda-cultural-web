@@ -66,14 +66,14 @@ async function fetchEvents(type) {
 
 function formatEvent(event) {
   const date = new Date(event.start_datetime);
-  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   
   return {
-    day: date.getDate().toString(),
-    month: months[date.getMonth()].toUpperCase(),
-    title: event.title.substring(0, 50),
-    venue: (event.venue_name || 'Salvador').substring(0, 30),
-    time: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}h`,
+    title: event.title.substring(0, 60),
+    dayOfWeek: daysOfWeek[date.getDay()],
+    time: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
+    venue: (event.venue_name || 'Salvador').substring(0, 40),
+    price: event.price_text || 'Consulte',
   };
 }
 
