@@ -190,12 +190,26 @@ export function StoriesManager() {
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <h4 className="font-semibold text-blue-900 mb-2">ℹ️ Como funciona:</h4>
         <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Selecione os tipos de Stories que deseja gerar</li>
-          <li>• Clique em "Gerar Stories" para iniciar o processo</li>
-          <li>• A geração acontece via GitHub Actions (leva ~2-3 minutos)</li>
-          <li>• Os Stories ficarão disponíveis no histórico após a geração</li>
-          <li>• Stories são gerados automaticamente todo dia às 04:00 BRT</li>
+          <li>• <strong>Geração Automática:</strong> Stories são gerados todo dia às 04:00 BRT via GitHub Actions</li>
+          <li>• <strong>Geração Manual:</strong> Use o botão acima para gerar sob demanda (requer configuração)</li>
+          <li>• <strong>Histórico:</strong> Últimos 20 Stories gerados aparecem abaixo</li>
+          <li>• <strong>Tempo:</strong> Geração leva ~2-3 minutos via GitHub Actions</li>
         </ul>
+      </div>
+
+      {/* Configuração Necessária */}
+      <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h4 className="font-semibold text-yellow-900 mb-2">⚙️ Configuração Necessária:</h4>
+        <p className="text-sm text-yellow-800 mb-2">
+          Para usar a geração manual, configure no Vercel:
+        </p>
+        <ul className="text-sm text-yellow-800 space-y-1 ml-4">
+          <li>• <code className="bg-yellow-100 px-1 py-0.5 rounded">GITHUB_TOKEN</code> - Token do GitHub com permissão de Actions</li>
+          <li>• <code className="bg-yellow-100 px-1 py-0.5 rounded">SUPABASE_SERVICE_KEY</code> - Service key do Supabase</li>
+        </ul>
+        <p className="text-xs text-yellow-700 mt-2">
+          💡 Enquanto isso, aguarde a geração automática diária ou use o GitHub Actions manualmente.
+        </p>
       </div>
     </div>
   );
