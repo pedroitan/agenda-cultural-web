@@ -74,9 +74,25 @@ export async function POST(request: NextRequest) {
 // GET para listar Stories gerados
 export async function GET() {
   try {
+    // Debug: verificar variáveis de ambiente
+    const hasServiceKey = !!process.env.SUPABASE_SERVICE_KEY;
+    const hasServiceRoleKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const hasAnonKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    console.log('Environment check:', {
+      hasServiceKey,
+      hasServiceRoleKey,
+      hasAnonKey,
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+    });
+
     if (!supabaseUrl || !supabaseKey) {
       console.log('Missing Supabase credentials');
-      return NextResponse.json({ stories: [] });
+      return NextResponse.json({ 
+        stories: [],
+        debug: { hasServiceKey, hasServiceRoleKey, hasAnonKey }
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -91,12 +107,19 @@ export async function GET() {
 
     if (error) {
       console.error('Supabase storage error:', error);
-      return NextResponse.json({ stories: [] });
+      return NextResponse.json({ 
+        stories: [],
+        error: error.message,
+        debug: { hasServiceKey, hasServiceRoleKey, hasAnonKey }
+      });
     }
 
     if (!data || data.length === 0) {
       console.log('No stories found in bucket');
-      return NextResponse.json({ stories: [] });
+      return NextResponse.json({ 
+        stories: [],
+        debug: { hasServiceKey, hasServiceRoleKey, hasAnonKey, dataLength: data?.length || 0 }
+      });
     }
 
     console.log(`Found ${data.length} stories in bucket`);
@@ -115,6 +138,9 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching stories:', error);
-    return NextResponse.json({ stories: [] });
+    return NextResponse.json({ 
+      stories: [],
+      error: String(error)
+    });
   }
 }
