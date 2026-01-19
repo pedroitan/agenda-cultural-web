@@ -4,10 +4,6 @@ import { createClient } from '@supabase/supabase-js';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-// Priorizar SUPABASE_SERVICE_ROLE_KEY que é a que está configurada no Vercel
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
 export async function POST(request: NextRequest) {
   try {
     const { storyTypes } = await request.json();
@@ -75,6 +71,10 @@ export async function POST(request: NextRequest) {
 // GET para listar Stories gerados
 export async function GET() {
   try {
+    // Ler variáveis de ambiente dentro da função (importante para Vercel)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
     // Debug: verificar variáveis de ambiente
     const hasServiceKey = !!process.env.SUPABASE_SERVICE_KEY;
     const hasServiceRoleKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -86,13 +86,14 @@ export async function GET() {
       hasAnonKey,
       hasUrl: !!supabaseUrl,
       hasKey: !!supabaseKey,
+      keyLength: supabaseKey?.length || 0,
     });
 
     if (!supabaseUrl || !supabaseKey) {
       console.log('Missing Supabase credentials');
       return NextResponse.json({ 
         stories: [],
-        debug: { hasServiceKey, hasServiceRoleKey, hasAnonKey }
+        debug: { hasServiceKey, hasServiceRoleKey, hasAnonKey, hasUrl: !!supabaseUrl, hasKey: !!supabaseKey }
       });
     }
 
