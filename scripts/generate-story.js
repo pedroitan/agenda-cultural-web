@@ -25,10 +25,11 @@ async function generateStory(events, storyType = 'week', outputPath = 'story-out
 
 function generateHTML(events, storyType = 'week') {
   const storyConfig = {
-    week: { title: 'Agenda', subtitle: 'da Semana', gradient: ['#667eea', '#764ba2'] },
-    free: { title: 'Eventos', subtitle: 'Gratuitos', gradient: ['#4ade80', '#22c55e'] },
-    weekend: { title: 'Fim de', subtitle: 'Semana', gradient: ['#f093fb', '#f5576c'] },
-    today: { title: 'Hoje em', subtitle: 'Salvador', gradient: ['#fbbf24', '#f59e0b'] },
+    week: { title: 'Agenda da', subtitle: 'Semana', gradient: ['#667eea', '#764ba2'] },
+    free: { title: 'ROLÊS GRATUITOS', subtitle: 'em Salvador hoje', gradient: ['#4ade80', '#22c55e'] },
+    weekend: { title: 'O que fazer em Salvador', subtitle: 'NESTE FIM DE SEMANA', gradient: ['#f093fb', '#f5576c'] },
+    today: { title: 'O que fazer em Salvador', subtitle: 'HOJE', gradient: ['#fbbf24', '#f59e0b'] },
+    highlight: { title: 'Evento em', subtitle: 'Destaque', gradient: ['#ff6b35', '#f59e0b'] },
   };
   const config = storyConfig[storyType] || storyConfig.week;
   const eventItems = events.map(event => `
@@ -89,15 +90,17 @@ function generateHTML(events, storyType = 'week') {
     .header { text-align: center; margin-bottom: 80px; }
     .title-main {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 120px;
+      font-size: 90px;
       color: white;
-      line-height: 0.9;
-      letter-spacing: 4px;
+      line-height: 1.1;
+      letter-spacing: 2px;
       text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 900px;
     }
     .title-sub {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 80px;
+      font-size: 70px;
       background: rgba(255,255,255,0.95);
       color: #1a1a1a;
       display: inline-block;
@@ -105,6 +108,7 @@ function generateHTML(events, storyType = 'week') {
       margin-top: 10px;
       border-radius: 12px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      text-align: center;
     }
     .events-list {
       flex: 1;
