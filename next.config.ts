@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "elcabong.com.br",
+        pathname: "/wp-content/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.elcabong.com.br",
+        pathname: "/wp-content/uploads/**",
       },
       {
         protocol: "https",
