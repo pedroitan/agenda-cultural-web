@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const categories = [
   "Todos",
@@ -23,40 +22,36 @@ const dateFilters = [
   { label: "Este mês", value: "month" },
 ];
 
-export default function EventFilters() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+type EventFiltersProps = {
+  categoria: string;
+  data: string;
+  busca: string;
+  onCategoriaChange: (value: string) => void;
+  onDataChange: (value: string) => void;
+  onBuscaChange: (value: string) => void;
+};
 
-  const currentCategory = searchParams.get("categoria") || "Todos";
-  const currentDate = searchParams.get("data") || "";
-  const currentSearch = searchParams.get("busca") || "";
-
+export default function EventFilters({
+  categoria,
+  data,
+  busca,
+  onCategoriaChange,
+  onDataChange,
+  onBuscaChange,
+}: EventFiltersProps) {
   // Local state for search input (for instant typing)
-  const [searchInput, setSearchInput] = useState(currentSearch);
+  const [searchInput, setSearchInput] = useState(busca);
 
-  const updateFilters = useCallback(
-    (key: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (value && value !== "Todos" && value !== "") {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-      router.push(`/?${params.toString()}`);
-    },
-    [router, searchParams]
-  );
-
-  // Debounce search input - only update URL after 500ms of no typing
+  // Debounce search input - only update after 300ms of no typing
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchInput !== currentSearch) {
-        updateFilters("busca", searchInput);
+      if (searchInput !== busca) {
+        onBuscaChange(searchInput);
       }
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchInput, currentSearch, updateFilters]);
+  }, [searchInput, busca, onBuscaChange]);
 
   return (
     <div className="mb-6 space-y-4">
@@ -78,9 +73,9 @@ export default function EventFilters() {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => updateFilters("categoria", cat)}
+              onClick={() => onCategoriaChange(cat)}
               className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                currentCategory === cat
+                categoria === cat
                   ? "bg-zinc-900 text-white"
                   : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
               }`}
@@ -96,9 +91,9 @@ export default function EventFilters() {
         {dateFilters.map((df) => (
           <button
             key={df.value}
-            onClick={() => updateFilters("data", df.value)}
+            onClick={() => onDataChange(df.value)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-              currentDate === df.value
+              data === df.value
                 ? "bg-zinc-900 text-white"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
             }`}
