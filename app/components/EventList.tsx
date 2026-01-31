@@ -135,20 +135,13 @@ export default function EventList({ events }: { events: EventRow[] }) {
               >
                 <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
                   {ev.image_url ? (
-                    <Image
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={ev.image_url}
                       alt={ev.title}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                      unoptimized
-                      onError={(e) => {
-                        // Fallback to placeholder on error
-                        e.currentTarget.style.display = 'none';
-                      }}
+                      className="h-full w-full object-cover"
                     />
-                  ) : null}
-                  {!ev.image_url && (
+                  ) : (
                     <div className="flex h-full w-full items-center justify-center text-zinc-400">
                       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
