@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "instagram.com",
       },
+      {
+        protocol: "https",
+        hostname: "ssxowzurrtyzmracmusn.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };
