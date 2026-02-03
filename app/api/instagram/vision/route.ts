@@ -254,6 +254,7 @@ export async function POST(request: NextRequest) {
     }
 
     const allEvents: any[] = []
+    const errors: string[] = []
     let lastEventDate: string | undefined
 
     // Process images sequentially
@@ -268,7 +269,9 @@ export async function POST(request: NextRequest) {
       const result = await extractEventsFromImage(imageBuffer, mimeType, lastEventDate)
 
       if (result.error) {
-        console.error(`Error processing image ${i + 1}:`, result.error)
+        const errorMsg = `Image ${i + 1}: ${result.error}`
+        console.error(errorMsg)
+        errors.push(errorMsg)
         continue
       }
 
@@ -321,10 +324,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Collect debug info
+    const debugInfo = {
+      imagesProcessed: images.length,
+      geminiApiConfigured: !!GEMINI_API_KEY,
+      totalEventsExtracted: allEvents.length,
+      errors: errors.length > 0 ? errors : undefined,
+    }
+
     return NextResponse.json({
       success: true,
       count: allEvents.length,
       events: allEvents,
+      debug: debugInfo,
     })
   } catch (error) {
     console.error("Error processing images:", error)

@@ -110,9 +110,26 @@ export default function InstagramVisionPage() {
       const data = await response.json()
 
       if (response.ok) {
+        let message = `✅ ${data.count} eventos extraídos e adicionados com sucesso!`
+        
+        // Add debug info if available
+        if (data.debug) {
+          message += `\n\n📊 Debug Info:`
+          message += `\n- Imagens processadas: ${data.debug.imagesProcessed}`
+          message += `\n- Gemini API configurada: ${data.debug.geminiApiConfigured ? 'Sim' : 'Não'}`
+          message += `\n- Total de eventos: ${data.debug.totalEventsExtracted}`
+          
+          if (data.debug.errors && data.debug.errors.length > 0) {
+            message += `\n\n❌ Erros encontrados:`
+            data.debug.errors.forEach((err: string) => {
+              message += `\n- ${err}`
+            })
+          }
+        }
+        
         setResult({
           success: true,
-          message: `✅ ${data.count} eventos extraídos e adicionados com sucesso!`,
+          message,
           events: data.events,
         })
         setImages([])
