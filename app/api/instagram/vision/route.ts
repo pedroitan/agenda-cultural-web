@@ -5,11 +5,6 @@ import { createClient } from "@supabase/supabase-js"
 export const runtime = 'nodejs'
 export const maxDuration = 60 // 60 seconds timeout
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 // Gemini Vision API
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`
@@ -105,14 +100,17 @@ async function extractEventsFromImage(
   imageBuffer: Buffer,
   mimeType: string,
   previousDate?: string
-): Promise<ExtractedEvent[]> {
+): Promise<{ events: ExtractedEvent[], error?: string }> {
   if (!GEMINI_API_KEY) {
-    console.log('  ⚠️  Gemini API not configured')
-    return []
+    const error = 'Gemini API key not configured'
+    console.error('❌', error)
+    return { events: [], error }
   }
 
   try {
     const prompt = buildPrompt(previousDate)
+    console.log('🤖 Calling Gemini Vision API...')
+    
     const response = await fetch(GEMINI_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -132,25 +130,33 @@ async function extractEventsFromImage(
     })
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.status, await response.text())
-      return []
+      const errorText = await response.text()
+      const error = `Gemini API error ${response.status}: ${errorText}`
+      console.error('❌', error)
+      return { events: [], error }
     }
 
     const data = await response.json()
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    
+    console.log('📝 Gemini response length:', text.length)
 
     // Extract JSON from response
     const jsonMatch = text.match(/\[[\s\S]*\]/)
     if (!jsonMatch) {
-      console.error('No JSON found in response')
-      return []
+      const error = 'No JSON array found in Gemini response'
+      console.error('❌', error)
+      console.log('Response text:', text.substring(0, 500))
+      return { events: [], error }
     }
 
     const events = JSON.parse(jsonMatch[0])
-    return events
+    console.log('✅ Extracted', events.length, 'events')
+    return { events }
   } catch (error) {
-    console.error('Error extracting events:', error)
-    return []
+    const errorMsg = `Error extracting events: ${error}`
+    console.error('❌', errorMsg)
+    return { events: [], error: errorMsg }
   }
 }
 
@@ -196,6 +202,20 @@ function categorizeEvent(title: string, description?: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Supabase client with correct env vars
+    const supabaseUrl = process.env.SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase credentials')
+      return NextResponse.json({ 
+        error: 'Server configuration error',
+        details: 'Missing database credentials' 
+      }, { status: 500 })
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
     const formData = await request.formData()
     const images = formData.getAll("images") as File[]
     const channelName = formData.get("channelName") as string
@@ -244,17 +264,22 @@ export async function POST(request: NextRequest) {
       const mimeType = image.type
 
       // Extract events using Gemini Vision
-      const extractedEvents = await extractEventsFromImage(imageBuffer, mimeType, lastEventDate)
+      const result = await extractEventsFromImage(imageBuffer, mimeType, lastEventDate)
 
-      if (extractedEvents.length === 0) {
+      if (result.error) {
+        console.error(`Error processing image ${i + 1}:`, result.error)
+        continue
+      }
+
+      if (result.events.length === 0) {
         console.log(`No events found in image ${i + 1}`)
         continue
       }
 
-      console.log(`Extracted ${extractedEvents.length} events from image ${i + 1}`)
+      console.log(`Extracted ${result.events.length} events from image ${i + 1}`)
 
       // Process each extracted event
-      for (const ev of extractedEvents) {
+      for (const ev of result.events) {
         const startDatetime = parseInstagramDate(ev.date, ev.time)
         if (!startDatetime) {
           console.log(`Invalid date format: ${ev.date} ${ev.time}`)
