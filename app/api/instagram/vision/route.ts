@@ -7,7 +7,7 @@ export const maxDuration = 60 // 60 seconds timeout
 
 // Gemini Vision API
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
-const GEMINI_MODEL = 'gemini-1.5-flash' // Using stable model instead of experimental
+const GEMINI_MODEL = 'gemini-1.5-pro-latest' // Using correct model name for v1beta
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`
 
 interface ExtractedEvent {
