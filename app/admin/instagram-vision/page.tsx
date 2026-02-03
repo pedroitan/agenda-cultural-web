@@ -10,9 +10,68 @@ export default function InstagramVisionPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ success: boolean; message: string; events?: any[] } | null>(null)
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = async (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+          
+          // Resize if too large
+          const maxDimension = 1920
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = (height / width) * maxDimension
+              width = maxDimension
+            } else {
+              width = (width / height) * maxDimension
+              height = maxDimension
+            }
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          
+          const ctx = canvas.getContext('2d')!
+          ctx.drawImage(img, 0, 0, width, height)
+          
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                })
+                resolve(compressedFile)
+              } else {
+                resolve(file)
+              }
+            },
+            'image/jpeg',
+            0.85 // 85% quality
+          )
+        }
+        img.src = e.target?.result as string
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(Array.from(e.target.files))
+      const files = Array.from(e.target.files)
+      setLoading(true)
+      
+      // Compress images
+      const compressedFiles = await Promise.all(
+        files.map(file => compressImage(file))
+      )
+      
+      setImages(compressedFiles)
+      setLoading(false)
     }
   }
 
@@ -153,16 +212,23 @@ export default function InstagramVisionPage() {
                 className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm text-black file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
               />
               <p className="mt-1 text-xs text-zinc-500">
-                Selecione uma ou mais imagens. Elas serão processadas em ordem cronológica.
+                Selecione uma ou mais imagens. Elas serão comprimidas automaticamente antes do upload.
               </p>
+              {loading && images.length === 0 && (
+                <div className="mt-2 text-sm text-blue-600">
+                  ⏳ Comprimindo imagens...
+                </div>
+              )}
               {images.length > 0 && (
                 <div className="mt-2 space-y-1">
-                  <p className="text-sm font-medium text-zinc-700">{images.length} imagem(ns) selecionada(s):</p>
+                  <p className="text-sm font-medium text-zinc-700">
+                    {images.length} imagem(ns) selecionada(s) e comprimida(s):
+                  </p>
                   <ul className="space-y-1 text-sm text-zinc-600">
                     {images.map((img, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <span className="text-blue-600">•</span>
-                        <span>{img.name}</span>
+                        <span className="text-green-600">✓</span>
+                        <span>{img.name} ({(img.size / 1024).toFixed(0)} KB)</span>
                       </li>
                     ))}
                   </ul>

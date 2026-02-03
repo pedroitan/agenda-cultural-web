@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-// Increase body size limit to 50MB
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
-}
+// Configure route segment for larger payloads
+export const runtime = 'nodejs'
+export const maxDuration = 60 // 60 seconds timeout
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
