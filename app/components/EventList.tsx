@@ -124,10 +124,16 @@ export default function EventList({ events }: { events: EventRow[] }) {
             });
             const hasMultipleSources = urls.length > 1;
             
+            const primaryUrl = urls[0];
             return (
               <a
                 key={ev.id}
-                href={`/r/${ev.id}`}
+                href={primaryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  fetch(`/api/track-click/${ev.id}`, { method: 'POST' }).catch(() => {})
+                }}
                 className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-shadow hover:shadow-md"
               >
                 <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
