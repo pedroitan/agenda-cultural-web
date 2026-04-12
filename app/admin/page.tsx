@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import RunScraperButton from "./RunScraperButton";
 import ResetClicksButton from "./ResetClicksButton";
+import { RealtimeClickCounter, RealtimeTopClicked } from "./RealtimeClickStats";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -222,43 +223,12 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
               <p className="text-white text-sm font-medium">Engajamento</p>
               <ResetClicksButton />
             </div>
-            <p className="text-white text-2xl font-bold mb-1">{totalClicks}</p>
-            <p className="text-purple-100 text-xs">Total de cliques em eventos</p>
+            <RealtimeClickCounter initialTotal={totalClicks} />
           </div>
         </div>
 
-        {/* Top Clicked Events */}
-        {topClicked && topClicked.length > 0 && (
-          <>
-            <h2 className="text-xl font-semibold mb-4">Eventos Mais Clicados</h2>
-            <div className="bg-gray-800 rounded-lg p-6 mb-8">
-              <div className="space-y-3">
-                {topClicked.map((event, index) => (
-                  <div key={event.id} className="flex items-center justify-between border-b border-gray-700 pb-3 last:border-0">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span className="text-2xl font-bold text-gray-600">#{index + 1}</span>
-                      <div className="min-w-0 flex-1">
-                        <a
-                          href={event.url?.split('|')[0]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium truncate block hover:text-yellow-300 transition-colors"
-                        >
-                          {event.title}
-                        </a>
-                        <p className="text-sm text-gray-400 capitalize">{event.source}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-yellow-400">{event.click_count}</span>
-                      <span className="text-sm text-gray-400">cliques</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+        {/* Top Clicked Events — updates in realtime */}
+        <RealtimeTopClicked initialTop={topClicked ?? []} />
 
         {/* Latest Scrape by Source */}
         <h2 className="text-xl font-semibold mb-4">Último Scrape por Fonte</h2>
