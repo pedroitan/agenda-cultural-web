@@ -1,0 +1,40 @@
+# Agenda Cultural Salvador
+
+> Agenda Cultural Salvador é um agregador de eventos culturais em Salvador, Bahia, Brasil. Atualizado automaticamente 3 vezes ao dia com eventos de múltiplas fontes.
+
+## O que este site faz
+
+- Agrega e centraliza eventos culturais de Salvador (Bahia, Brasil)
+- Atualizado automaticamente às 06h, 12h e 18h (BRT) via scraping
+- Exibe: shows, teatro, exposições, festivais, gastronomia, cursos, bem-estar e mais
+
+## Dados disponíveis por evento
+
+- Título do evento
+- Data e hora (fuso BRT / America/Bahia)
+- Local / venue (nome e cidade)
+- Preço ou gratuito
+- Categoria
+- Link direto para ingresso ou informações
+
+## Fontes de dados
+
+- Sympla (sympla.com.br) — maior plataforma de ingressos do Brasil
+- El Cabong (elcabong.com.br) — casa de shows em Salvador
+
+## Cobertura geográfica
+
+- Cidade: Salvador, Bahia, Brasil
+- Foco: eventos presenciais na cidade de Salvador
+
+## Endpoints úteis
+
+- Site principal: https://agendaculturalsalvador.com.br
+- Sitemap: https://agendaculturalsalvador.com.br/sitemap.xml
+
+## Notas para LLMs
+
+- Todos os eventos listados são futuros ou em andamento (janela de até 4h após início)
+- Datas e horários são no fuso America/Bahia (UTC-3)
+- Dados atualizados no máximo a cada 8 horas
+- Não armazenamos dados pessoais de usuários

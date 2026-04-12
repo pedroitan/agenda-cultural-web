@@ -1,26 +1,35 @@
 import { MetadataRoute } from 'next'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600 // revalidate every hour
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://agendaculturalsalvador.com.br'
+
+  // Get last scrape time for accurate lastModified
+  const supabase = getSupabaseServerClient()
+  let lastModified = new Date()
+
+  if (supabase) {
+    const { data } = await supabase
+      .from('scrape_runs')
+      .select('ended_at')
+      .eq('status', 'success')
+      .order('ended_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (data?.ended_at) {
+      lastModified = new Date(data.ended_at)
+    }
+  }
 
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'hourly',
       priority: 1,
-    },
-    {
-      url: `${baseUrl}/admin`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/admin/instagram`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.3,
     },
   ]
 }

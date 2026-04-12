@@ -121,16 +121,24 @@ export default async function Home() {
   const dedupedEvents = deduplicateEvents(events);
 
   // Generate JSON-LD structured data for events
+  // Dates stored as BRT literals treated as UTC — convert +00:00 → -03:00 for correct timezone signalling
+  const toBRT = (dt: string) => dt.replace(/\+00:00$|Z$/, '-03:00');
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    "name": "Agenda Cultural Salvador",
+    "description": `${dedupedEvents.length} eventos culturais em Salvador, Bahia`,
+    "url": "https://agendaculturalsalvador.com.br",
     "itemListElement": dedupedEvents.slice(0, 20).map((event, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "item": {
         "@type": "Event",
         "name": event.title,
-        "startDate": event.start_datetime,
+        "startDate": toBRT(event.start_datetime),
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "location": {
           "@type": "Place",
           "name": event.venue_name || "Salvador, BA",
@@ -140,6 +148,11 @@ export default async function Home() {
             "addressRegion": "BA",
             "addressCountry": "BR"
           }
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "Agenda Cultural Salvador",
+          "url": "https://agendaculturalsalvador.com.br"
         },
         "offers": event.is_free ? {
           "@type": "Offer",

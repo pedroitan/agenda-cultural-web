@@ -13,15 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = "https://agendaculturalsalvador.com.br";
+
 export const metadata: Metadata = {
-  title: "Agenda Cultural Salvador - 630+ Eventos em Salvador",
-  description: "Descubra os melhores eventos culturais em Salvador. Shows, teatro, exposições e muito mais. Atualizado diariamente com eventos do Sympla, El Cabong e Instagram.",
-  keywords: ["eventos salvador", "shows salvador", "agenda cultural", "teatro salvador", "eventos culturais", "o que fazer em salvador"],
-  authors: [{ name: "Agenda Cultural Salvador" }],
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "Agenda Cultural Salvador — Eventos em Salvador, BA",
+    template: "%s | Agenda Cultural Salvador",
+  },
+  description: "Descubra shows, teatro, exposições e festivais em Salvador, Bahia. Atualizado 3x ao dia com eventos do Sympla e El Cabong.",
+  keywords: ["eventos salvador", "shows salvador", "agenda cultural salvador", "teatro salvador", "eventos culturais bahia", "o que fazer em salvador", "eventos bahia"],
+  authors: [{ name: "Agenda Cultural Salvador", url: BASE_URL }],
+  alternates: {
+    canonical: BASE_URL,
+  },
   openGraph: {
     title: "Agenda Cultural Salvador",
-    description: "630+ eventos culturais em Salvador - Atualizado diariamente",
-    url: "https://agendaculturalsalvador.com.br",
+    description: "Shows, teatro, exposições e festivais em Salvador, BA — Atualizado 3x ao dia",
+    url: BASE_URL,
     siteName: "Agenda Cultural Salvador",
     locale: "pt_BR",
     type: "website",
@@ -29,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Agenda Cultural Salvador",
-    description: "630+ eventos culturais em Salvador",
+    description: "Shows, teatro, exposições e festivais em Salvador, BA",
   },
   robots: {
     index: true,
@@ -37,6 +46,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
     },
   },
 };
