@@ -17,21 +17,21 @@ type EventRow = {
   url: string;
 };
 
-// Format date as "16 Janeiro" and time as "19:00"
-function formatEventDate(dateStr: string): { date: string; time: string } {
-  const d = new Date(dateStr);
+// Format date as "16 Abril" and time as "19:00"
+// Parses the literal stored value (BRT times stored as UTC-naive in DB)
+// Does NOT apply timezone conversion - values are already BRT
+function formatEventDate(dateStr: string): { date: string; time: string | null } {
   const months = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
-  const day = d.getDate();
-  const month = months[d.getMonth()];
-  const hours = d.getHours().toString().padStart(2, "0");
-  const minutes = d.getMinutes().toString().padStart(2, "0");
-  
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!match) return { date: '?', time: null };
+  const [, , month, day, hour, minute] = match;
+  const timeStr = `${hour}:${minute}`;
   return {
-    date: `${day} ${month}`,
-    time: `${hours}:${minutes}`,
+    date: `${parseInt(day)} ${months[parseInt(month) - 1]}`,
+    time: timeStr === '00:00' ? null : timeStr,
   };
 }
 
@@ -152,7 +152,7 @@ export default function EventList({ events }: { events: EventRow[] }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-xs font-medium text-zinc-500">
-                      {date} • {time}
+                      {date}{time ? ` • ${time}` : " • Horário a confirmar"}
                     </p>
                     {ev.category && (
                       <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">

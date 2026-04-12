@@ -1,0 +1,10 @@
+# Copie este arquivo para .env.local e preencha com suas credenciais
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://ssxowzurrtyzmracmusn.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-anon-key-aqui
+SUPABASE_SERVICE_KEY=sua-service-key-aqui
+
+# GitHub (para disparar Actions via API)
+GITHUB_TOKEN=seu-github-token-aqui
+GITHUB_REPOSITORY=pedroitan/agenda-cultural-web

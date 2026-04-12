@@ -309,10 +309,22 @@ export async function POST(request: NextRequest) {
           raw_payload: ev,
         }
 
+        // Check if event already exists
+        const { data: existing } = await supabase
+          .from('events')
+          .select('id')
+          .eq('external_id', externalId)
+          .single()
+
+        if (existing) {
+          console.log(`  ⏭️  Event already exists: ${ev.title}`)
+          continue
+        }
+
         // Insert into database
         const { data, error } = await supabase
           .from('events')
-          .upsert(eventData, { onConflict: 'external_id' })
+          .insert(eventData)
           .select()
 
         if (error) {
@@ -320,6 +332,7 @@ export async function POST(request: NextRequest) {
         } else {
           allEvents.push(data[0])
           lastEventDate = ev.date // Update for next image
+          console.log(`  ✅ Saved: ${ev.title}`)
         }
       }
     }
