@@ -1,4 +1,5 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
+import RunScraperButton from "./RunScraperButton";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -139,7 +140,8 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
             <h1 className="text-3xl font-bold mb-2">Dashboard Admin</h1>
             <p className="text-gray-400">Agenda Cultural Salvador</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap items-center">
+            <RunScraperButton />
             <a
               href="/admin/instagram"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"

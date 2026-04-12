@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useState, useMemo } from "react";
 import EventFilters from "./EventFilters";
 
@@ -127,10 +125,9 @@ export default function EventList({ events }: { events: EventRow[] }) {
             const hasMultipleSources = urls.length > 1;
             
             return (
-              <Link
+              <a
                 key={ev.id}
                 href={`/r/${ev.id}`}
-                prefetch={false}
                 className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-shadow hover:shadow-md"
               >
                 <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
@@ -177,7 +174,7 @@ export default function EventList({ events }: { events: EventRow[] }) {
                     </p>
                   )}
                 </div>
-              </Link>
+              </a>
             );
           })}
         </div>
