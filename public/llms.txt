@@ -27,7 +27,24 @@
 - Cidade: Salvador, Bahia, Brasil
 - Foco: eventos presenciais na cidade de Salvador
 
-## Endpoints úteis
+## API pública de eventos (JSON)
+
+Endpoint: `GET https://agendaculturalsalvador.com.br/api/events`
+
+Parâmetros opcionais:
+- `limit` — número máximo de eventos (padrão: 50, máximo: 200)
+- `category` — filtro por categoria (ex: "Shows e Festas", "Teatro", "Arte e Cultura")
+- `date` — filtro por data no formato YYYY-MM-DD (ex: "2026-04-13")
+- `free=true` — somente eventos gratuitos
+- `q` — busca por título ou local
+
+Exemplos:
+- Todos os próximos eventos: https://agendaculturalsalvador.com.br/api/events
+- Shows este fim de semana: https://agendaculturalsalvador.com.br/api/events?category=Shows%20e%20Festas
+- Eventos gratuitos: https://agendaculturalsalvador.com.br/api/events?free=true
+- Busca por artista: https://agendaculturalsalvador.com.br/api/events?q=nome+do+artista
+
+## Outros endpoints
 
 - Site principal: https://agendaculturalsalvador.com.br
 - Sitemap: https://agendaculturalsalvador.com.br/sitemap.xml
