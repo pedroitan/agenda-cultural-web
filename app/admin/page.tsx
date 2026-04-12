@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import RunScraperButton from "./RunScraperButton";
+import ResetClicksButton from "./ResetClicksButton";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -112,7 +113,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
   // Get top clicked events
   const { data: topClicked } = await supabase
     .from("events")
-    .select("id, title, click_count, source, start_datetime")
+    .select("id, title, click_count, source, start_datetime, url")
     .gt("click_count", 0)
     .order("click_count", { ascending: false })
     .limit(10);
@@ -219,9 +220,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-white text-sm font-medium">Engajamento</p>
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-              </svg>
+              <ResetClicksButton />
             </div>
             <p className="text-white text-2xl font-bold mb-1">{totalClicks}</p>
             <p className="text-purple-100 text-xs">Total de cliques em eventos</p>
@@ -239,7 +238,14 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <span className="text-2xl font-bold text-gray-600">#{index + 1}</span>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium truncate">{event.title}</p>
+                        <a
+                          href={event.url?.split('|')[0]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium truncate block hover:text-yellow-300 transition-colors"
+                        >
+                          {event.title}
+                        </a>
                         <p className="text-sm text-gray-400 capitalize">{event.source}</p>
                       </div>
                     </div>
