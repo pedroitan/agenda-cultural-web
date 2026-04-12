@@ -20,16 +20,23 @@ export function RealtimeClickCounter({
   const [live, setLive] = useState(false);
 
   useEffect(() => {
+    const fetchTotal = async () => {
+      try {
+        const res = await fetch("/api/click-stats");
+        const { total } = await res.json();
+        setTotalClicks(total);
+      } catch {}
+    };
+
     const channel = supabase
       .channel("click_counter")
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "events" },
-        (payload) => {
-          const diff =
-            ((payload.new as { click_count: number }).click_count || 0) -
-            ((payload.old as { click_count: number }).click_count || 0);
-          if (diff !== 0) setTotalClicks((prev) => prev + diff);
+        () => {
+          // Re-fetch accurate total instead of computing delta from old values
+          // (Supabase Realtime without REPLICA IDENTITY FULL doesn't send old column values)
+          fetchTotal();
         }
       )
       .subscribe((status) => setLive(status === "SUBSCRIBED"));
