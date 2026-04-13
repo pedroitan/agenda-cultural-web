@@ -237,6 +237,20 @@ export default async function Home({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      
+      {/* Banner */}
+      <div className="w-full bg-gradient-to-r from-purple-900 to-indigo-900">
+        <div className="mx-auto max-w-4xl">
+          <img 
+            src="/banner.png" 
+            alt="Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia" 
+            className="w-full h-auto"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </div>
+      </div>
+
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-5">
           <div className="flex flex-col gap-1">
