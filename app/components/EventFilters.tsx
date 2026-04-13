@@ -31,6 +31,14 @@ type EventFiltersProps = {
   onBuscaChange: (value: string) => void;
 };
 
+function updateURL(categoria: string, q: string) {
+  const params = new URLSearchParams();
+  if (categoria && categoria !== "Todos") params.set("categoria", categoria);
+  if (q) params.set("q", q);
+  const url = params.toString() ? `/?${params.toString()}` : "/";
+  window.history.replaceState(null, "", url);
+}
+
 export default function EventFilters({
   categoria,
   data,
@@ -42,16 +50,21 @@ export default function EventFilters({
   // Local state for search input (for instant typing)
   const [searchInput, setSearchInput] = useState(busca);
 
-  // Debounce search input - only update after 300ms of no typing
+  // Debounce search input - update state + URL after 400ms
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== busca) {
         onBuscaChange(searchInput);
+        updateURL(categoria, searchInput);
       }
-    }, 300);
-
+    }, 400);
     return () => clearTimeout(timer);
-  }, [searchInput, busca, onBuscaChange]);
+  }, [searchInput, busca, onBuscaChange, categoria]);
+
+  const handleCategoriaChange = (cat: string) => {
+    onCategoriaChange(cat);
+    updateURL(cat, searchInput);
+  };
 
   return (
     <div className="mb-6 space-y-4">
@@ -73,7 +86,7 @@ export default function EventFilters({
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => onCategoriaChange(cat)}
+              onClick={() => handleCategoriaChange(cat)}
               className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
                 categoria === cat
                   ? "bg-zinc-900 text-white"

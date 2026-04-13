@@ -278,6 +278,43 @@ export default async function Home({
           <EventList events={dedupedEvents} initialSearch={initialSearch} initialCategoria={initialCategoria} />
         )}
       </main>
+
+      <footer className="border-t border-zinc-200 bg-white mt-8">
+        <div className="mx-auto w-full max-w-4xl px-4 py-8 space-y-4 text-sm text-zinc-500">
+          <div>
+            <p className="font-medium text-zinc-700 mb-1">Sobre a Agenda Cultural Salvador</p>
+            <p>
+              A Agenda Cultural Salvador é um agregador de eventos culturais em Salvador, Bahia.
+              Reunimos shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais
+              em um só lugar, com informações atualizadas diariamente a partir do{" "}
+              <a href="https://sympla.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">Sympla</a>{" "}
+              e do{" "}
+              <a href="https://elcabong.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">El Cabong</a>.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-zinc-700 mb-1">Principais espaços culturais em Salvador</p>
+            <p>
+              Teatro Castro Alves (TCA), Teatro Gamboa, El Cabong, Casa de Música da Bahia,
+              SESI Salvador, Concha Acústica do TCA, Teatro ISBA, Teatro Vila Velha,
+              Museu de Arte Moderna da Bahia (MAM), Farol da Barra, Solar do Unhão,
+              Teatro SESC Casa do Comerciário, Espaço Cultural da Barroquinha e outros
+              espaços culturais de Salvador, Bahia.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-zinc-700 mb-1">Categorias de eventos</p>
+            <p>
+              Shows e Festas · Teatro · Arte e Cultura · Gastronomia · Cursos e Workshops ·
+              Palestras · Bem-estar · Games e Geek · Eventos Religiosos · Eventos Gratuitos em Salvador
+            </p>
+          </div>
+          <p className="text-xs text-zinc-400 pt-2">
+            © {new Date().getFullYear()} Agenda Cultural Salvador · Salvador, Bahia, Brasil ·{" "}
+            <a href="/api/events" className="underline hover:text-zinc-600">API pública</a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
