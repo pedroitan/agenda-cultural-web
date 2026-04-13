@@ -33,10 +33,18 @@ function formatEventDate(dateStr: string): { date: string; time: string | null }
   };
 }
 
-export default function EventList({ events }: { events: EventRow[] }) {
-  const [categoria, setCategoria] = useState<string>("Todos");
+export default function EventList({
+  events,
+  initialSearch = "",
+  initialCategoria = "",
+}: {
+  events: EventRow[];
+  initialSearch?: string;
+  initialCategoria?: string;
+}) {
+  const [categoria, setCategoria] = useState<string>(initialCategoria || "Todos");
   const [data, setData] = useState<string>("");
-  const [busca, setBusca] = useState<string>("");
+  const [busca, setBusca] = useState<string>(initialSearch);
 
   // Client-side filtering - instant, no page reload
   const filteredEvents = useMemo(() => {

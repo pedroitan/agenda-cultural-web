@@ -76,7 +76,14 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
   });
 }
 
-export default async function Home() {
+const BASE_URL = "https://agendaculturalsalvador.com.br";
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; categoria?: string }>;
+}) {
+  const { q: initialSearch = "", categoria: initialCategoria = "" } = await searchParams;
 
   const supabase = getSupabaseServerClient();
 
@@ -123,6 +130,61 @@ export default async function Home() {
   // Generate JSON-LD structured data for events
   // Dates stored as BRT literals treated as UTC — convert +00:00 → -03:00 for correct timezone signalling
   const toBRT = (dt: string) => dt.replace(/\+00:00$|Z$/, '-03:00');
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Agenda Cultural Salvador",
+    "url": BASE_URL,
+    "description": "Agregador de eventos culturais em Salvador, Bahia. Shows, teatro, exposições e festivais.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${BASE_URL}/?q={search_term_input}`
+      },
+      "query-input": "required name=search_term_input"
+    }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O que tem pra fazer em Salvador este fim de semana?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `A Agenda Cultural Salvador lista ${dedupedEvents.length} eventos atuais em Salvador, incluindo shows, teatro, exposições e festivais. Acesse agendaculturalsalvador.com.br para ver todos os eventos com datas, horários e locais.`
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Onde ver shows e eventos culturais em Salvador?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Salvador tem uma agenda cultural intensa com eventos no Teatro Castro Alves (TCA), Teatro Gamboa, El Cabong, Casa de Música da Bahia, SESI, Concha Acústica e muitos outros. A Agenda Cultural Salvador agrega eventos de Sympla e El Cabong em um só lugar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quais são os eventos gratuitos em Salvador?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Salvador oferece muitos eventos gratuitos, especialmente em espaços públicos, museus e centros culturais. Use o filtro 'Gratuito' na Agenda Cultural Salvador para ver apenas eventos sem custo."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Como comprar ingressos para eventos em Salvador?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A maioria dos eventos em Salvador vende ingressos pelo Sympla (sympla.com.br). A Agenda Cultural Salvador exibe links diretos para compra de ingressos em cada evento listado."
+        }
+      }
+    ]
+  };
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -172,10 +234,9 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-5">
           <div className="flex flex-col gap-1">
@@ -214,7 +275,7 @@ export default async function Home() {
             </p>
           </div>
         ) : (
-          <EventList events={dedupedEvents} />
+          <EventList events={dedupedEvents} initialSearch={initialSearch} initialCategoria={initialCategoria} />
         )}
       </main>
     </div>
