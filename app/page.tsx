@@ -1,9 +1,9 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import EventList from "./components/EventList";
 
-// Disable caching to always fetch fresh data
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Revalidate every 5 minutes — reduces Supabase egress from repeated bot/crawler hits
+// Events only change when scraper runs (3x/day), so 5min cache is safe
+export const revalidate = 300;
 
 type EventRow = {
   id: string;

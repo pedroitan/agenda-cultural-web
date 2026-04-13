@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300; // cache for 5 minutes at CDN level
 
 /**
  * Public Events API
