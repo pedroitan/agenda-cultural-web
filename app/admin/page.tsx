@@ -160,7 +160,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gray-800 rounded-lg p-6">
             <p className="text-gray-400 text-sm">Total de Eventos</p>
             <p className="text-4xl font-bold text-green-400">{totalEvents || 0}</p>
@@ -168,10 +168,6 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           <div className="bg-gray-800 rounded-lg p-6">
             <p className="text-gray-400 text-sm">Eventos Futuros</p>
             <p className="text-4xl font-bold text-blue-400">{futureEvents || 0}</p>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Total de Cliques</p>
-            <p className="text-4xl font-bold text-yellow-400">{totalClicks}</p>
           </div>
           {counts.map((c) => (
             <div key={c.source} className="bg-gray-800 rounded-lg p-6">
