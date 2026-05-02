@@ -234,7 +234,7 @@ export default async function Home({
   };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-950">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
@@ -254,19 +254,19 @@ export default async function Home({
         </picture>
       </div>
 
-      <header className="border-b" style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+      <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-5">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            <h1 className="text-xl font-semibold tracking-tight">
               Agenda Cultural Salvador
             </h1>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm text-zinc-600">
               {hasSupabase
                 ? `${dedupedEvents.length} eventos encontrados`
                 : "Supabase ainda não configurado"}
             </p>
             {lastUpdatedAt && (
-              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+              <p className="text-xs text-zinc-500">
                 Última atualização: {new Date(lastUpdatedAt).toLocaleString('pt-BR', {
                   day: '2-digit',
                   month: '2-digit',
@@ -283,11 +283,11 @@ export default async function Home({
 
       <main className="mx-auto w-full max-w-4xl px-4 py-8">
         {!hasSupabase ? (
-          <div className="rounded-xl border p-5" style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+          <div className="rounded-xl border border-zinc-200 bg-white p-5">
             <h2 className="text-base font-semibold">Próximo passo</h2>
-            <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <p className="mt-2 text-sm text-zinc-600">
               Crie o projeto no Supabase e preencha as variáveis em um arquivo
-              <code className="mx-1 rounded px-1 py-0.5" style={{ backgroundColor: 'var(--bg-elevated)' }}>.env.local</code>
+              <code className="mx-1 rounded bg-zinc-100 px-1 py-0.5">.env.local</code>
               (ou configure no deploy). Depois reinicie o dev server.
             </p>
           </div>
@@ -299,21 +299,21 @@ export default async function Home({
         )}
       </main>
 
-      <footer className="border-t mt-8" style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-        <div className="mx-auto w-full max-w-4xl px-4 py-8 space-y-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
+      <footer className="border-t border-zinc-200 bg-white mt-8">
+        <div className="mx-auto w-full max-w-4xl px-4 py-8 space-y-4 text-sm text-zinc-500">
           <div>
-            <p className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Sobre a Agenda Cultural Salvador</p>
+            <p className="font-medium text-zinc-700 mb-1">Sobre a Agenda Cultural Salvador</p>
             <p>
               A Agenda Cultural Salvador é um agregador de eventos culturais em Salvador, Bahia.
               Reunimos shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais
               em um só lugar, com informações atualizadas diariamente a partir do{" "}
-              <a href="https://sympla.com.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--text-primary)' }}>Sympla</a>{" "}
+              <a href="https://sympla.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">Sympla</a>{" "}
               e do{" "}
-              <a href="https://elcabong.com.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--text-primary)' }}>El Cabong</a>.
+              <a href="https://elcabong.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">El Cabong</a>.
             </p>
           </div>
           <div>
-            <p className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Principais espaços culturais em Salvador</p>
+            <p className="font-medium text-zinc-700 mb-1">Principais espaços culturais em Salvador</p>
             <p>
               Teatro Castro Alves (TCA), Teatro Gamboa, El Cabong, Casa de Música da Bahia,
               SESI Salvador, Concha Acústica do TCA, Teatro ISBA, Teatro Vila Velha,
@@ -323,15 +323,15 @@ export default async function Home({
             </p>
           </div>
           <div>
-            <p className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>Categorias de eventos</p>
+            <p className="font-medium text-zinc-700 mb-1">Categorias de eventos</p>
             <p>
               Shows e Festas · Teatro · Arte e Cultura · Gastronomia · Cursos e Workshops ·
               Palestras · Bem-estar · Games e Geek · Eventos Religiosos · Eventos Gratuitos em Salvador
             </p>
           </div>
-          <p className="text-xs pt-2" style={{ color: 'var(--text-tertiary)' }}>
+          <p className="text-xs text-zinc-400 pt-2">
             © {new Date().getFullYear()} Agenda Cultural Salvador · Salvador, Bahia, Brasil ·{" "}
-            <a href="/api/events" className="underline" style={{ color: 'var(--text-primary)' }}>API pública</a>
+            <a href="/api/events" className="underline hover:text-zinc-600">API pública</a>
           </p>
         </div>
       </footer>

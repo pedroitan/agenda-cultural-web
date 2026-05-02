@@ -1,55 +1,26 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans, DM_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
-
-const dmMono = DM_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
-
-const BASE_URL = "https://agendaculturalsalvador.com.br";
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: {
-    default: "Agenda Cultural Salvador — Eventos em Salvador, BA",
-    template: "%s | Agenda Cultural Salvador",
-  },
-  description: "Descubra shows, teatro, exposições e festivais em Salvador, Bahia. Atualizado 3x ao dia com eventos do Sympla e El Cabong.",
-  keywords: ["eventos salvador", "shows salvador", "agenda cultural salvador", "teatro salvador", "eventos culturais bahia", "o que fazer em salvador", "eventos bahia"],
-  authors: [{ name: "Agenda Cultural Salvador", url: BASE_URL }],
-  alternates: {
-    canonical: BASE_URL,
-  },
+  title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
+  description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
+  keywords: "eventos salvador, shows salvador, agenda cultural salvador, teatro salvador, exposições salvador, festivais salvador",
+  authors: [{ name: "Agenda Cultural Salvador" }],
   openGraph: {
-    title: "Agenda Cultural Salvador",
-    description: "Shows, teatro, exposições e festivais em Salvador, BA — Atualizado 3x ao dia",
-    url: BASE_URL,
+    title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
+    description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
+    url: "https://agendaculturalsalvador.com.br",
     siteName: "Agenda Cultural Salvador",
     locale: "pt_BR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agenda Cultural Salvador",
-    description: "Shows, teatro, exposições e festivais em Salvador, BA",
+    title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
+    description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
   },
   robots: {
     index: true,
@@ -77,11 +48,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${syne.variable} ${dmSans.variable} ${dmMono.variable} antialiased`}
-      >
+      <body className={inter.className}>
         {children}
-        <Analytics />
       </body>
     </html>
   );

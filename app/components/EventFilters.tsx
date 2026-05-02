@@ -75,8 +75,7 @@ export default function EventFilters({
           placeholder="Buscar evento..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="w-full rounded-lg px-4 py-2 text-sm focus:outline-none"
-          style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)' }}
+          className="w-full rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm focus:border-zinc-400 focus:outline-none"
         />
       </div>
 
@@ -88,11 +87,11 @@ export default function EventFilters({
             <button
               key={cat}
               onClick={() => handleCategoriaChange(cat)}
-              className="rounded-full px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{
-                backgroundColor: categoria === cat ? 'var(--accent-primary)' : 'var(--bg-elevated)',
-                color: categoria === cat ? 'white' : 'var(--text-secondary)'
-              }}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                categoria === cat
+                  ? "bg-zinc-900 text-white"
+                  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+              }`}
             >
               {cat}
             </button>
@@ -106,11 +105,11 @@ export default function EventFilters({
           <button
             key={df.value}
             onClick={() => onDataChange(df.value)}
-            className="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{
-              backgroundColor: data === df.value ? 'var(--accent-primary)' : 'var(--bg-elevated)',
-              color: data === df.value ? 'white' : 'var(--text-secondary)'
-            }}
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              data === df.value
+                ? "bg-zinc-900 text-white"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+            }`}
           >
             {df.label}
           </button>
