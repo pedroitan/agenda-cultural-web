@@ -10,7 +10,6 @@ type EventRow = {
   id: string;
   title: string;
   start_datetime: string;
-  end_datetime: string | null;
   venue_name: string | null;
   image_url: string | null;
   price_text: string | null;
@@ -105,7 +104,7 @@ export default async function Home({
       supabase
         .from("events")
         .select(
-          "id,title,start_datetime,end_datetime,venue_name,image_url,price_text,is_free,category,url"
+          "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
         .gte("start_datetime", fourHoursAgoIso)
         .order("start_datetime", { ascending: true }),
@@ -294,12 +293,7 @@ export default async function Home({
           </div>
         ) : (
           <>
-            <HappeningNow events={dedupedEvents} onEventClick={(id) => {
-              const event = dedupedEvents.find(e => e.id === id);
-              if (event) {
-                window.open(event.url.split('|')[0], '_blank');
-              }
-            }} />
+            <HappeningNow events={dedupedEvents} />
             <EventList events={dedupedEvents} initialSearch={initialSearch} initialCategoria={initialCategoria} />
           </>
         )}

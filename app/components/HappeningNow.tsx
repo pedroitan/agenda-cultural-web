@@ -1,26 +1,31 @@
+'use client';
+
 type Event = {
   id: string;
   title: string;
   start_datetime: string;
-  end_datetime: string | null;
   venue_name: string | null;
   image_url: string | null;
   category: string | null;
   url: string;
 };
 
-export default function HappeningNow({ events, onEventClick }: { events: Event[], onEventClick: (id: string) => void }) {
-  // Filter events happening now: start_datetime <= NOW < end_datetime
+export default function HappeningNow({ events }: { events: Event[] }) {
+  // Filter events happening now: started within last 2 hours (simplified logic without end_datetime)
   const now = new Date();
+  const twoHoursAgo = new Date(now.getTime() - (2 * 60 * 60 * 1000));
   const happeningNow = events.filter(event => {
     const start = new Date(event.start_datetime);
-    const end = event.end_datetime ? new Date(event.end_datetime) : null;
-    return start <= now && (!end || now < end);
+    return start >= twoHoursAgo && start <= now;
   });
 
   if (happeningNow.length === 0) {
     return null;
   }
+
+  const handleEventClick = (url: string) => {
+    window.open(url.split('|')[0], '_blank');
+  };
 
   return (
     <section className="mb-8">
@@ -38,7 +43,7 @@ export default function HappeningNow({ events, onEventClick }: { events: Event[]
         {happeningNow.map(event => (
           <div
             key={event.id}
-            onClick={() => onEventClick(event.id)}
+            onClick={() => handleEventClick(event.url)}
             className="flex-shrink-0 w-64 cursor-pointer group"
           >
             <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: '4/3' }}>
