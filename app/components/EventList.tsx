@@ -124,9 +124,9 @@ export default function EventList({
       />
 
       {filteredEvents.length === 0 ? (
-        <div className="rounded-xl border border-zinc-200 bg-white p-5">
-          <h2 className="text-base font-semibold">Nenhum evento encontrado</h2>
-          <p className="mt-2 text-sm text-zinc-600">
+        <div className="rounded-xl border p-5" style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>Nenhum evento encontrado</h2>
+          <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
             {events.length > 0
               ? "Tente ajustar os filtros para ver mais eventos."
               : "Quando o scraper rodar e persistir eventos, eles vão aparecer aqui."}
@@ -157,9 +157,10 @@ export default function EventList({
                 onClick={() => {
                   fetch(`/api/track-click/${ev.id}`, { method: 'POST' }).catch(() => {})
                 }}
-                className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-shadow hover:shadow-md"
+                className="flex gap-4 rounded-xl border p-4 transition-shadow hover:shadow-md"
+                style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
               >
-                <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg bg-zinc-100">
+                <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg" style={{ backgroundColor: 'var(--bg-elevated)' }}>
                   {ev.image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -168,7 +169,7 @@ export default function EventList({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-zinc-400">
+                    <div className="flex h-full w-full items-center justify-center" style={{ color: 'var(--text-tertiary)' }}>
                       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
@@ -177,28 +178,28 @@ export default function EventList({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-xs font-medium text-zinc-500">
+                    <p className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                       {date}{time ? ` • ${time}` : " • Horário a confirmar"}
                     </p>
                     {ev.category && (
-                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-secondary)' }}>
                         {ev.category}
                       </span>
                     )}
                     {hasMultipleSources && (
-                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                      <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: '#3B82F6', color: 'white' }}>
                         {sources.join(' + ')}
                       </span>
                     )}
                   </div>
-                  <h2 className="mt-1 line-clamp-2 text-base font-semibold">
+                  <h2 className="mt-1 line-clamp-2 text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
                     {ev.title}
                   </h2>
-                  <p className="mt-1 text-sm text-zinc-600">
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                     {ev.venue_name ?? "Local a confirmar"}
                   </p>
                   {ev.is_free && (
-                    <p className="mt-1 text-sm font-medium text-green-600">
+                    <p className="mt-1 text-sm font-medium" style={{ color: 'var(--price-free)' }}>
                       Gratuito
                     </p>
                   )}
@@ -210,7 +211,8 @@ export default function EventList({
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  className="flex-none self-center rounded-full bg-green-500 p-2 text-white hover:bg-green-600 transition-colors"
+                  className="flex-none self-center rounded-full p-2 text-white hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: '#25D366' }}
                   title="Compartilhar no WhatsApp"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
