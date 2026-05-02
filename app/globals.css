@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base (fundo e superfície) - Identidade noturna urbana */
+  --bg-base: #0A0A0A;
+  --bg-surface: #141414;
+  --bg-elevated: #1E1E1E;
+  --bg-overlay: rgba(0,0,0,0.6);
+
+  /* Accent (identidade da marca) */
+  --accent-primary: #7B61FF;
+  --accent-secondary: #FF3A8C;
+  --accent-glow: rgba(123,97,255,0.2);
+
+  /* Texto */
+  --text-primary: #F5F5F0;
+  --text-secondary: #9B9991;
+  --text-tertiary: #5C5A56;
+  --text-on-accent: #FFFFFF;
+
+  /* Categorias */
+  --cat-music: #FF6B6B;
+  --cat-theatre: #A855F7;
+  --cat-art: #F59E0B;
+  --cat-outdoor: #10B981;
+  --cat-talks: #3B82F6;
+  --cat-experimental: #EC4899;
+
+  /* Preço */
+  --price-free: #10B981;
+  --price-low: #F59E0B;
+  --price-high: #EF4444;
+
+  /* Bordas */
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-medium: rgba(255,255,255,0.12);
+  --border-strong: rgba(255,255,255,0.24);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
 }
