@@ -5,6 +5,7 @@ import ActiveEvents from "./ActiveEvents";
 import AdminLayout from "./AdminLayout";
 import EventSubmissions from "./EventSubmissions";
 import AdsManager from "./AdsManager";
+import ToursManager from "./ToursManager";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -262,6 +263,11 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       {/* Ads Manager */}
       <div id="anuncios">
         <AdsManager />
+      </div>
+
+      {/* Tours Manager */}
+      <div id="roteiros">
+        <ToursManager />
       </div>
 
       {/* Latest Scrape by Source */}
