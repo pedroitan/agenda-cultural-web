@@ -4,6 +4,7 @@ import ResetClicksButton from "./ResetClicksButton";
 import { RealtimeClickCounter, RealtimeTopClicked } from "./RealtimeClickStats";
 import PendingEvents from "./PendingEvents";
 import ActiveEvents from "./ActiveEvents";
+import { LayoutDashboard, Calendar, BarChart3, Database, Settings, Home } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -153,58 +154,107 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
   });
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Dashboard Admin</h1>
-            <p className="text-gray-400">Agenda Cultural Salvador</p>
+    <div className="min-h-screen bg-gray-50 text-gray-900 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r border-gray-200 fixed h-full">
+        <div className="p-6">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Dashboard Admin</h1>
+          <p className="text-sm text-gray-500">Agenda Cultural Salvador</p>
+        </div>
+        
+        <nav className="mt-4">
+          <div className="px-4 py-2">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Principal</p>
+            <a href="/" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <Home size={20} />
+              <span>Voltar ao Site</span>
+            </a>
           </div>
-          <div className="flex gap-3 flex-wrap items-center">
-            <RunScraperButton />
+
+          <div className="px-4 py-2 mt-4">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Eventos</p>
+            <a href="#eventos-aprovados" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <LayoutDashboard size={20} />
+              <span>Eventos Aprovados</span>
+            </a>
+            <a href="#eventos-pendentes" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <Calendar size={20} />
+              <span>Eventos Pendentes</span>
+            </a>
+          </div>
+
+          <div className="px-4 py-2 mt-4">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Scrapes</p>
+            <a href="#scrapes-fonte" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <Database size={20} />
+              <span>Scrapes por Fonte</span>
+            </a>
+            <a href="#historico-scrapes" className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              <BarChart3 size={20} />
+              <span>Histórico de Scrapes</span>
+            </a>
+          </div>
+
+          <div className="px-4 py-2 mt-4">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ações</p>
+            <div className="px-3 py-2">
+              <RunScraperButton />
+            </div>
             <a
               href="/admin/instagram"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              + Instagram (Texto)
+              <span>+ Instagram (Texto)</span>
             </a>
             <a
               href="/admin/instagram-vision"
-              className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+              className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              🤖 Instagram Vision (Imagens)
+              <span>🤖 Instagram Vision</span>
             </a>
           </div>
-        </div>
+
+          <div className="px-4 py-2 mt-4">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Analytics</p>
+            <div className="px-3 py-2">
+              <ResetClicksButton />
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 ml-64 p-8">
+        <div className="max-w-6xl">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gray-800 rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Total de Eventos</p>
-            <p className="text-4xl font-bold text-green-400">{totalEvents || 0}</p>
+          <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+            <p className="text-gray-600 text-sm">Total de Eventos</p>
+            <p className="text-4xl font-bold text-green-600">{totalEvents || 0}</p>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6">
-            <p className="text-gray-400 text-sm">Eventos Futuros</p>
-            <p className="text-4xl font-bold text-blue-400">{futureEvents || 0}</p>
+          <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+            <p className="text-gray-600 text-sm">Eventos Futuros</p>
+            <p className="text-4xl font-bold text-blue-600">{futureEvents || 0}</p>
           </div>
           {counts.map((c) => (
-            <div key={c.source} className="bg-gray-800 rounded-lg p-6">
-              <p className="text-gray-400 text-sm">
+            <div key={c.source} className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+              <p className="text-gray-600 text-sm">
                 {c.source === 'instagram' ? 'Instagram (Manual)' : c.source.charAt(0).toUpperCase() + c.source.slice(1)}
               </p>
-              <p className="text-4xl font-bold text-purple-400">{c.count}</p>
+              <p className="text-4xl font-bold text-purple-600">{c.count}</p>
             </div>
           ))}
         </div>
 
         {/* Analytics Overview */}
-        <h2 className="text-xl font-semibold mb-4">📊 Analytics & Métricas</h2>
+        <h2 id="analytics" className="text-xl font-semibold mb-4 text-gray-900">📊 Analytics & Métricas</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <a
             href="https://dash.cloudflare.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all"
+            className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm"
           >
             <div className="flex items-center justify-between mb-2">
               <p className="text-white text-sm font-medium">Cloudflare Analytics</p>
@@ -220,7 +270,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
             href="https://vercel.com/pedroitans-projects/agenda-cultural-web/analytics"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gradient-to-br from-black to-gray-800 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all shadow-sm"
           >
             <div className="flex items-center justify-between mb-2">
               <p className="text-white text-sm font-medium">Vercel Analytics</p>
@@ -232,7 +282,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
             <p className="text-gray-300 text-xs">Performance detalhada</p>
           </a>
 
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <p className="text-white text-sm font-medium">Engajamento</p>
               <ResetClicksButton />
@@ -245,107 +295,107 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
         <RealtimeTopClicked initialTop={topClicked ?? []} />
 
         {/* Pending Events */}
-        <PendingEvents />
+        <div id="eventos-pendentes">
+          <PendingEvents />
+        </div>
 
         {/* Active Events */}
-        <ActiveEvents />
+        <div id="eventos-aprovados">
+          <ActiveEvents />
+        </div>
 
         {/* Latest Scrape by Source */}
-        <h2 className="text-xl font-semibold mb-4">Último Scrape por Fonte</h2>
+        <h2 id="scrapes-fonte" className="text-xl font-semibold mb-4 text-gray-900">Último Scrape por Fonte</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {Array.from(latestBySource.values()).map((run) => (
             <div
               key={run.id}
-              className={`bg-gray-800 rounded-lg p-6 border-l-4 ${
+              className={`bg-white rounded-lg p-6 border-l-4 shadow-sm ${
                 run.status === "success" ? "border-green-500" : "border-red-500"
               }`}
             >
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold capitalize">{run.source}</h3>
+                <h3 className="text-lg font-semibold capitalize text-gray-900">{run.source}</h3>
                 <span
                   className={`px-2 py-1 rounded text-xs ${
                     run.status === "success"
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-red-500/20 text-red-400"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                   }`}
                 >
                   {run.status}
                 </span>
               </div>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-gray-500 text-sm mb-3">
                 {formatDate(run.started_at)} • {formatDuration(run.started_at, run.ended_at)}
               </p>
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
-                  <p className="text-2xl font-bold text-blue-400">{run.items_fetched}</p>
+                  <p className="text-2xl font-bold text-blue-600">{run.items_fetched}</p>
                   <p className="text-xs text-gray-500">Fetched</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-green-400">{run.items_valid}</p>
+                  <p className="text-2xl font-bold text-green-600">{run.items_valid}</p>
                   <p className="text-xs text-gray-500">Valid</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-yellow-400">{run.items_upserted}</p>
+                  <p className="text-2xl font-bold text-yellow-600">{run.items_upserted}</p>
                   <p className="text-xs text-gray-500">Upserted</p>
                 </div>
               </div>
               {run.error_message && (
-                <p className="mt-3 text-red-400 text-sm truncate">{run.error_message}</p>
+                <p className="mt-3 text-red-600 text-sm truncate">{run.error_message}</p>
               )}
             </div>
           ))}
         </div>
 
         {/* Recent Scrape Runs */}
-        <h2 className="text-xl font-semibold mb-4">Histórico de Scrapes</h2>
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
+        <h2 id="historico-scrapes" className="text-xl font-semibold mb-4 text-gray-900">Histórico de Scrapes</h2>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-700">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-sm">Fonte</th>
-                <th className="px-4 py-3 text-left text-sm">Data</th>
-                <th className="px-4 py-3 text-left text-sm">Duração</th>
-                <th className="px-4 py-3 text-left text-sm">Status</th>
-                <th className="px-4 py-3 text-right text-sm">Fetched</th>
-                <th className="px-4 py-3 text-right text-sm">Valid</th>
-                <th className="px-4 py-3 text-right text-sm">Upserted</th>
+                <th className="px-4 py-3 text-left text-sm text-gray-600 font-medium">Fonte</th>
+                <th className="px-4 py-3 text-left text-sm text-gray-600 font-medium">Data</th>
+                <th className="px-4 py-3 text-left text-sm text-gray-600 font-medium">Duração</th>
+                <th className="px-4 py-3 text-left text-sm text-gray-600 font-medium">Status</th>
+                <th className="px-4 py-3 text-right text-sm text-gray-600 font-medium">Fetched</th>
+                <th className="px-4 py-3 text-right text-sm text-gray-600 font-medium">Valid</th>
+                <th className="px-4 py-3 text-right text-sm text-gray-600 font-medium">Upserted</th>
               </tr>
             </thead>
             <tbody>
               {(scrapeRuns || []).map((run: ScrapeRun) => (
-                <tr key={run.id} className="border-t border-gray-700 hover:bg-gray-750">
-                  <td className="px-4 py-3 capitalize">{run.source}</td>
-                  <td className="px-4 py-3 text-gray-400 text-sm">
+                <tr key={run.id} className="border-t border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3 capitalize text-gray-900">{run.source}</td>
+                  <td className="px-4 py-3 text-gray-500 text-sm">
                     {formatDate(run.started_at)}
                   </td>
-                  <td className="px-4 py-3 text-gray-400 text-sm">
+                  <td className="px-4 py-3 text-gray-500 text-sm">
                     {formatDuration(run.started_at, run.ended_at)}
                   </td>
                   <td className="px-4 py-3">
                     <span
                       className={`px-2 py-1 rounded text-xs ${
                         run.status === "success"
-                          ? "bg-green-500/20 text-green-400"
-                          : "bg-red-500/20 text-red-400"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                       }`}
                     >
                       {run.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">{run.items_fetched}</td>
-                  <td className="px-4 py-3 text-right text-green-400">{run.items_valid}</td>
-                  <td className="px-4 py-3 text-right text-yellow-400">{run.items_upserted}</td>
+                  <td className="px-4 py-3 text-right text-gray-900">{run.items_fetched}</td>
+                  <td className="px-4 py-3 text-right text-green-600">{run.items_valid}</td>
+                  <td className="px-4 py-3 text-right text-yellow-600">{run.items_upserted}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <a href="/" className="hover:text-white">← Voltar para o site</a>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
