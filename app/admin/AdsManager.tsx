@@ -37,6 +37,20 @@ export default function AdsManager() {
   const [showForm, setShowForm] = useState(false);
   const [editingAd, setEditingAd] = useState<Ad | null>(null);
   const [filter, setFilter] = useState<"all" | "pending" | "active" | "paused" | "expired">("all");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    image_url: "",
+    target_url: "",
+    ad_type: "banner" as const,
+    position: "",
+    priority: 0,
+    start_date: "",
+    end_date: "",
+    advertiser_name: "",
+    advertiser_email: "",
+    advertiser_phone: "",
+  });
 
   useEffect(() => {
     fetchAds();
@@ -99,6 +113,83 @@ export default function AdsManager() {
     } else {
       fetchAds();
     }
+  };
+
+  const handleSave = async () => {
+    if (!formData.title || !formData.image_url || !formData.target_url || !formData.start_date || !formData.end_date || !formData.advertiser_name) {
+      alert("Preencha todos os campos obrigatórios");
+      return;
+    }
+
+    const { error } = editingAd
+      ? await supabase.from("ads").update(formData).eq("id", editingAd.id)
+      : await supabase.from("ads").insert({
+          ...formData,
+          status: "pending",
+          is_active: false,
+          impressions: 0,
+          clicks: 0,
+        });
+
+    if (error) {
+      console.error("Error saving ad:", error);
+      alert("Erro ao salvar anúncio");
+    } else {
+      setShowForm(false);
+      setEditingAd(null);
+      setFormData({
+        title: "",
+        description: "",
+        image_url: "",
+        target_url: "",
+        ad_type: "banner",
+        position: "",
+        priority: 0,
+        start_date: "",
+        end_date: "",
+        advertiser_name: "",
+        advertiser_email: "",
+        advertiser_phone: "",
+      });
+      fetchAds();
+    }
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setEditingAd(null);
+    setFormData({
+      title: "",
+      description: "",
+      image_url: "",
+      target_url: "",
+      ad_type: "banner",
+      position: "",
+      priority: 0,
+      start_date: "",
+      end_date: "",
+      advertiser_name: "",
+      advertiser_email: "",
+      advertiser_phone: "",
+    });
+  };
+
+  const handleEdit = (ad: Ad) => {
+    setEditingAd(ad);
+    setFormData({
+      title: ad.title,
+      description: ad.description || "",
+      image_url: ad.image_url,
+      target_url: ad.target_url,
+      ad_type: ad.ad_type as any,
+      position: ad.position || "",
+      priority: ad.priority,
+      start_date: ad.start_date.split("T")[0],
+      end_date: ad.end_date.split("T")[0],
+      advertiser_name: ad.advertiser_name,
+      advertiser_email: ad.advertiser_email || "",
+      advertiser_phone: ad.advertiser_phone || "",
+    });
   };
 
   const formatDate = (dateStr: string) => {
@@ -267,7 +358,7 @@ export default function AdsManager() {
                   </>
                 )}
                 <button
-                  onClick={() => setEditingAd(ad)}
+                  onClick={() => handleEdit(ad)}
                   className="flex items-center gap-2 px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
                 >
                   <Edit size={16} />
@@ -283,6 +374,190 @@ export default function AdsManager() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Form Modal */}
+      {(showForm || editingAd) && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              {editingAd ? "Editar Anúncio" : "Novo Anúncio"}
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Título *
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Descrição
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 min-h-[80px]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  URL da Imagem *
+                </label>
+                <input
+                  type="url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  URL de Destino *
+                </label>
+                <input
+                  type="url"
+                  value={formData.target_url}
+                  onChange={(e) => setFormData({ ...formData, target_url: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tipo de Anúncio *
+                  </label>
+                  <select
+                    value={formData.ad_type}
+                    onChange={(e) => setFormData({ ...formData, ad_type: e.target.value as any })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                  >
+                    <option value="banner">Banner</option>
+                    <option value="sidebar">Sidebar</option>
+                    <option value="featured">Featured</option>
+                    <option value="sponsored">Sponsored</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Posição
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.position}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                    placeholder="top, sidebar, etc."
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Prioridade (0-10)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={formData.priority}
+                  onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Data de Início *
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Data de Término *
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome do Anunciante *
+                </label>
+                <input
+                  type="text"
+                  value={formData.advertiser_name}
+                  onChange={(e) => setFormData({ ...formData, advertiser_name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email do Anunciante
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.advertiser_email}
+                    onChange={(e) => setFormData({ ...formData, advertiser_email: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Telefone do Anunciante
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.advertiser_phone}
+                    onChange={(e) => setFormData({ ...formData, advertiser_phone: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={handleSave}
+                className="flex-1 bg-violet-600 text-white py-2 rounded-lg hover:bg-violet-700 transition-colors"
+              >
+                {editingAd ? "Salvar" : "Criar"}
+              </button>
+              <button
+                onClick={handleCloseForm}
+                className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
