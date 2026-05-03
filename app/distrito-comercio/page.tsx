@@ -1,7 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import EventList from "../components/EventList";
 import HappeningNow from "../components/HappeningNow";
-import EventFilters from "../components/EventFilters";
 import Link from "next/link";
 
 type EventRow = {
@@ -60,12 +59,6 @@ export default async function DistritoComercioPage() {
       {/* Conteúdo */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <HappeningNow events={events || []} />
-        <EventFilters
-          categoria="Todos"
-          data=""
-          onCategoriaChange={() => {}}
-          onDataChange={() => {}}
-        />
         <EventList events={events || []} />
       </div>
     </div>
