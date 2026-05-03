@@ -69,7 +69,7 @@ BEGIN
   SET impressions = impressions + 1 
   WHERE id = ad_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Função para incrementar cliques
 CREATE OR REPLACE FUNCTION increment_ad_click(ad_id UUID)
@@ -79,4 +79,4 @@ BEGIN
   SET clicks = clicks + 1 
   WHERE id = ad_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
