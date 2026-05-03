@@ -1,0 +1,116 @@
+-- Inserir anúncios mockup para teste
+-- Execute este script no Supabase SQL Editor após aplicar a migration create_ads.sql
+
+INSERT INTO ads (
+  title,
+  description,
+  image_url,
+  target_url,
+  ad_type,
+  position,
+  priority,
+  start_date,
+  end_date,
+  is_active,
+  impressions,
+  clicks,
+  advertiser_name,
+  advertiser_email,
+  advertiser_phone,
+  status
+) VALUES
+-- Anúncio Banner Principal
+(
+  'Festival de Verão 2026',
+  'O maior festival de música da Bahia está de volta! Confira a programação completa e garanta seu ingresso.',
+  'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=400&fit=crop',
+  'https://sympla.com.br/festival-verao-2026',
+  'banner',
+  'top',
+  10,
+  '2026-01-01',
+  '2026-12-31',
+  true,
+  0,
+  0,
+  'Festival Produções',
+  'contato@festival.com.br',
+  '+55 71 99999-0000',
+  'active'
+),
+-- Anúncio Sidebar
+(
+  'Restaurante Baiana',
+  'Experimente a verdadeira culinária baiana no coração do Pelourinho. Moqueca, acarajé e muito mais!',
+  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
+  'https://instagram.com/restaurantebaiana',
+  'sidebar',
+  'sidebar',
+  5,
+  '2026-01-01',
+  '2026-06-30',
+  true,
+  0,
+  0,
+  'Restaurante Baiana',
+  'reservas@restaurantebaiana.com',
+  '+55 71 88888-1111',
+  'active'
+),
+-- Anúncio Featured
+(
+  'Galeria de Arte Moderna',
+  'Exposição inédita de artistas brasileiros contemporâneos. Visitação gratuita aos sábados.',
+  'https://images.unsplash.com/photo-1518998053901-5348d3969105?w=600&h=400&fit=crop',
+  'https://galeriaarte.com.br/exposicao',
+  'featured',
+  'between_events',
+  8,
+  '2026-02-01',
+  '2026-05-31',
+  true,
+  0,
+  0,
+  'Galeria de Arte',
+  'contato@galeriaarte.com.br',
+  '+55 71 77777-2222',
+  'active'
+),
+-- Anúncio Sponsored
+(
+  'Workshop de Fotografia',
+  'Aprenda fotografia profissional com especialistas. Inscreva-se agora!',
+  'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600&h=300&fit=crop',
+  'https://workshopfotografia.com.br',
+  'sponsored',
+  'top',
+  3,
+  '2026-03-01',
+  '2026-04-30',
+  true,
+  0,
+  0,
+  'Workshop Foto',
+  'inscricao@workshopfoto.com',
+  '+55 71 66666-3333',
+  'active'
+),
+-- Anúncio Pendente
+(
+  'Teatro Municipal',
+  'Temporada de clássicos do teatro brasileiro. Ingressos à venda agora.',
+  'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=600&h=400&fit=crop',
+  'https://teatromunicipal.com.br',
+  'banner',
+  'top',
+  7,
+  '2026-04-01',
+  '2026-08-31',
+  false,
+  0,
+  0,
+  'Teatro Municipal',
+  'bilheteria@teatro.com.br',
+  '+55 71 55555-4444',
+  'pending'
+);
