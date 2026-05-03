@@ -3,6 +3,7 @@ import { RealtimeClickCounter, RealtimeTopClicked } from "./RealtimeClickStats";
 import PendingEvents from "./PendingEvents";
 import ActiveEvents from "./ActiveEvents";
 import AdminLayout from "./AdminLayout";
+import EventSubmissions from "./EventSubmissions";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -227,6 +228,11 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       {/* Active Events */}
       <div id="eventos-aprovados">
         <ActiveEvents />
+      </div>
+
+      {/* Event Submissions */}
+      <div id="submissoes-eventos">
+        <EventSubmissions />
       </div>
 
       {/* Latest Scrape by Source */}
