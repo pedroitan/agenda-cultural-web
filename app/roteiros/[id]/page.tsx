@@ -2,6 +2,8 @@ import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Clock, Calendar, ExternalLink, ArrowRight } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 type TourStop = {
   id: string;
   tour_id: string;
@@ -50,11 +52,15 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
     );
   }
 
-  // Buscar roteiro e paradas
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/tours/${id}`);
-  const tour: Tour & { stops: TourStop[] } = await response.json();
+  // Buscar roteiro
+  const { data: tour } = await supabase
+    .from("tours")
+    .select("*")
+    .eq("id", id)
+    .eq("is_published", true)
+    .maybeSingle();
 
-  if (!tour || !tour.id) {
+  if (!tour) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
         <div className="text-center">
@@ -66,6 +72,39 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
       </div>
     );
   }
+
+  // Buscar paradas com eventos relacionados
+  const { data: stops } = await supabase
+    .from("tour_stops")
+    .select(`
+      id,
+      tour_id,
+      event_id,
+      horario,
+      duracao_min,
+      deslocamento_proximo_min,
+      modo_deslocamento,
+      order_index,
+      events:event_id (
+        id,
+        title,
+        start_datetime,
+        venue_name,
+        image_url,
+        price_text,
+        is_free,
+        category,
+        url,
+        description
+      )
+    `)
+    .eq("tour_id", id)
+    .order("order_index", { ascending: true });
+
+  const tourWithStops = {
+    ...tour,
+    stops: (stops || []) as unknown as TourStop[],
+  };
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -116,7 +155,8 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-zinc-900">Roteiro</h2>
           
-          {!tour.stops || tour.stops.length === 0 ? (
+          {!tourWithStops.stops || tourWithStops.stops.length === 0 ? (
+
             <div className="bg-white rounded-xl p-6 border border-zinc-200 text-center">
               <p className="text-zinc-600">Este roteiro ainda não tem paradas definidas.</p>
             </div>
@@ -125,7 +165,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
               {/* Timeline line */}
               <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-violet-200"></div>
 
-              {tour.stops.map((stop, index) => (
+              {tourWithStops.stops.map((stop: TourStop, index: number) => (
                 <div key={stop.id} className="relative pl-12 md:pl-16 pb-8 last:pb-0">
                   {/* Timeline dot */}
                   <div className="absolute left-2 md:left-4 top-0 w-4 h-4 rounded-full bg-violet-600 border-4 border-white shadow-sm"></div>
@@ -172,7 +212,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
                     </Link>
 
                     {/* Deslocamento para próxima parada */}
-                    {stop.deslocamento_proximo_min && index < tour.stops.length - 1 && (
+                    {stop.deslocamento_proximo_min && index < tourWithStops.stops.length - 1 && (
                       <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2 text-sm text-zinc-500">
                         <ArrowRight size={16} />
                         <span>
@@ -189,10 +229,10 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
         </div>
 
         {/* CTA */}
-        {tour.stops && tour.stops.length > 0 && (
+        {tourWithStops.stops && tourWithStops.stops.length > 0 && (
           <div className="mt-8 text-center">
             <Link
-              href={`/event/${tour.stops[0].events.id}`}
+              href={`/event/${tourWithStops.stops[0].events.id}`}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-lg hover:shadow-xl text-lg"
             >
               Começar Roteiro
