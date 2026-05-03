@@ -302,6 +302,8 @@ export default async function Home({
             <div className="flex flex-wrap gap-2">
               <Link href="/eventos-salvador-hoje" className="underline hover:text-zinc-700">Eventos Hoje</Link>
               <span>·</span>
+              <Link href="/mapa" className="underline hover:text-zinc-700">Mapa de Eventos</Link>
+              <span>·</span>
               <Link href="/roteiros" className="underline hover:text-zinc-700">Roteiros Curados</Link>
               <span>·</span>
               <Link href="/distrito-comercio" className="underline hover:text-zinc-700">Distrito do Comércio</Link>
