@@ -19,31 +19,23 @@ export async function POST(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Buscar cliques atuais e incrementar diretamente (sem depender de função SQL)
     const { data: ad, error: fetchError } = await supabase
       .from("ads")
-      .select("clicks, target_url")
+      .select("impressions")
       .eq("id", ad_id)
       .single();
 
     if (fetchError || !ad) {
-      console.error("Ad not found:", fetchError);
       return NextResponse.json({ error: "Ad not found" }, { status: 404 });
     }
 
-    const { error: updateError } = await supabase
+    await supabase
       .from("ads")
-      .update({ clicks: (ad.clicks || 0) + 1 })
+      .update({ impressions: (ad.impressions || 0) + 1 })
       .eq("id", ad_id);
 
-    if (updateError) {
-      console.error("Error incrementing click:", updateError);
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ ok: true, target_url: ad.target_url });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Ad click error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -59,8 +59,12 @@ export default function AdBanner({ type = "banner", position, className = "" }: 
       } else if (data && data.length > 0) {
         setAd(data[0]);
         
-        // Incrementar impressões
-        await supabase.rpc("increment_ad_impression", { ad_id: data[0].id });
+        // Registrar impressão via API
+        fetch("/api/ad-impression", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ad_id: data[0].id }),
+        }).catch(() => {});
       }
     } catch (error) {
       console.error("Error fetching ad:", error);
