@@ -5,6 +5,7 @@ import Link from 'next/link';
 import HappeningNow from './HappeningNow';
 import EventFilters from './EventFilters';
 import EventList from './EventList';
+import AdBanner from './AdBanner';
 
 type EventRow = {
   id: string;
@@ -136,13 +137,24 @@ export default function PageClient({
 
       <main className="mx-auto w-full max-w-7xl px-4 py-6">
         <HappeningNow events={events} />
+        
+        {/* Banner Principal */}
+        <AdBanner type="banner" position="top" className="mb-6" />
+        
         <EventFilters
           categoria={categoria}
           data={data}
           onCategoriaChange={handleCategoriaChange}
           onDataChange={setData}
         />
+        
+        {/* Banner entre filtros e lista */}
+        <AdBanner type="featured" position="between_events" className="mb-6" />
+        
         <EventList events={filteredEvents} />
+        
+        {/* Banner no final */}
+        <AdBanner type="banner" position="bottom" className="mt-6" />
       </main>
     </>
   );
