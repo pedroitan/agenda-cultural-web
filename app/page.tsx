@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import EventList from "./components/EventList";
 import HappeningNow from "./components/HappeningNow";
+import Link from "next/link";
 
 // Revalidate every 5 minutes — reduces Supabase egress from repeated bot/crawler hits
 // Events only change when scraper runs (3x/day), so 5min cache is safe
@@ -107,6 +108,7 @@ export default async function Home({
           "id,title,start_datetime,venue_name,image_url,price_text,is_free,category,url"
         )
         .gte("start_datetime", fourHoursAgoIso)
+        .eq("is_active", true)
         .order("start_datetime", { ascending: true }),
       supabase
         .from("scrape_runs")
@@ -278,6 +280,12 @@ export default async function Home({
               </p>
             )}
           </div>
+          <Link
+            href="/adicionar-evento"
+            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-4 py-2 rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-md hover:shadow-lg text-sm"
+          >
+            + Adicionar Evento
+          </Link>
         </div>
       </header>
 

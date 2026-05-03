@@ -1,0 +1,234 @@
+{
+  "eventos": [
+    {
+      "id": "evt-001",
+      "nome": "Afrobeat Sunset",
+      "categoria": "musica",
+      "vibe": ["energetico", "cultural"],
+      "ao_vivo": true,
+      "data_inicio": "2025-05-24T18:30:00",
+      "data_fim": "2025-05-24T22:30:00",
+      "local": {
+        "nome": "MAM Park",
+        "endereco": "Av. Contorno, s/n",
+        "bairro": "Contorno",
+        "lat": -13.0020,
+        "lng": -38.5148
+      },
+      "preco_min": 30,
+      "preco_max": 60,
+      "imagem_url": "/images/afrobeat-sunset.jpg",
+      "link_ingresso": "https://sympla.com.br/evento/afrobeat-sunset",
+      "descricao": "Um show a céu aberto vibrante celebrando afrobeat, cultura e comunidade com banda ao vivo e DJs.",
+      "tags": ["Afrobeat", "Live Band", "Open Air"],
+      "amigos_vao": 48
+    },
+    {
+      "id": "evt-002",
+      "nome": "Corpos Invisíveis",
+      "categoria": "arte",
+      "vibe": ["cultural", "curioso"],
+      "ao_vivo": true,
+      "data_inicio": "2025-05-24T17:00:00",
+      "data_fim": "2025-05-24T22:00:00",
+      "local": {
+        "nome": "Solar do Unhão",
+        "endereco": "Av. do Contorno, s/n",
+        "bairro": "Unhão",
+        "lat": -13.0065,
+        "lng": -38.5137
+      },
+      "preco_min": 0,
+      "preco_max": 0,
+      "imagem_url": "/images/corpos-invisiveis.jpg",
+      "link_ingresso": null,
+      "descricao": "Exposição coletiva que explora a invisibilidade social através de instalações e videoarte.",
+      "tags": ["Exposição", "Arte Contemporânea", "Grátis"],
+      "amigos_vao": 12
+    },
+    {
+      "id": "evt-003",
+      "nome": "Baile da Cidade",
+      "categoria": "musica",
+      "vibe": ["energetico"],
+      "ao_vivo": false,
+      "data_inicio": "2025-05-24T20:00:00",
+      "data_fim": "2025-05-25T02:00:00",
+      "local": {
+        "nome": "Santo Antônio Além do Carmo",
+        "endereco": "Largo de Santo Antônio",
+        "bairro": "Santo Antônio",
+        "lat": -12.9719,
+        "lng": -38.5079
+      },
+      "preco_min": 20,
+      "preco_max": 40,
+      "imagem_url": "/images/baile-cidade.jpg",
+      "link_ingresso": "https://sympla.com.br/baile-da-cidade",
+      "descricao": "Live band de axé e MPB no coração do centro histórico de Salvador.",
+      "tags": ["Live Band", "Axé", "MPB"],
+      "amigos_vao": 67
+    },
+    {
+      "id": "evt-004",
+      "nome": "Hidden Sounds",
+      "categoria": "musica",
+      "vibe": ["curioso", "energetico"],
+      "ao_vivo": false,
+      "data_inicio": "2025-05-24T23:00:00",
+      "data_fim": "2025-05-25T05:00:00",
+      "local": {
+        "nome": "Armazém 404",
+        "endereco": "Rua da Preguiça, 404",
+        "bairro": "Comércio",
+        "lat": -12.9697,
+        "lng": -38.5084
+      },
+      "preco_min": 50,
+      "preco_max": 80,
+      "imagem_url": "/images/hidden-sounds.jpg",
+      "link_ingresso": "https://sympla.com.br/hidden-sounds",
+      "descricao": "Noite experimental com DJs convidados internacionais. Eletrônico de vanguarda.",
+      "tags": ["Eletrônico", "Underground", "Internacional"],
+      "amigos_vao": 32
+    },
+    {
+      "id": "evt-005",
+      "nome": "Vernissage Corpos Invisíveis",
+      "categoria": "arte",
+      "vibe": ["cultural", "curioso", "romantico"],
+      "ao_vivo": false,
+      "data_inicio": "2025-05-25T18:00:00",
+      "data_fim": "2025-05-25T22:00:00",
+      "local": {
+        "nome": "Solar do Unhão",
+        "endereco": "Av. do Contorno, s/n",
+        "bairro": "Unhão",
+        "lat": -12.9797,
+        "lng": -38.5084
+      },
+      "preco_min": 0,
+      "preco_max": 0,
+      "imagem_url": "/images/vernissage.jpg",
+      "link_ingresso": null,
+      "descricao": "Abertura oficial da exposição com presença dos artistas e performance ao vivo.",
+      "tags": ["Arte", "Vernissage", "Performance", "Grátis"],
+      "amigos_vao": 21
+    },
+    {
+      "id": "evt-006",
+      "nome": "SubSolo Underground Session",
+      "categoria": "musica",
+      "vibe": ["curioso", "energetico"],
+      "ao_vivo": false,
+      "data_inicio": "2025-05-25T23:00:00",
+      "data_fim": "2025-05-26T06:00:00",
+      "local": {
+        "nome": "SubSolo Club",
+        "endereco": "Rua das Grades de Ferro, 12",
+        "bairro": "Pelourinho",
+        "lat": -12.9748,
+        "lng": -38.5139
+      },
+      "preco_min": 60,
+      "preco_max": 100,
+      "imagem_url": "/images/subsolo.jpg",
+      "link_ingresso": "https://sympla.com.br/subsolo",
+      "descricao": "A mais tradicional festa de música eletrônica underground de Salvador. Três pistas, som Funktion-One.",
+      "tags": ["Eletrônico", "Techno", "Underground"],
+      "amigos_vao": 89
+    },
+    {
+      "id": "evt-007",
+      "nome": "Jantar no Pelô",
+      "categoria": "gastronomia",
+      "vibe": ["romantico", "cultural"],
+      "ao_vivo": false,
+      "data_inicio": "2025-05-24T20:00:00",
+      "data_fim": "2025-05-24T22:00:00",
+      "local": {
+        "nome": "Casa de Tereza",
+        "endereco": "Largo do Pelourinho, 3",
+        "bairro": "Pelourinho",
+        "lat": -12.9749,
+        "lng": -38.5135
+      },
+      "preco_min": 120,
+      "preco_max": 200,
+      "imagem_url": "/images/jantar-pelo.jpg",
+      "link_ingresso": "https://casadetereza.com.br/reservas",
+      "descricao": "Menu degustação de comida afro-baiana com música ao vivo e vista para o Pelourinho.",
+      "tags": ["Gastronomia", "Afro-Baiana", "Reserva Necessária"],
+      "amigos_vao": 8
+    }
+  ],
+
+  "roteiros": [
+    {
+      "id": "rot-001",
+      "titulo": "Afro-Bahia Night",
+      "curador_nome": "Deh Bakare",
+      "curador_avatar": "/images/deh-bakare.jpg",
+      "curador_bio": "DJ, produtora musical e ativista cultural. Residente do SubSolo há 8 anos.",
+      "descricao": "Uma noite pelo som, arte e sabor no coração de Salvador. Do pôr do sol ao amanhecer.",
+      "duracao_total_min": 390,
+      "paradas": [
+        {
+          "evento_id": "evt-001",
+          "horario": "18:00",
+          "duracao_min": 90,
+          "deslocamento_proximo_min": 10,
+          "modo_deslocamento": "a_pe"
+        },
+        {
+          "evento_id": "evt-007",
+          "horario": "20:00",
+          "duracao_min": 75,
+          "deslocamento_proximo_min": 8,
+          "modo_deslocamento": "a_pe"
+        },
+        {
+          "evento_id": "evt-003",
+          "horario": "22:00",
+          "duracao_min": 120,
+          "deslocamento_proximo_min": 12,
+          "modo_deslocamento": "taxi"
+        },
+        {
+          "evento_id": "evt-004",
+          "horario": "00:30",
+          "duracao_min": 150,
+          "deslocamento_proximo_min": 0,
+          "modo_deslocamento": null
+        }
+      ]
+    }
+  ],
+
+  "categorias": [
+    { "id": "musica",       "label": "Música",       "icone": "music",      "cor": "#FF6B6B" },
+    { "id": "teatro",       "label": "Teatro",       "icone": "drama",      "cor": "#A855F7" },
+    { "id": "arte",         "label": "Arte",         "icone": "palette",    "cor": "#F59E0B" },
+    { "id": "outdoor",      "label": "Outdoor",      "icone": "trees",      "cor": "#10B981" },
+    { "id": "talks",        "label": "Talks",        "icone": "mic",        "cor": "#3B82F6" },
+    { "id": "experimental", "label": "Experimental", "icone": "flask",      "cor": "#EC4899" }
+  ],
+
+  "vibes": [
+    { "id": "chill",       "label": "Chill",          "icone": "leaf",      "cor": "#10B981", "descricao": "Relaxado, suave, contemplativo" },
+    { "id": "energetico",  "label": "Energético",     "icone": "zap",       "cor": "#FF3A8C", "descricao": "Animado, dançante, intenso" },
+    { "id": "cultural",    "label": "Cultural",       "icone": "drama",     "cor": "#A855F7", "descricao": "Arte, história, identidade" },
+    { "id": "curioso",     "label": "Curioso",        "icone": "lightbulb", "cor": "#F59E0B", "descricao": "Experimental, novo, underground" },
+    { "id": "romantico",   "label": "Romântico",      "icone": "heart",     "cor": "#EC4899", "descricao": "Íntimo, atmosférico, especial" },
+    { "id": "aventureiro", "label": "Aventureiro",    "icone": "mountain",  "cor": "#14B8A6", "descricao": "Outdoor, descoberta, espontâneo" },
+    { "id": "surpresa",    "label": "Surpreenda-me",  "icone": "sparkles",  "cor": "#F59E0B", "descricao": "Deixa o algoritmo decidir" }
+  ],
+
+  "bairros": [
+    { "id": "pelourinho",    "label": "Pelourinho",    "lat": -12.9749, "lng": -38.5135 },
+    { "id": "barra",         "label": "Barra",         "lat": -13.0103, "lng": -38.5332 },
+    { "id": "rio-vermelho",  "label": "Rio Vermelho",  "lat": -13.0084, "lng": -38.5013 },
+    { "id": "santo-antonio", "label": "Santo Antônio", "lat": -12.9719, "lng": -38.5079 },
+    { "id": "comercio",      "label": "Comércio",      "lat": -12.9697, "lng": -38.5084 }
+  ]
+}

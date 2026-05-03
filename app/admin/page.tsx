@@ -2,6 +2,8 @@ import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import RunScraperButton from "./RunScraperButton";
 import ResetClicksButton from "./ResetClicksButton";
 import { RealtimeClickCounter, RealtimeTopClicked } from "./RealtimeClickStats";
+import PendingEvents from "./PendingEvents";
+import ActiveEvents from "./ActiveEvents";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -225,6 +227,12 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
 
         {/* Top Clicked Events — updates in realtime */}
         <RealtimeTopClicked initialTop={topClicked ?? []} />
+
+        {/* Pending Events */}
+        <PendingEvents />
+
+        {/* Active Events */}
+        <ActiveEvents />
 
         {/* Latest Scrape by Source */}
         <h2 className="text-xl font-semibold mb-4">Último Scrape por Fonte</h2>
