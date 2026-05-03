@@ -121,12 +121,28 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     .order("click_count", { ascending: false })
     .limit(10);
 
-  // Get total clicks
+  // Get total clicks (with deduplication like frontend)
   const { data: clickStats } = await supabase
     .from("events")
-    .select("click_count");
+    .select("id, title, venue_name, start_datetime, click_count, url");
   
-  const totalClicks = clickStats?.reduce((sum, e) => sum + (e.click_count || 0), 0) || 0;
+  // Deduplicate by title + date + venue (same logic as frontend)
+  const grouped = new Map<string, number>();
+  (clickStats || []).forEach((e: any) => {
+    const titleNormalized = e.title
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const dateMatch = e.start_datetime.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const dateKey = dateMatch ? `${dateMatch[2]}-${dateMatch[3]}` : '';
+    const venueKey = (e.venue_name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const key = `${titleNormalized}-${dateKey}-${venueKey}`;
+    
+    // Keep the highest click_count for duplicates
+    const current = grouped.get(key) || 0;
+    grouped.set(key, Math.max(current, e.click_count || 0));
+  });
+  
+  const totalClicks = Array.from(grouped.values()).reduce((sum, count) => sum + count, 0);
 
   // Group scrape runs by source to get latest for each
   const latestBySource = new Map<string, ScrapeRun>();
