@@ -1,16 +1,18 @@
 "use client";
 
-const categories = [
-  { label: "Todos",          icon: "🎭" },
-  { label: "Shows e Festas", icon: "🎵" },
-  { label: "Teatro",         icon: "🎪" },
-  { label: "Arte e Cultura", icon: "🎨" },
-  { label: "Gastronomia",    icon: "🍽️" },
-  { label: "Cursos",         icon: "📚" },
-  { label: "Palestras",      icon: "🎤" },
-  { label: "Bem-estar",      icon: "🧘" },
-  { label: "Games e Geek",   icon: "🎮" },
-  { label: "Religioso",      icon: "✨" },
+import { LucideIcon, Sparkles, Music, Theater, Palette, Utensils, BookOpen, Mic, Heart, Gamepad2, Church } from "lucide-react";
+
+const categories: { label: string; icon: LucideIcon }[] = [
+  { label: "Todos",          icon: Sparkles },
+  { label: "Shows e Festas", icon: Music },
+  { label: "Teatro",         icon: Theater },
+  { label: "Arte e Cultura", icon: Palette },
+  { label: "Gastronomia",    icon: Utensils },
+  { label: "Cursos",         icon: BookOpen },
+  { label: "Palestras",      icon: Mic },
+  { label: "Bem-estar",      icon: Heart },
+  { label: "Games e Geek",   icon: Gamepad2 },
+  { label: "Religioso",      icon: Church },
 ];
 
 const dateFilters = [
@@ -59,7 +61,7 @@ export default function EventFilters({
                 : "bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
             }`}
           >
-            <span>{cat.icon}</span>
+            <cat.icon size={16} />
             <span>{cat.label}</span>
           </button>
         ))}

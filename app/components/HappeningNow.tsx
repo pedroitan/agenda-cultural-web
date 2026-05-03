@@ -10,6 +10,21 @@ type Event = {
   url: string;
 };
 
+function formatEventDate(dateStr: string): { date: string; time: string | null } {
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!match) return { date: '?', time: null };
+  const [, , month, day, hour, minute] = match;
+  const timeStr = `${hour}:${minute}`;
+  return {
+    date: `${parseInt(day)} ${months[parseInt(month) - 1]}`,
+    time: timeStr === '00:00' ? null : timeStr,
+  };
+}
+
 export default function HappeningNow({ events }: { events: Event[] }) {
   // Filter events happening now: started within last 2 hours (simplified logic without end_datetime)
   const now = new Date();
@@ -30,55 +45,59 @@ export default function HappeningNow({ events }: { events: Event[] }) {
   return (
     <section className="mb-8">
       <div className="flex items-center gap-2 mb-4">
-        <p className="text-sm font-semibold tracking-wider uppercase text-[var(--text-secondary)]">
+        <p className="text-sm font-semibold tracking-wider uppercase text-zinc-500">
           Acontecendo agora
         </p>
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-secondary)] opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-secondary)]"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
         </span>
       </div>
       
       <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-        {happeningNow.map(event => (
-          <div
-            key={event.id}
-            onClick={() => handleEventClick(event.url)}
-            className="flex-shrink-0 w-64 cursor-pointer group"
-          >
-            <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: '4/3' }}>
-              {event.image_url ? (
-                <img
-                  src={event.image_url}
-                  alt={event.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full bg-[var(--bg-surface)] flex items-center justify-center">
-                  <span className="text-[var(--text-tertiary)] text-sm">Sem imagem</span>
-                </div>
-              )}
-              <div className="absolute top-2 left-2 flex gap-2">
-                <span className="px-2 py-1 text-xs font-bold rounded-full bg-[var(--accent-primary)] text-white">
-                  AO VIVO
-                </span>
-                {event.category && (
-                  <span className="px-2 py-1 text-xs font-semibold rounded-full bg-black/50 text-white backdrop-blur-sm">
-                    {event.category}
-                  </span>
+        {happeningNow.map(event => {
+          const { date, time } = formatEventDate(event.start_datetime);
+          return (
+            <div
+              key={event.id}
+              onClick={() => handleEventClick(event.url)}
+              className="flex-shrink-0 w-64 cursor-pointer group"
+            >
+              <div className="relative w-full aspect-[16/9] bg-zinc-100 overflow-hidden rounded-lg transition-all group-hover:shadow-md group-hover:-translate-y-0.5">
+                {event.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={event.image_url}
+                    alt={event.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-zinc-300">
+                    <span className="text-sm">Sem imagem</span>
+                  </div>
                 )}
+                <div className="absolute top-2 left-2">
+                  {event.category && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-black/60 text-white backdrop-blur-sm">
+                      {event.category}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-0.5 pt-2 pb-2 px-1">
+                <p className="line-clamp-2 text-base font-bold leading-tight text-zinc-900">
+                  {event.title}
+                </p>
+                <p className="line-clamp-1 text-sm text-zinc-600 mt-0.5">
+                  {event.venue_name ?? "Local a confirmar"}
+                </p>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  {date}{time ? ` • ${time}` : ""}
+                </p>
               </div>
             </div>
-            <div className="mt-3">
-              <p className="text-base font-semibold text-[var(--text-primary)] line-clamp-2">
-                {event.title}
-              </p>
-              <p className="text-sm text-[var(--text-secondary)] mt-1">
-                {event.venue_name}
-              </p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
