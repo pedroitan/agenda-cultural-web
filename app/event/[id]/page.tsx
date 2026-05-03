@@ -2,6 +2,7 @@ import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Calendar, MapPin, ExternalLink } from "lucide-react";
+import TrackPageView from "./TrackPageView";
 
 type EventRow = {
   id: string;
@@ -112,6 +113,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="min-h-screen bg-zinc-50">
+      <TrackPageView eventId={event.id} />
       {/* Hero Full-Bleed */}
       <div className="relative w-full h-64 md:h-96 lg:h-[500px] bg-zinc-900">
         {event.image_url ? (
