@@ -58,7 +58,7 @@ export default function HappeningNow({ events }: { events: Event[] }) {
           return (
             <Link
               key={event.id}
-              href={`/event/${event.id}`}
+              href={`/r/${event.id}`}
               className="flex-shrink-0 w-64 cursor-pointer group"
             >
               <div className="relative w-full aspect-[16/9] bg-zinc-100 overflow-hidden rounded-lg transition-all group-hover:shadow-md group-hover:-translate-y-0.5">
