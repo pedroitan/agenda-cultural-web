@@ -4,6 +4,7 @@ import PendingEvents from "./PendingEvents";
 import ActiveEvents from "./ActiveEvents";
 import AdminLayout from "./AdminLayout";
 import EventSubmissions from "./EventSubmissions";
+import AdsManager from "./AdsManager";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -233,6 +234,11 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       {/* Event Submissions */}
       <div id="submissoes-eventos">
         <EventSubmissions />
+      </div>
+
+      {/* Ads Manager */}
+      <div id="anuncios">
+        <AdsManager />
       </div>
 
       {/* Latest Scrape by Source */}
