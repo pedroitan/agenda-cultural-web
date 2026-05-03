@@ -41,6 +41,21 @@ export default function PageClient({
   const [busca, setBusca] = useState(initialSearch);
   const [categoria, setCategoria] = useState(initialCategoria || 'Todos');
   const [data, setData] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  // IDs dos eventos que aparecem no HappeningNow (com imagem, nas últimas 2h)
+  const happeningNowIds = useMemo(() => {
+    const now = new Date();
+    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+    return new Set(
+      events
+        .filter(e => {
+          const start = new Date(e.start_datetime);
+          return start >= twoHoursAgo && start <= now && !!e.image_url;
+        })
+        .map(e => e.id)
+    );
+  }, [events]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -88,8 +103,11 @@ export default function PageClient({
       );
     }
 
+    // Excluir eventos já exibidos no HappeningNow
+    filtered = filtered.filter(e => !happeningNowIds.has(e.id));
+
     return filtered;
-  }, [events, categoria, data, busca]);
+  }, [events, categoria, data, busca, happeningNowIds]);
 
   const handleCategoriaChange = (cat: string) => {
     setCategoria(cat);
@@ -123,6 +141,8 @@ export default function PageClient({
               placeholder="O que você quer curtir hoje em Salvador?"
               value={busca}
               onChange={(e) => handleBuscaChange(e.target.value)}
+              onFocus={() => setShowFilters(true)}
+              onBlur={() => { if (!busca) setTimeout(() => setShowFilters(false), 200); }}
               className="w-full rounded-full border border-zinc-200 bg-zinc-50 pl-9 pr-4 py-2 text-sm focus:bg-white focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-100 transition-all"
             />
           </div>
@@ -146,6 +166,7 @@ export default function PageClient({
           data={data}
           onCategoriaChange={handleCategoriaChange}
           onDataChange={setData}
+          showOnMobile={showFilters}
         />
         
         {/* Banner entre filtros e lista */}

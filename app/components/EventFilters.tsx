@@ -27,6 +27,7 @@ type EventFiltersProps = {
   data: string;
   onCategoriaChange: (value: string) => void;
   onDataChange: (value: string) => void;
+  showOnMobile?: boolean;
 };
 
 function updateURL(categoria: string, q: string) {
@@ -42,13 +43,14 @@ export default function EventFilters({
   data,
   onCategoriaChange,
   onDataChange,
+  showOnMobile = false,
 }: EventFiltersProps) {
   const handleCategoriaChange = (cat: string) => {
     onCategoriaChange(cat);
   };
 
   return (
-    <div className="mb-6 space-y-3">
+    <div className={`mb-6 space-y-3 ${showOnMobile ? '' : 'hidden md:block'}`}>
       {/* Category pills with icons */}
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (

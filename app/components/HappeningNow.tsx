@@ -33,7 +33,7 @@ export default function HappeningNow({ events }: { events: Event[] }) {
   const twoHoursAgo = new Date(now.getTime() - (2 * 60 * 60 * 1000));
   const happeningNow = events.filter(event => {
     const start = new Date(event.start_datetime);
-    return start >= twoHoursAgo && start <= now;
+    return start >= twoHoursAgo && start <= now && !!event.image_url;
   });
 
   if (happeningNow.length === 0) {
