@@ -193,7 +193,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
         {/* CTA Button */}
         <Link
-          href={`/r/${event.id}`}
+          href={`/cta/${event.id}`}
           className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-lg hover:shadow-xl text-lg"
         >
           {event.is_free ? "Ver detalhes" : "Comprar ingresso"}
