@@ -153,30 +153,53 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     }
   });
 
+  const sourceLabel = (source: string) => {
+    const labels: Record<string, string> = {
+      sympla: 'Sympla',
+      elcabong: 'El Cabong',
+      instagram: 'Instagram',
+      manual_submission: 'Submissão Manual',
+    };
+    return labels[source] ?? source.charAt(0).toUpperCase() + source.slice(1);
+  };
+
+  const sourceIcon = (source: string) => {
+    const icons: Record<string, string> = {
+      sympla: '🎟️',
+      elcabong: '🎵',
+      instagram: '📸',
+      manual_submission: '✍️',
+    };
+    return icons[source] ?? '📋';
+  };
+
   return (
     <AdminLayout>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-          <p className="text-gray-600 text-sm">Total de Eventos</p>
-          <p className="text-4xl font-bold text-green-600">{totalEvents || 0}</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Total de Eventos</p>
+          <p className="text-3xl font-bold text-gray-900">{totalEvents || 0}</p>
+          <p className="text-xs text-green-600 mt-1 font-medium">Todos ativos</p>
         </div>
-        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-          <p className="text-gray-600 text-sm">Eventos Futuros</p>
-          <p className="text-4xl font-bold text-blue-600">{futureEvents || 0}</p>
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Eventos Futuros</p>
+          <p className="text-3xl font-bold text-gray-900">{futureEvents || 0}</p>
+          <p className="text-xs text-blue-600 mt-1 font-medium">Próximos 30 dias</p>
         </div>
         {counts.map((c) => (
-          <div key={c.source} className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-            <p className="text-gray-600 text-sm">
-              {c.source === 'instagram' ? 'Instagram (Manual)' : c.source.charAt(0).toUpperCase() + c.source.slice(1)}
+          <div key={c.source} className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+            <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
+              {sourceIcon(c.source)} {sourceLabel(c.source)}
             </p>
-            <p className="text-4xl font-bold text-purple-600">{c.count}</p>
+            <p className="text-3xl font-bold text-gray-900">{c.count}</p>
+            <p className="text-xs text-violet-600 mt-1 font-medium">eventos</p>
           </div>
         ))}
       </div>
 
       {/* Analytics Overview */}
-      <h2 id="analytics" className="text-xl font-semibold mb-4 text-gray-900">📊 Analytics & Métricas</h2>
+      <h2 id="analytics" className="text-xl font-semibold mb-4 text-gray-900">Analytics & Métricas</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <a
           href="https://dash.cloudflare.com"
