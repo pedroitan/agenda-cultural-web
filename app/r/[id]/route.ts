@@ -30,10 +30,8 @@ export async function GET(
 
   // Only increment for real user navigations, not prefetch
   if (!isPrefetch) {
-    await supabase
-      .from("events")
-      .update({ click_count: (event.click_count || 0) + 1 })
-      .eq("id", event.id);
+    // Usar função SQL para incremento atômico e evitar race conditions
+    await supabase.rpc('increment_click_count', { event_id: id });
   }
 
   // Use first URL if multiple sources (deduplicated events)
