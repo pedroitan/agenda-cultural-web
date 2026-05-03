@@ -158,6 +158,29 @@ export default function PageClient({
       <main className="mx-auto w-full max-w-7xl px-4 py-6">
         <HappeningNow events={events} />
         
+        {/* Roteiros Curados */}
+        <div className="mb-6">
+          <Link
+            href="/roteiros"
+            className="group relative block w-full rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-6 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.01]"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold mb-2">Roteiros Curados</h2>
+                <p className="text-white/90 text-sm">
+                  Descubra roteiros completos com múltiplos eventos selecionados por especialistas
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-white/80 group-hover:text-white transition-colors">
+                <span className="text-sm font-medium">Ver roteiros</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </div>
+        
         {/* Banner Principal */}
         <AdBanner type="banner" position="top" className="mb-6" />
         
