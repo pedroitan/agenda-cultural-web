@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Calendar, MapPin, ExternalLink } from "lucide-react";
 import TrackPageView from "./TrackPageView";
+import EventMap from "@/app/components/EventMapWrapper";
 
 type EventRow = {
   id: string;
@@ -15,6 +16,8 @@ type EventRow = {
   category: string | null;
   url: string;
   description: string | null;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -177,6 +180,54 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             </p>
           </div>
         </div>
+
+        {/* Mapa do local */}
+        {event.latitude && event.longitude && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="text-zinc-700" size={20} />
+              <h2 className="font-semibold text-zinc-900 text-lg">Como chegar</h2>
+            </div>
+            <EventMap
+              events={[{
+                id: event.id,
+                title: event.title,
+                venue_name: event.venue_name,
+                latitude: event.latitude,
+                longitude: event.longitude,
+                start_datetime: event.start_datetime,
+                image_url: event.image_url,
+              }]}
+              height="350px"
+              zoom={16}
+              singleEvent={true}
+            />
+            <div className="mt-3 flex gap-2">
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Rotas no Google Maps
+              </a>
+              <a
+                href={`https://waze.com/ul?ll=${event.latitude},${event.longitude}&navigate=yes`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.54 6.63c.89 1.55 1.46 3.32 1.46 5.37 0 4.91-3.87 9-9 9H13c-.73.62-1.66 1-2.5 1-1.93 0-3.5-1.57-3.5-3.5v-.5c-2.45-.49-4.5-2.38-5.5-4.5C1.17 12 1 10.96 1 10c0-4.96 4.04-9 9-9 4.16 0 7.72 2.82 8.5 6.63h2.04z"/>
+                </svg>
+                Abrir no Waze
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* Price */}
         <div className="bg-white rounded-xl p-6 border border-zinc-200 mb-8">
