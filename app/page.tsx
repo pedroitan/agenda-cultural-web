@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import PageClient from "./components/PageClient";
+import Link from "next/link";
 
 // Revalidate every 5 minutes — reduces Supabase egress from repeated bot/crawler hits
 // Events only change when scraper runs (3x/day), so 5min cache is safe
@@ -282,10 +283,29 @@ export default async function Home({
           </div>
           <div>
             <p className="font-medium text-zinc-700 mb-1">Categorias de eventos</p>
-            <p>
-              Shows e Festas · Teatro · Arte e Cultura · Gastronomia · Cursos e Workshops ·
-              Palestras · Bem-estar · Games e Geek · Eventos Religiosos · Eventos Gratuitos em Salvador
-            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/categoria/shows-salvador" className="underline hover:text-zinc-700">Shows e Festas</Link>
+              <span>·</span>
+              <Link href="/categoria/teatro-salvador" className="underline hover:text-zinc-700">Teatro</Link>
+              <span>·</span>
+              <Link href="/categoria/exposicoes-salvador" className="underline hover:text-zinc-700">Arte e Cultura</Link>
+              <span>·</span>
+              <Link href="/categoria/festivais-salvador" className="underline hover:text-zinc-700">Festivais</Link>
+              <span>·</span>
+              <Link href="/categoria/eventos-gratuitos-salvador" className="underline hover:text-zinc-700">Eventos Gratuitos</Link>
+              <span>·</span>
+              <Link href="/categoria/eventos-criancas-salvador" className="underline hover:text-zinc-700">Infantil</Link>
+            </div>
+          </div>
+          <div>
+            <p className="font-medium text-zinc-700 mb-1">Páginas populares</p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/eventos-salvador-hoje" className="underline hover:text-zinc-700">Eventos Hoje</Link>
+              <span>·</span>
+              <Link href="/roteiros" className="underline hover:text-zinc-700">Roteiros Curados</Link>
+              <span>·</span>
+              <Link href="/distrito-comercio" className="underline hover:text-zinc-700">Distrito do Comércio</Link>
+            </div>
           </div>
           <p className="text-xs text-zinc-400 pt-2">
             © {new Date().getFullYear()} Agenda Cultural Salvador · Salvador, Bahia, Brasil ·{" "}
