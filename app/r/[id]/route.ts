@@ -20,7 +20,7 @@ export async function GET(
 
   const { data: event, error } = await supabase
     .from("events")
-    .select("id,url")
+    .select("id, url, click_count")
     .eq("id", id)
     .maybeSingle();
 
@@ -30,7 +30,11 @@ export async function GET(
 
   // Only increment for real user navigations, not prefetch or bot requests
   if (!isPrefetch) {
-    await supabase.rpc("increment_event_click", { event_id: event.id });
+    // Incrementar cliques com UPDATE direto (sem depender de função SQL)
+    await supabase
+      .from("events")
+      .update({ click_count: (event.click_count || 0) + 1 })
+      .eq("id", event.id);
   }
 
   // Use first URL if multiple sources (deduplicated events)

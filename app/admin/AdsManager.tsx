@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Plus, Edit, Trash2, Eye, MousePointer2, Calendar, ExternalLink, Check, X } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, MousePointer2, Calendar, ExternalLink, Check, X, RefreshCw } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -54,6 +54,8 @@ export default function AdsManager() {
 
   useEffect(() => {
     fetchAds();
+    const interval = setInterval(fetchAds, 30000);
+    return () => clearInterval(interval);
   }, [filter]);
 
   const fetchAds = async () => {
@@ -205,7 +207,17 @@ export default function AdsManager() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">Gerenciar Anúncios</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold text-gray-900">Gerenciar Anúncios</h2>
+          <button
+            onClick={fetchAds}
+            disabled={loading}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+            title="Atualizar"
+          >
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+          </button>
+        </div>
         <div className="flex gap-2">
           {(["all", "pending", "active", "paused", "expired"] as const).map((status) => (
             <button
