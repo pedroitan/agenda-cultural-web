@@ -9,17 +9,9 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  // Skip tracking for prefetch requests (multiple headers to check)
+  // Skip tracking for prefetch requests
   const purpose = request.headers.get("purpose") ?? request.headers.get("sec-purpose") ?? "";
   const isPrefetch = purpose.includes("prefetch");
-
-  // Skip tracking for bots
-  const userAgent = request.headers.get("user-agent") ?? "";
-  const isBot = /bot|crawler|spider|crawl|facebookexternalhit|twitterbot|linkedinbot|whatsapp/i.test(userAgent);
-
-  // Skip tracking for HEAD requests (prefetch often uses HEAD)
-  const method = request.method;
-  const isHeadRequest = method === "HEAD";
 
   const supabase = getSupabaseServerClient();
   if (!supabase) {
@@ -36,9 +28,8 @@ export async function GET(
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Only increment for real user navigations, not prefetch, bots, or HEAD requests
-  if (!isPrefetch && !isBot && !isHeadRequest) {
-    // Incrementar cliques com UPDATE direto (sem depender de função SQL)
+  // Only increment for real user navigations, not prefetch
+  if (!isPrefetch) {
     await supabase
       .from("events")
       .update({ click_count: (event.click_count || 0) + 1 })
