@@ -3,9 +3,6 @@ import EventList from "../components/EventList";
 import HappeningNow from "../components/HappeningNow";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 type EventRow = {
   id: string;
   title: string;
@@ -31,12 +28,18 @@ export default async function DistritoComercioPage() {
     );
   }
 
-  const { data: events } = await supabase
+  const { data: events, error } = await supabase
     .from("events")
     .select("*")
     .eq("district", "comercio")
+    .eq("is_active", true)
     .gt("start_datetime", new Date().toISOString())
     .order("start_datetime", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao buscar eventos do distrito:", error);
+  }
+  console.log("Eventos do distrito encontrados:", events?.length || 0);
 
   return (
     <div className="min-h-screen bg-zinc-50">
