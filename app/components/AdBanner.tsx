@@ -72,13 +72,22 @@ export default function AdBanner({ type = "banner", position, className = "" }: 
   const handleClick = async () => {
     if (!ad) return;
 
+    console.log("Ad clicked, ad_id:", ad.id);
+
     try {
       // Incrementar cliques
-      await fetch("/api/ad-click", {
+      const response = await fetch("/api/ad-click", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ad_id: ad.id }),
       });
+
+      const data = await response.json();
+      console.log("Click tracking response:", data);
+
+      if (!response.ok) {
+        console.error("Click tracking failed:", data);
+      }
 
       // Redirecionar para o destino
       window.open(ad.target_url, "_blank");

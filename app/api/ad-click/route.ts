@@ -27,15 +27,17 @@ export async function POST(request: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Incrementar cliques no banco
+    console.log("Incrementing click for ad_id:", ad_id);
     const { error } = await supabase.rpc("increment_ad_click", { ad_id });
 
     if (error) {
       console.error("Error incrementing ad click:", error);
       return NextResponse.json(
-        { error: "Failed to increment click" },
+        { error: "Failed to increment click", details: error.message },
         { status: 500 }
       );
     }
+    console.log("Click incremented successfully");
 
     // Buscar o anúncio para obter a URL de destino
     const { data: ad, error: adError } = await supabase
