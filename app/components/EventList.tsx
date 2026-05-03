@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 type EventRow = {
   id: string;
   title: string;
@@ -46,14 +48,9 @@ export default function EventList({ events }: { events: EventRow[] }) {
         const primaryUrl = ev.url.split('|')[0];
 
         return (
-          <a
+          <Link
             key={ev.id}
-            href={primaryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              fetch(`/api/track-click/${ev.id}`, { method: 'POST' }).catch(() => {})
-            }}
+            href={`/event/${ev.id}`}
             className="group flex flex-col"
           >
             {/* Image — landscape 16:9 */}
@@ -92,7 +89,7 @@ export default function EventList({ events }: { events: EventRow[] }) {
                 {date}{time ? ` • ${time}` : ""}
               </p>
             </div>
-          </a>
+          </Link>
         );
       })}
     </div>

@@ -1,5 +1,7 @@
 'use client';
 
+import Link from "next/link";
+
 type Event = {
   id: string;
   title: string;
@@ -38,10 +40,6 @@ export default function HappeningNow({ events }: { events: Event[] }) {
     return null;
   }
 
-  const handleEventClick = (url: string) => {
-    window.open(url.split('|')[0], '_blank');
-  };
-
   return (
     <section className="mb-8">
       <div className="flex items-center gap-2 mb-4">
@@ -58,9 +56,9 @@ export default function HappeningNow({ events }: { events: Event[] }) {
         {happeningNow.map(event => {
           const { date, time } = formatEventDate(event.start_datetime);
           return (
-            <div
+            <Link
               key={event.id}
-              onClick={() => handleEventClick(event.url)}
+              href={`/event/${event.id}`}
               className="flex-shrink-0 w-64 cursor-pointer group"
             >
               <div className="relative w-full aspect-[16/9] bg-zinc-100 overflow-hidden rounded-lg transition-all group-hover:shadow-md group-hover:-translate-y-0.5">
@@ -91,11 +89,8 @@ export default function HappeningNow({ events }: { events: Event[] }) {
                 <p className="line-clamp-1 text-sm text-zinc-600 mt-0.5">
                   {event.venue_name ?? "Local a confirmar"}
                 </p>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  {date}{time ? ` • ${time}` : ""}
-                </p>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
