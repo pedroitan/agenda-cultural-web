@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 const categories = [
-  "Todos",
-  "Shows e Festas",
-  "Teatro",
-  "Arte e Cultura",
-  "Gastronomia",
-  "Cursos",
-  "Palestras",
-  "Bem-estar",
-  "Games e Geek",
-  "Religioso",
+  { label: "Todos",          icon: "🎭" },
+  { label: "Shows e Festas", icon: "🎵" },
+  { label: "Teatro",         icon: "🎪" },
+  { label: "Arte e Cultura", icon: "🎨" },
+  { label: "Gastronomia",    icon: "🍽️" },
+  { label: "Cursos",         icon: "📚" },
+  { label: "Palestras",      icon: "🎤" },
+  { label: "Bem-estar",      icon: "🧘" },
+  { label: "Games e Geek",   icon: "🎮" },
+  { label: "Religioso",      icon: "✨" },
 ];
 
 const dateFilters = [
@@ -25,10 +23,8 @@ const dateFilters = [
 type EventFiltersProps = {
   categoria: string;
   data: string;
-  busca: string;
   onCategoriaChange: (value: string) => void;
   onDataChange: (value: string) => void;
-  onBuscaChange: (value: string) => void;
 };
 
 function updateURL(categoria: string, q: string) {
@@ -42,65 +38,35 @@ function updateURL(categoria: string, q: string) {
 export default function EventFilters({
   categoria,
   data,
-  busca,
   onCategoriaChange,
   onDataChange,
-  onBuscaChange,
 }: EventFiltersProps) {
-  // Local state for search input (for instant typing)
-  const [searchInput, setSearchInput] = useState(busca);
-
-  // Debounce search input - update state + URL after 400ms
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchInput !== busca) {
-        onBuscaChange(searchInput);
-        updateURL(categoria, searchInput);
-      }
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchInput, busca, onBuscaChange, categoria]);
-
   const handleCategoriaChange = (cat: string) => {
     onCategoriaChange(cat);
-    updateURL(cat, searchInput);
   };
 
   return (
-    <div className="mb-6 space-y-4">
-      {/* Search */}
-      <div>
-        <input
-          type="text"
-          placeholder="Buscar evento..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          className="w-full rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm focus:border-zinc-400 focus:outline-none"
-        />
-      </div>
-
-      {/* Category and Date filters */}
+    <div className="mb-6 space-y-3">
+      {/* Category pills with icons */}
       <div className="flex flex-wrap gap-2">
-        {/* Category pills */}
-        <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleCategoriaChange(cat)}
-              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                categoria === cat
-                  ? "bg-zinc-900 text-white"
-                  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {categories.map((cat) => (
+          <button
+            key={cat.label}
+            onClick={() => handleCategoriaChange(cat.label)}
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all ${
+              categoria === cat.label
+                ? "bg-zinc-900 text-white shadow-sm"
+                : "bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
+            }`}
+          >
+            <span>{cat.icon}</span>
+            <span>{cat.label}</span>
+          </button>
+        ))}
       </div>
 
       {/* Date filter */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         {dateFilters.map((df) => (
           <button
             key={df.value}
@@ -108,7 +74,7 @@ export default function EventFilters({
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
               data === df.value
                 ? "bg-zinc-900 text-white"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                : "bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
             }`}
           >
             {df.label}

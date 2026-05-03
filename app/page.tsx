@@ -1,7 +1,5 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
-import EventList from "./components/EventList";
-import HappeningNow from "./components/HappeningNow";
-import Link from "next/link";
+import PageClient from "./components/PageClient";
 
 // Revalidate every 5 minutes — reduces Supabase egress from repeated bot/crawler hits
 // Events only change when scraper runs (3x/day), so 5min cache is safe
@@ -249,66 +247,22 @@ export default async function Home({
             src="/banner-optimized.png" 
             alt="Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia" 
             className="w-full h-auto object-cover"
-            style={{ maxHeight: '400px' }}
+            style={{ maxHeight: '180px' }}
             loading="eager"
             fetchPriority="high"
           />
         </picture>
       </div>
 
-      <header className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-5">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold tracking-tight">
-              Agenda Cultural Salvador
-            </h1>
-            <p className="text-sm text-zinc-600">
-              {hasSupabase
-                ? `${dedupedEvents.length} eventos encontrados`
-                : "Supabase ainda não configurado"}
-            </p>
-            {lastUpdatedAt && (
-              <p className="text-xs text-zinc-500">
-                Última atualização: {new Date(lastUpdatedAt).toLocaleString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  timeZone: 'America/Bahia',
-                })}
-              </p>
-            )}
-          </div>
-          <Link
-            href="/adicionar-evento"
-            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-4 py-2 rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-md hover:shadow-lg text-sm"
-          >
-            + Adicionar Evento
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto w-full max-w-4xl px-4 py-8">
-        {!hasSupabase ? (
-          <div className="rounded-xl border border-zinc-200 bg-white p-5">
-            <h2 className="text-base font-semibold">Próximo passo</h2>
-            <p className="mt-2 text-sm text-zinc-600">
-              Crie o projeto no Supabase e preencha as variáveis em um arquivo
-              <code className="mx-1 rounded bg-zinc-100 px-1 py-0.5">.env.local</code>
-              (ou configure no deploy). Depois reinicie o dev server.
-            </p>
-          </div>
-        ) : (
-          <>
-            <HappeningNow events={dedupedEvents} />
-            <EventList events={dedupedEvents} initialSearch={initialSearch} initialCategoria={initialCategoria} />
-          </>
-        )}
-      </main>
+      <PageClient
+        events={dedupedEvents}
+        eventCount={dedupedEvents.length}
+        initialSearch={initialSearch}
+        initialCategoria={initialCategoria}
+      />
 
       <footer className="border-t border-zinc-200 bg-white mt-8">
-        <div className="mx-auto w-full max-w-4xl px-4 py-8 space-y-4 text-sm text-zinc-500">
+        <div className="mx-auto w-full max-w-5xl px-4 py-8 space-y-4 text-sm text-zinc-500">
           <div>
             <p className="font-medium text-zinc-700 mb-1">Sobre a Agenda Cultural Salvador</p>
             <p>
