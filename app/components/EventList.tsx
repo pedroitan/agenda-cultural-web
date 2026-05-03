@@ -50,7 +50,7 @@ export default function EventList({ events }: { events: EventRow[] }) {
         return (
           <Link
             key={ev.id}
-            href={`/event/${ev.id}`}
+            href={`/r/${ev.id}`}
             className="group flex flex-col"
           >
             {/* Image — landscape 16:9 */}
