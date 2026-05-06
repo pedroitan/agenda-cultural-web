@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next'
 import { getSupabaseServerClient } from '@/lib/supabaseServer'
+import { getCityConfig } from '@/config/cities'
 
 export const revalidate = 3600 // revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://agendaculturalsalvador.com.br'
+  const city = getCityConfig()
+  const baseUrl = city.siteUrl
 
   // Get last scrape time for accurate lastModified
   const supabase = getSupabaseServerClient()

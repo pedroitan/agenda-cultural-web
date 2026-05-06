@@ -1,7 +1,9 @@
 import { ImageResponse } from "next/og";
+import { getCityConfig } from "@/config/cities";
 
 export const runtime = "edge";
-export const alt = "Agenda Cultural Salvador";
+const city = getCityConfig();
+export const alt = city.siteTitle.split(' -')[0];
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -52,7 +54,7 @@ export default function Image() {
             marginBottom: "32px",
           }}
         >
-          Salvador
+          {city.name}
         </div>
         <div
           style={{
@@ -71,7 +73,7 @@ export default function Image() {
             textAlign: "center",
           }}
         >
-          agendaculturalsalvador.com.br · Atualizado diariamente
+          {city.siteUrl.replace('https://', '')} · Atualizado diariamente
         </div>
       </div>
     ),

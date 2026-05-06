@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import PageClient from "./components/PageClient";
 import Link from "next/link";
+import { getCityConfig } from "@/config/cities";
 
 // Revalidate every 5 minutes — reduces Supabase egress from repeated bot/crawler hits
 // Events only change when scraper runs (3x/day), so 5min cache is safe
@@ -77,7 +78,8 @@ function deduplicateEvents(events: EventRow[]): EventRow[] {
   });
 }
 
-const BASE_URL = "https://agendaculturalsalvador.com.br";
+const cityConfig = getCityConfig();
+const BASE_URL = cityConfig.siteUrl;
 
 export default async function Home({
   searchParams,
@@ -136,9 +138,9 @@ export default async function Home({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Agenda Cultural Salvador",
+    "name": cityConfig.siteTitle.split(' -')[0],
     "url": BASE_URL,
-    "description": "Agregador de eventos culturais em Salvador, Bahia. Shows, teatro, exposições e festivais.",
+    "description": cityConfig.siteDescription,
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
@@ -152,48 +154,22 @@ export default async function Home({
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "O que tem pra fazer em Salvador este fim de semana?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `A Agenda Cultural Salvador lista ${dedupedEvents.length} eventos atuais em Salvador, incluindo shows, teatro, exposições e festivais. Acesse agendaculturalsalvador.com.br para ver todos os eventos com datas, horários e locais.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Onde ver shows e eventos culturais em Salvador?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Salvador tem uma agenda cultural intensa com eventos no Teatro Castro Alves (TCA), Teatro Gamboa, El Cabong, Casa de Música da Bahia, SESI, Concha Acústica e muitos outros. A Agenda Cultural Salvador agrega eventos de Sympla e El Cabong em um só lugar."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Quais são os eventos gratuitos em Salvador?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Salvador oferece muitos eventos gratuitos, especialmente em espaços públicos, museus e centros culturais. Use o filtro 'Gratuito' na Agenda Cultural Salvador para ver apenas eventos sem custo."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Como comprar ingressos para eventos em Salvador?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A maioria dos eventos em Salvador vende ingressos pelo Sympla (sympla.com.br). A Agenda Cultural Salvador exibe links diretos para compra de ingressos em cada evento listado."
-        }
+    "mainEntity": cityConfig.jsonLd.faq.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer,
       }
-    ]
+    }))
   };
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Agenda Cultural Salvador",
-    "description": `${dedupedEvents.length} eventos culturais em Salvador, Bahia`,
-    "url": "https://agendaculturalsalvador.com.br",
+    "name": cityConfig.siteTitle.split(' -')[0],
+    "description": `${dedupedEvents.length} eventos culturais ${cityConfig.preposition} ${cityConfig.name}, ${cityConfig.state}`,
+    "url": BASE_URL,
     "itemListElement": dedupedEvents.slice(0, 20).map((event, index) => ({
       "@type": "ListItem",
       "position": index + 1,
@@ -205,18 +181,18 @@ export default async function Home({
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "location": {
           "@type": "Place",
-          "name": event.venue_name || "Salvador, BA",
+          "name": event.venue_name || `${cityConfig.name}, ${cityConfig.state}`,
           "address": {
             "@type": "PostalAddress",
-            "addressLocality": "Salvador",
-            "addressRegion": "BA",
+            "addressLocality": cityConfig.jsonLd.locality,
+            "addressRegion": cityConfig.jsonLd.region,
             "addressCountry": "BR"
           }
         },
         "organizer": {
           "@type": "Organization",
-          "name": "Agenda Cultural Salvador",
-          "url": "https://agendaculturalsalvador.com.br"
+          "name": cityConfig.siteTitle.split(' -')[0],
+          "url": BASE_URL
         },
         "offers": event.is_free ? {
           "@type": "Offer",
@@ -244,7 +220,7 @@ export default async function Home({
       <div className="w-full bg-gradient-to-r from-purple-900 to-indigo-900">
         <img 
           src="/banner.png" 
-          alt="Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia" 
+          alt={cityConfig.siteTitle} 
           className="w-full h-32 md:h-48 lg:h-56 object-cover"
           loading="eager"
           fetchPriority="high"
@@ -256,61 +232,54 @@ export default async function Home({
         eventCount={dedupedEvents.length}
         initialSearch={initialSearch}
         initialCategoria={initialCategoria}
+        cityName={cityConfig.name}
+        cityPreposition={cityConfig.preposition}
       />
 
       <footer className="border-t border-zinc-200 bg-white mt-8">
         <div className="mx-auto w-full max-w-5xl px-4 py-8 space-y-4 text-sm text-zinc-500">
           <div>
-            <p className="font-medium text-zinc-700 mb-1">Sobre a Agenda Cultural Salvador</p>
+            <p className="font-medium text-zinc-700 mb-1">Sobre a {cityConfig.siteTitle.split(' -')[0]}</p>
             <p>
-              A Agenda Cultural Salvador é um agregador de eventos culturais em Salvador, Bahia.
+              A {cityConfig.siteTitle.split(' -')[0]} é um agregador de eventos culturais {cityConfig.preposition} {cityConfig.name}, {cityConfig.state}.
               Reunimos shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais
-              em um só lugar, com informações atualizadas diariamente a partir do{" "}
-              <a href="https://sympla.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">Sympla</a>{" "}
-              e do{" "}
-              <a href="https://elcabong.com.br" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">El Cabong</a>.
+              em um só lugar, com informações atualizadas diariamente a partir de{" "}
+              {cityConfig.footerSources.map((source, i) => (
+                <span key={source.url}>
+                  {i > 0 && (i === cityConfig.footerSources.length - 1 ? ' e ' : ', ')}
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{source.name}</a>
+                </span>
+              ))}.
             </p>
           </div>
           <div>
-            <p className="font-medium text-zinc-700 mb-1">Principais espaços culturais em Salvador</p>
-            <p>
-              Teatro Castro Alves (TCA), Teatro Gamboa, El Cabong, Casa de Música da Bahia,
-              SESI Salvador, Concha Acústica do TCA, Teatro ISBA, Teatro Vila Velha,
-              Museu de Arte Moderna da Bahia (MAM), Farol da Barra, Solar do Unhão,
-              Teatro SESC Casa do Comerciário, Espaço Cultural da Barroquinha e outros
-              espaços culturais de Salvador, Bahia.
-            </p>
+            <p className="font-medium text-zinc-700 mb-1">Principais espaços culturais {cityConfig.preposition} {cityConfig.name}</p>
+            <p>{cityConfig.footerVenues}</p>
           </div>
           <div>
             <p className="font-medium text-zinc-700 mb-1">Categorias de eventos</p>
             <div className="flex flex-wrap gap-2">
-              <Link href="/categoria/shows-salvador" className="underline hover:text-zinc-700">Shows e Festas</Link>
-              <span>·</span>
-              <Link href="/categoria/teatro-salvador" className="underline hover:text-zinc-700">Teatro</Link>
-              <span>·</span>
-              <Link href="/categoria/exposicoes-salvador" className="underline hover:text-zinc-700">Arte e Cultura</Link>
-              <span>·</span>
-              <Link href="/categoria/festivais-salvador" className="underline hover:text-zinc-700">Festivais</Link>
-              <span>·</span>
-              <Link href="/categoria/eventos-gratuitos-salvador" className="underline hover:text-zinc-700">Eventos Gratuitos</Link>
-              <span>·</span>
-              <Link href="/categoria/eventos-criancas-salvador" className="underline hover:text-zinc-700">Infantil</Link>
+              {cityConfig.categoryLinks.map((link, i) => (
+                <span key={link.href} className="flex items-center gap-2">
+                  {i > 0 && <span>·</span>}
+                  <Link href={link.href} className="underline hover:text-zinc-700">{link.label}</Link>
+                </span>
+              ))}
             </div>
           </div>
           <div>
             <p className="font-medium text-zinc-700 mb-1">Páginas populares</p>
             <div className="flex flex-wrap gap-2">
-              <Link href="/eventos-salvador-hoje" className="underline hover:text-zinc-700">Eventos Hoje</Link>
-              <span>·</span>
-              <Link href="/mapa" className="underline hover:text-zinc-700">Mapa de Eventos</Link>
-              <span>·</span>
-              <Link href="/roteiros" className="underline hover:text-zinc-700">Roteiros Curados</Link>
-              <span>·</span>
-              <Link href="/distrito-comercio" className="underline hover:text-zinc-700">Distrito do Comércio</Link>
+              {cityConfig.popularLinks.map((link, i) => (
+                <span key={link.href} className="flex items-center gap-2">
+                  {i > 0 && <span>·</span>}
+                  <Link href={link.href} className="underline hover:text-zinc-700">{link.label}</Link>
+                </span>
+              ))}
             </div>
           </div>
           <p className="text-xs text-zinc-400 pt-2">
-            © {new Date().getFullYear()} Agenda Cultural Salvador · Salvador, Bahia, Brasil ·{" "}
+            © {new Date().getFullYear()} {cityConfig.footerCopyright} ·{" "}
             <a href="/api/events" className="underline hover:text-zinc-600">API pública</a>
           </p>
         </div>

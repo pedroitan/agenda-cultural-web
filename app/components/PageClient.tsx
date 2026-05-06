@@ -32,11 +32,15 @@ export default function PageClient({
   eventCount,
   initialSearch = '',
   initialCategoria = '',
+  cityName = 'Salvador',
+  cityPreposition = 'em',
 }: {
   events: EventRow[];
   eventCount: number;
   initialSearch?: string;
   initialCategoria?: string;
+  cityName?: string;
+  cityPreposition?: string;
 }) {
   const [busca, setBusca] = useState(initialSearch);
   const [categoria, setCategoria] = useState(initialCategoria || 'Todos');
@@ -125,7 +129,7 @@ export default function PageClient({
       <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white shadow-sm">
         <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3">
           <h1 className="shrink-0 text-sm font-bold text-zinc-900 hidden sm:block">
-            Agenda Cultural Salvador
+            Agenda Cultural {cityName}
           </h1>
           {/* Search bar — centralizada, proeminente */}
           <div className="relative flex-1">
@@ -138,7 +142,7 @@ export default function PageClient({
             </svg>
             <input
               type="text"
-              placeholder="O que você quer curtir hoje em Salvador?"
+              placeholder={`O que você quer curtir hoje ${cityPreposition} ${cityName}?`}
               value={busca}
               onChange={(e) => handleBuscaChange(e.target.value)}
               onFocus={() => setShowFilters(true)}

@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
+import { getCityConfig } from '@/config/cities'
 
 export default function robots(): MetadataRoute.Robots {
+  const city = getCityConfig();
   return {
     rules: [
       {
@@ -9,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://agendaculturalsalvador.com.br/sitemap.xml',
+    sitemap: `${city.siteUrl}/sitemap.xml`,
   }
 }

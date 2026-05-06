@@ -1,26 +1,28 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { getCityConfig } from "@/config/cities";
 
 const inter = Inter({ subsets: ["latin"] });
+const city = getCityConfig();
 
 export const metadata: Metadata = {
-  title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
-  description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
-  keywords: "eventos salvador, shows salvador, agenda cultural salvador, teatro salvador, exposições salvador, festivais salvador",
-  authors: [{ name: "Agenda Cultural Salvador" }],
+  title: city.siteTitle,
+  description: city.siteDescription,
+  keywords: city.keywords,
+  authors: [{ name: city.siteTitle.split(' -')[0] }],
   openGraph: {
-    title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
-    description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
-    url: "https://agendaculturalsalvador.com.br",
-    siteName: "Agenda Cultural Salvador",
+    title: city.ogTitle,
+    description: city.ogDescription,
+    url: city.siteUrl,
+    siteName: city.siteTitle.split(' -')[0],
     locale: "pt_BR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia",
-    description: "Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.",
+    title: city.ogTitle,
+    description: city.ogDescription,
   },
   robots: {
     index: true,
