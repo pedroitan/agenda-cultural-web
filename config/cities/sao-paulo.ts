@@ -11,7 +11,7 @@ export const saoPauloConfig: CityConfig = {
   keywords: 'eventos sao paulo, shows sp, agenda cultural sp, teatro sao paulo, exposições sp, festivais sao paulo',
   ogTitle: 'Agenda Cultural SP - Shows, Teatro, Exposições e Festivais em São Paulo',
   ogDescription: 'Encontre shows, peças de teatro, exposições, festivais e muito mais em São Paulo. Agenda cultural atualizada diariamente.',
-  headerImage: '/images/header-sao-paulo.jpg',
+  headerImage: '/banner.png',
   footerSources: [
     { name: 'Sympla', url: 'https://sympla.com.br' },
     { name: 'Agenda SP', url: 'https://www.prefeitura.sp.gov.br/cidade/secretarias/cultura' },
