@@ -243,13 +243,7 @@ export default async function Home({
             <p>
               A {cityConfig.siteTitle.split(' -')[0]} é um agregador de eventos culturais {cityConfig.preposition} {cityConfig.name}, {cityConfig.state}.
               Reunimos shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais
-              em um só lugar, com informações atualizadas diariamente a partir de{" "}
-              {cityConfig.footerSources.map((source, i) => (
-                <span key={source.url}>
-                  {i > 0 && (i === cityConfig.footerSources.length - 1 ? ' e ' : ', ')}
-                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{source.name}</a>
-                </span>
-              ))}.
+              em um só lugar, com informações atualizadas diariamente.
             </p>
           </div>
           <div>
