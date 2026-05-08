@@ -18,6 +18,7 @@ type Tour = {
   image_url: string | null;
   is_published: boolean;
   created_at: string;
+  city: string;
 };
 
 type TourStop = {
@@ -55,6 +56,7 @@ export default function ToursManager() {
     curator_bio: "",
     description: "",
     image_url: "",
+    city: process.env.NEXT_PUBLIC_CITY || "salvador",
   });
 
   useEffect(() => {
@@ -64,7 +66,12 @@ export default function ToursManager() {
 
   const fetchTours = async () => {
     setLoading(true);
-    const { data } = await supabase.from("tours").select("*").order("created_at", { ascending: false });
+    const city = process.env.NEXT_PUBLIC_CITY || "salvador";
+    const { data } = await supabase
+      .from("tours")
+      .select("*")
+      .eq("city", city)
+      .order("created_at", { ascending: false });
     setTours(data || []);
     setLoading(false);
   };
@@ -137,7 +144,7 @@ export default function ToursManager() {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedTour(null);
-    setFormData({ title: "", curator_name: "", curator_bio: "", description: "", image_url: "" });
+    setFormData({ title: "", curator_name: "", curator_bio: "", description: "", image_url: "", city: process.env.NEXT_PUBLIC_CITY || "salvador" });
   };
 
   const handleEdit = (tour: Tour) => {
@@ -148,6 +155,7 @@ export default function ToursManager() {
       curator_bio: tour.curator_bio || "",
       description: tour.description || "",
       image_url: tour.image_url || "",
+      city: tour.city,
     });
     setShowModal(true);
   };

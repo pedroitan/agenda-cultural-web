@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
+import { getCityConfig } from "@/config/cities";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   const supabase = getSupabaseServerClient();
+  const cityConfig = getCityConfig();
 
   if (!supabase) {
     return NextResponse.json({ error: "Supabase não configurado" }, { status: 500 });
@@ -14,6 +16,7 @@ export async function GET() {
     .from("tours")
     .select("*")
     .eq("is_published", true)
+    .eq("city", cityConfig.slug)
     .order("created_at", { ascending: false });
 
   if (error) {

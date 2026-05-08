@@ -186,7 +186,7 @@ export default function PageClient({
         </div>
         
         {/* Banner Principal */}
-        <AdBanner type="banner" position="top" className="mb-6" />
+        {/* <AdBanner type="banner" position="top" className="mb-6" /> */}
         
         <EventFilters
           categoria={categoria}
@@ -197,12 +197,12 @@ export default function PageClient({
         />
         
         {/* Banner entre filtros e lista */}
-        <AdBanner type="featured" position="between_events" className="mb-6" />
+        {/* <AdBanner type="featured" position="between_events" className="mb-6" /> */}
         
         <EventList events={filteredEvents} />
         
         {/* Banner no final */}
-        <AdBanner type="banner" position="bottom" className="mt-6" />
+        {/* <AdBanner type="banner" position="bottom" className="mt-6" /> */}
       </main>
     </>
   );

@@ -44,8 +44,8 @@ BEGIN
     AND start_datetime > NOW() 
     ORDER BY start_datetime LIMIT 1;
 
-  -- ROTEIRO 1: Noite de Samba no Pelourinho
-  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url)
+  -- ROTEIRO 1: Noite de Samba no Pelourinho (Salvador)
+  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url, city)
   VALUES (
     tour1_id,
     'Noite de Samba no Pelourinho',
@@ -53,7 +53,8 @@ BEGIN
     'Curadoria local de Salvador',
     'Um mergulho na tradição do samba baiano. Comece com o Samba de Lua no Clube do Samba, vá para o Largo da Tieta e termine com Os Thiagos. Uma noite inesquecível no coração do Pelourinho.',
     true,
-    'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800'
+    'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800',
+    'salvador'
   );
 
   IF event_samba_lua IS NOT NULL THEN
@@ -71,8 +72,8 @@ BEGIN
     VALUES (tour1_id, event_os_thiagos, '22:30', 90, NULL, NULL, 3);
   END IF;
 
-  -- ROTEIRO 2: Cultura e Teatro no Centro Histórico
-  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url)
+  -- ROTEIRO 2: Cultura e Teatro no Centro Histórico (Salvador)
+  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url, city)
   VALUES (
     tour2_id,
     'Cultura e Teatro no Centro Histórico',
@@ -80,7 +81,8 @@ BEGIN
     'Curadoria local de Salvador',
     'Experiência completa de arte e cultura no Pelourinho. Teatro, música e a riqueza histórica do centro de Salvador em uma só noite.',
     true,
-    'https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=800'
+    'https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=800',
+    'salvador'
   );
 
   IF event_teatro_sesc IS NOT NULL THEN
@@ -93,8 +95,8 @@ BEGIN
     VALUES (tour2_id, event_quincas, '21:00', 90, NULL, NULL, 2);
   END IF;
 
-  -- ROTEIRO 3: Reggae e Afrobrasilidade
-  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url)
+  -- ROTEIRO 3: Reggae e Afrobrasilidade (Salvador)
+  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url, city)
   VALUES (
     tour3_id,
     'Reggae e Afrobrasilidade',
@@ -102,7 +104,34 @@ BEGIN
     'Curadoria local de Salvador',
     'Uma viagem pela sonoridade negra de Salvador. Reggae, samba e as raízes culturais da capital baiana em roteiro imperdível.',
     true,
-    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800'
+    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800',
+    'salvador'
+  );
+
+  -- ROTEIRO 4: Noite de Samba na Lapa (Rio de Janeiro)
+  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url, city)
+  VALUES (
+    gen_random_uuid(),
+    'Noite de Samba na Lapa',
+    'Agenda Cultural RJ',
+    'Curadoria local do Rio de Janeiro',
+    'Uma noite inesquecível na Lapa, o coração boêmio do Rio. Samba, choro e a energia vibrante da noite carioca.',
+    true,
+    'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800',
+    'rio-de-janeiro'
+  );
+
+  -- ROTEIRO 5: Arte e Cultura em Pinheiros (São Paulo)
+  INSERT INTO tours (id, title, curator_name, curator_bio, description, is_published, image_url, city)
+  VALUES (
+    gen_random_uuid(),
+    'Arte e Cultura em Pinheiros',
+    'Agenda Cultural SP',
+    'Curadoria local de São Paulo',
+    'Roteiro cultural pelo vibrante bairro de Pinheiros. Galerias, teatros e a cena artística paulistana em uma só experiência.',
+    true,
+    'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800',
+    'sao-paulo'
   );
 
   IF event_ifa_reggae IS NOT NULL THEN
