@@ -47,21 +47,28 @@ export default async function DistritoComercioPage() {
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Header customizado */}
-      <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-          >
-            ← Voltar para Home
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Distrito do Comércio
-          </h1>
-          <p className="text-lg text-white/90 max-w-2xl">
-            Eventos no coração histórico de Salvador — Pelourinho, Terreiro de Jesus, 
-            Rua Chile e arredores. Descubra a cultura viva do centro da cidade.
-          </p>
+      <div className="relative">
+        <img
+          src="/distrito-comercio-header.jpg"
+          alt="Vista aérea do porto de Salvador e bairro do comércio"
+          className="w-full h-64 md:h-80 object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-900/80 to-orange-900/70">
+          <div className="max-w-6xl mx-auto px-4 py-12 h-full flex flex-col justify-center">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+            >
+              ← Voltar para Home
+            </Link>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              Distrito do Comércio
+            </h1>
+            <p className="text-lg text-white/90 max-w-2xl">
+              Eventos no coração histórico de Salvador — Pelourinho, Terreiro de Jesus, 
+              Rua Chile e arredores. Descubra a cultura viva do centro da cidade.
+            </p>
+          </div>
         </div>
       </div>
 
