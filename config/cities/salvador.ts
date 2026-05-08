@@ -11,6 +11,7 @@ export const salvadorConfig: CityConfig = {
   keywords: 'eventos salvador, shows salvador, agenda cultural salvador, teatro salvador, exposições salvador, festivais salvador',
   ogTitle: 'Agenda Cultural Salvador - Shows, Teatro, Exposições e Festivais em Salvador, Bahia',
   ogDescription: 'Encontre shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais em Salvador, Bahia. Agenda cultural atualizada diariamente.',
+  headerImage: '/images/header-salvador.jpg',
   footerSources: [
     { name: 'Sympla', url: 'https://sympla.com.br' },
     { name: 'El Cabong', url: 'https://elcabong.com.br' },

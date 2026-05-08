@@ -218,9 +218,9 @@ export default async function Home({
       
       {/* Banner - full width on all devices, maximized */}
       <div className="w-full bg-gradient-to-r from-purple-900 to-indigo-900">
-        <img 
-          src="/banner.png" 
-          alt={cityConfig.siteTitle} 
+        <img
+          src={cityConfig.headerImage}
+          alt={cityConfig.siteTitle}
           className="w-full h-32 md:h-48 lg:h-56 object-cover"
           loading="eager"
           fetchPriority="high"

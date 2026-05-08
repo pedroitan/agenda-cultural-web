@@ -9,6 +9,7 @@ export interface CityConfig {
   keywords: string
   ogTitle: string
   ogDescription: string
+  headerImage: string       // URL da imagem do header específica da cidade
   footerSources: { name: string; url: string }[]
   footerVenues: string
   footerCopyright: string

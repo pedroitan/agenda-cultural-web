@@ -11,6 +11,7 @@ export const rioConfig: CityConfig = {
   keywords: 'eventos rio de janeiro, shows rio, agenda cultural rj, teatro rio, samba rio, festivais rio de janeiro',
   ogTitle: 'Agenda Cultural RJ - Shows, Teatro, Samba e Festivais no Rio de Janeiro',
   ogDescription: 'Encontre shows, teatro, samba, exposições, festivais e muito mais no Rio de Janeiro. Agenda cultural atualizada diariamente.',
+  headerImage: '/images/header-rio.jpg',
   footerSources: [
     { name: 'Sympla', url: 'https://sympla.com.br' },
     { name: 'Rio Guia Oficial', url: 'https://www.rio.rj.gov.br' },

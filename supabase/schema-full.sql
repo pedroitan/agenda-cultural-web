@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS events (
   district TEXT,
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
+  raw_payload JSONB,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -47,12 +48,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_events_external_id ON events(source, exter
 CREATE TABLE IF NOT EXISTS scrape_runs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   source TEXT NOT NULL,
+  city TEXT NOT NULL,
   status TEXT NOT NULL, -- 'success' | 'error'
   started_at TIMESTAMP NOT NULL,
   ended_at TIMESTAMP,
-  events_found INTEGER DEFAULT 0,
-  events_inserted INTEGER DEFAULT 0,
-  events_updated INTEGER DEFAULT 0,
+  items_fetched INTEGER DEFAULT 0,
+  items_valid INTEGER DEFAULT 0,
+  items_invalid INTEGER DEFAULT 0,
+  items_upserted INTEGER DEFAULT 0,
   error_message TEXT,
   created_at TIMESTAMP DEFAULT NOW()
 );

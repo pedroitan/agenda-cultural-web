@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   description: city.siteDescription,
   keywords: city.keywords,
   authors: [{ name: city.siteTitle.split(' -')[0] }],
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: city.ogTitle,
     description: city.ogDescription,
