@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import Link from "next/link";
 import { MapPin, User, ArrowRight } from "lucide-react";
+import { getCityConfig } from "@/config/cities";
 
 type Tour = {
   id: string;
@@ -15,6 +16,7 @@ type Tour = {
 
 export default async function RoteirosPage() {
   const supabase = getSupabaseServerClient();
+  const cityConfig = getCityConfig();
 
   if (!supabase) {
     return (
@@ -30,6 +32,7 @@ export default async function RoteirosPage() {
     .from("tours")
     .select("*")
     .eq("is_published", true)
+    .eq("city", cityConfig.slug)
     .order("created_at", { ascending: false });
 
   return (
