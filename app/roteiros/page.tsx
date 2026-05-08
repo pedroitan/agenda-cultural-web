@@ -3,6 +3,11 @@ import Link from "next/link";
 import { MapPin, User, ArrowRight } from "lucide-react";
 import { getCityConfig } from "@/config/cities";
 
+type TourStop = {
+  order_index: number;
+  events: { image_url: string | null; title: string } | null;
+};
+
 type Tour = {
   id: string;
   title: string;
@@ -12,7 +17,65 @@ type Tour = {
   image_url: string | null;
   is_published: boolean;
   created_at: string;
+  tour_stops: TourStop[];
 };
+
+function TourImageCollage({ stops, fallback }: { stops: TourStop[]; fallback: string | null }) {
+  const images = stops
+    .sort((a, b) => a.order_index - b.order_index)
+    .map((s) => s.events?.image_url)
+    .filter(Boolean) as string[];
+
+  if (images.length === 0) {
+    if (fallback) {
+      return (
+        <div className="aspect-video w-full overflow-hidden">
+          <img src={fallback} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        </div>
+      );
+    }
+    return (
+      <div className="aspect-video w-full bg-zinc-100 flex items-center justify-center text-zinc-300">
+        <MapPin size={48} />
+      </div>
+    );
+  }
+
+  if (images.length === 1) {
+    return (
+      <div className="aspect-video w-full overflow-hidden">
+        <img src={images[0]} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      </div>
+    );
+  }
+
+  if (images.length === 2) {
+    return (
+      <div className="aspect-video w-full grid grid-cols-2 gap-0.5 bg-zinc-200 overflow-hidden">
+        {images.map((img, i) => (
+          <div key={i} className="overflow-hidden h-full">
+            <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="aspect-video w-full flex gap-0.5 bg-zinc-200 overflow-hidden">
+      <div className="w-1/2 overflow-hidden">
+        <img src={images[0]} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      </div>
+      <div className="w-1/2 flex flex-col gap-0.5">
+        {images.slice(1, 3).map((img, i) => (
+          <div key={i} className="flex-1 overflow-hidden">
+            <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default async function RoteirosPage() {
   const supabase = getSupabaseServerClient();
@@ -28,12 +91,25 @@ export default async function RoteirosPage() {
     );
   }
 
-  const { data: tours } = await supabase
+  const { data: rawTours } = await supabase
     .from("tours")
-    .select("*")
+    .select(`
+      *,
+      tour_stops (
+        order_index,
+        events ( image_url, title )
+      )
+    `)
     .eq("is_published", true)
     .eq("city", cityConfig.slug)
     .order("created_at", { ascending: false });
+
+  const seenTitles = new Set<string>();
+  const tours = (rawTours as Tour[] | null)?.filter((t) => {
+    if (seenTitles.has(t.title)) return false;
+    seenTitles.add(t.title);
+    return true;
+  }) ?? [];
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -50,7 +126,7 @@ export default async function RoteirosPage() {
             Roteiros Curados
           </h1>
           <p className="text-lg text-white/90 max-w-2xl">
-            Descubra Salvador através de roteiros pensados por curadores locais. 
+            Descubra {cityConfig.name} através de roteiros pensados por curadores locais.
             Múltiplos eventos conectados com horário, trajeto e experiência completa.
           </p>
         </div>
@@ -58,7 +134,7 @@ export default async function RoteirosPage() {
 
       {/* Grid de Roteiros */}
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {!tours || tours.length === 0 ? (
+        {tours.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
             <h2 className="text-xl font-semibold mb-2">Nenhum roteiro disponível</h2>
             <p className="text-zinc-600">
@@ -73,27 +149,14 @@ export default async function RoteirosPage() {
                 href={`/roteiros/${tour.id}`}
                 className="group bg-white rounded-xl border border-zinc-200 overflow-hidden hover:shadow-lg transition-all"
               >
-                {/* Image */}
-                {tour.image_url ? (
-                  <div className="aspect-video w-full bg-zinc-100">
-                    <img
-                      src={tour.image_url}
-                      alt={tour.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-video w-full bg-zinc-100 flex items-center justify-center text-zinc-300">
-                    <MapPin size={48} />
-                  </div>
-                )}
+                <TourImageCollage stops={tour.tour_stops ?? []} fallback={tour.image_url} />
 
                 {/* Content */}
                 <div className="p-5">
                   <h2 className="text-xl font-bold text-zinc-900 mb-2 group-hover:text-violet-600 transition-colors">
                     {tour.title}
                   </h2>
-                  
+
                   <div className="flex items-center gap-2 text-sm text-zinc-600 mb-3">
                     <User size={16} />
                     <span>Por {tour.curator_name}</span>
