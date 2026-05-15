@@ -162,26 +162,16 @@ export default function PageClient({
       <main className="mx-auto w-full max-w-7xl px-4 py-6">
         <HappeningNow events={events} />
         
-        {/* Roteiros Curados */}
+        {/* Roteiros do Fim de Semana */}
         <div className="mb-6">
           <Link
             href="/roteiros"
-            className="group relative block w-full rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-6 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.01]"
+            className="group relative inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg hover:scale-[1.02]"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Roteiros Curados</h2>
-                <p className="text-white/90 text-sm">
-                  Descubra roteiros completos com múltiplos eventos selecionados por especialistas
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-white/80 group-hover:text-white transition-colors">
-                <span className="text-sm font-medium">Ver roteiros</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
+            <span>Roteiros do Fim de Semana</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
         
