@@ -48,10 +48,23 @@ function TourImageCollage({ images }: { images: (string | null)[] }) {
 }
 
 function buildMapsDirectionsUrl(venues: (string | null)[], city: string): string {
-  const validVenues = venues.filter(Boolean) as string[];
-  if (validVenues.length === 0) return `https://www.google.com/maps/search/${encodeURIComponent(city)}`;
-  const parts = validVenues.map(v => encodeURIComponent(`${v}, ${city}`));
+  const valid = venues.filter(Boolean) as string[];
+  if (valid.length === 0) return `https://www.google.com/maps/search/${encodeURIComponent(city)}`;
+  const parts = valid.map(v => encodeURIComponent(`${v}, ${city}`));
   return `https://www.google.com/maps/dir/${parts.join('/')}`;
+}
+
+function buildMapsEmbedRouteUrl(venues: (string | null)[], city: string): string {
+  const valid = venues.filter(Boolean) as string[];
+  if (valid.length === 0) {
+    return `https://maps.google.com/maps?q=${encodeURIComponent(city)}&output=embed&z=13`;
+  }
+  if (valid.length === 1) {
+    return `https://maps.google.com/maps?q=${encodeURIComponent(valid[0] + ', ' + city)}&output=embed&z=14`;
+  }
+  const saddr = encodeURIComponent(valid[0] + ', ' + city);
+  const daddr = encodeURIComponent(valid.slice(1).map(v => v + ', ' + city).join(' to '));
+  return `https://maps.google.com/maps?saddr=${saddr}&daddr=${daddr}&output=embed&dirflg=d`;
 }
 
 export const dynamic = "force-dynamic";
@@ -161,10 +174,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
   const stopImages = tourWithStops.stops.map((s: TourStop) => s.events?.image_url ?? null);
   const venueNames = tourWithStops.stops.map((s: TourStop) => s.events?.venue_name ?? null);
   const mapsUrl = buildMapsDirectionsUrl(venueNames, 'Salvador, Bahia');
-  const firstVenue = venueNames.find(Boolean);
-  const mapEmbedUrl = firstVenue
-    ? `https://maps.google.com/maps?q=${encodeURIComponent(firstVenue + ', Salvador, Bahia')}&output=embed&z=14`
-    : `https://maps.google.com/maps?q=${encodeURIComponent('Salvador, Bahia')}&output=embed&z=13`;
+  const mapEmbedUrl = buildMapsEmbedRouteUrl(venueNames, 'Salvador, Bahia');
 
   return (
     <div className="min-h-screen bg-zinc-50">
