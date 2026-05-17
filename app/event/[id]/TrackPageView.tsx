@@ -12,7 +12,7 @@ export default function TrackPageView({ eventId }: { eventId: string }) {
       fetch(`/api/events/${eventId}/view`, { method: "POST" })
         .then(() => {
           // Set cookie to prevent duplicate counting (expires in 1 hour)
-          document.cookie = `viewed_${eventId}=1; max-age=3600; path=/`;
+          document.cookie = `viewed_${eventId}=1; max-age=86400; path=/`;
         })
         .catch(console.error);
     }

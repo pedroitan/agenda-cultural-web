@@ -40,7 +40,7 @@ export async function GET(
     const response = NextResponse.redirect(event.url.split("|")[0].trim());
     response.cookies.set(`clicked_${id}`, '1', {
       httpOnly: true,
-      maxAge: 3600, // 1 hour
+      maxAge: 86400, // 24 hours
       path: '/',
     });
     return response;

@@ -101,7 +101,7 @@ export function RealtimeTopClicked({
                 <span className="text-2xl font-bold text-gray-400">#{index + 1}</span>
                 <div className="min-w-0 flex-1">
                   <a
-                    href={event.url?.split("|")[0]}
+                    href={`/r/${event.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium truncate block hover:text-purple-600 transition-colors text-gray-900"

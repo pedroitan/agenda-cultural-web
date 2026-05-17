@@ -15,7 +15,11 @@ export async function POST(
   }
 
   // Usar função SQL para incremento atômico
-  await supabase.rpc('increment_click_count', { event_id: id });
+  const { error: rpcError } = await supabase.rpc('increment_click_count', { event_id: id });
+  if (rpcError) {
+    console.error('[track-view] RPC error:', rpcError.message, 'event_id:', id);
+    return NextResponse.json({ error: rpcError.message }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }
