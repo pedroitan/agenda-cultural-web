@@ -124,6 +124,9 @@ export default async function RoteirosPage() {
     );
   }
 
+  // Data de hoje no fuso de Bahia (UTC-3) no formato YYYY-MM-DD
+  const todayBahia = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bahia' });
+
   const { data: rawTours } = await supabase
     .from("tours")
     .select(`
@@ -135,7 +138,8 @@ export default async function RoteirosPage() {
     `)
     .eq("is_published", true)
     .eq("city", cityConfig.slug)
-    .order("created_at", { ascending: false });
+    .or(`scheduled_date.is.null,scheduled_date.gte.${todayBahia}`)
+    .order("scheduled_date", { ascending: true, nullsFirst: false });
 
   const seenTitles = new Set<string>();
   const tours = (rawTours as Tour[] | null)?.filter((t) => {
