@@ -6,6 +6,7 @@ import AdminLayout from "./AdminLayout";
 import EventSubmissions from "./EventSubmissions";
 import AdsManager from "./AdsManager";
 import ToursManager from "./ToursManager";
+import { getCityConfig } from "@/config/cities";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -55,6 +56,7 @@ function formatDuration(start: string, end: string | null): string {
 
 export default async function AdminPage() {
   const supabase = getSupabaseServerClient();
+  const cityConfig = getCityConfig();
 
   // Check if Supabase is configured
   if (!supabase) {
@@ -66,7 +68,7 @@ export default async function AdminPage() {
             Crie um arquivo <code className="bg-gray-800 px-2 py-1 rounded">.env.local</code> com:
           </p>
           <pre className="bg-gray-800 p-4 rounded text-left text-sm">
-{`SUPABASE_URL=https://ssxowzurrtyzmracmusn.supabase.co
+{`SUPABASE_URL=https://ifocsakyvzkqdhrfmgbz.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           </pre>
         </div>
@@ -74,23 +76,25 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     );
   }
 
-  // Get last scrape runs for each source
+  // Get last scrape runs for each source (filtered by city)
   const { data: scrapeRuns } = await supabase
     .from("scrape_runs")
     .select("*")
+    .eq("city", cityConfig.slug)
     .order("started_at", { ascending: false })
     .limit(20);
 
-  // Get event counts by source
+  // Get event counts by source (filtered by city)
   const { data: eventCounts } = await supabase
-    .rpc("get_event_counts_by_source");
+    .rpc("get_event_counts_by_source", { city_slug: cityConfig.slug });
 
   // Fallback: if RPC doesn't exist, query directly
   let counts: EventCount[] = eventCounts || [];
   if (!eventCounts) {
     const { data: events } = await supabase
       .from("events")
-      .select("source");
+      .select("source")
+      .eq("city", cityConfig.slug);
     
     if (events) {
       const countMap = new Map<string, number>();
@@ -104,29 +108,33 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     }
   }
 
-  // Get total events
+  // Get total events (filtered by city)
   const { count: totalEvents } = await supabase
     .from("events")
-    .select("*", { count: "exact", head: true });
+    .select("*", { count: "exact", head: true })
+    .eq("city", cityConfig.slug);
 
-  // Get future events count
+  // Get future events count (filtered by city)
   const { count: futureEvents } = await supabase
     .from("events")
     .select("*", { count: "exact", head: true })
+    .eq("city", cityConfig.slug)
     .gt("start_datetime", new Date().toISOString());
 
-  // Get top clicked events
+  // Get top clicked events (filtered by city)
   const { data: topClicked } = await supabase
     .from("events")
     .select("id, title, click_count, source, start_datetime, url")
+    .eq("city", cityConfig.slug)
     .gt("click_count", 0)
     .order("click_count", { ascending: false })
     .limit(10);
 
-  // Get total clicks (with deduplication like frontend)
+  // Get total clicks (with deduplication like frontend, filtered by city)
   const { data: clickStats } = await supabase
     .from("events")
-    .select("id, title, venue_name, start_datetime, click_count, url");
+    .select("id, title, venue_name, start_datetime, click_count, url")
+    .eq("city", cityConfig.slug);
   
   // Deduplicate by title + date + venue (same logic as frontend)
   const grouped = new Map<string, number>();

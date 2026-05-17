@@ -1,6 +1,58 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Clock, Calendar, ExternalLink, ArrowRight } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, ExternalLink, ArrowRight, Navigation } from "lucide-react";
+
+function TourImageCollage({ images }: { images: (string | null)[] }) {
+  const validImages = images.filter(Boolean) as string[];
+
+  if (validImages.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-zinc-700">
+        <MapPin size={64} />
+      </div>
+    );
+  }
+
+  if (validImages.length === 1) {
+    return (
+      <img src={validImages[0]} alt="" className="w-full h-full object-cover" />
+    );
+  }
+
+  if (validImages.length === 2) {
+    return (
+      <div className="w-full h-full grid grid-cols-2 gap-0.5 bg-zinc-900">
+        {validImages.map((img, i) => (
+          <div key={i} className="overflow-hidden h-full">
+            <img src={img} alt="" className="w-full h-full object-cover" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full flex gap-0.5 bg-zinc-900">
+      <div className="w-1/2 overflow-hidden">
+        <img src={validImages[0]} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="w-1/2 flex flex-col gap-0.5">
+        {validImages.slice(1, 3).map((img, i) => (
+          <div key={i} className="flex-1 overflow-hidden">
+            <img src={img} alt="" className="w-full h-full object-cover" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function buildMapsDirectionsUrl(venues: (string | null)[], city: string): string {
+  const validVenues = venues.filter(Boolean) as string[];
+  if (validVenues.length === 0) return `https://www.google.com/maps/search/${encodeURIComponent(city)}`;
+  const parts = validVenues.map(v => encodeURIComponent(`${v}, ${city}`));
+  return `https://www.google.com/maps/dir/${parts.join('/')}`;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -106,21 +158,19 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
     stops: (stops || []) as unknown as TourStop[],
   };
 
+  const stopImages = tourWithStops.stops.map((s: TourStop) => s.events?.image_url ?? null);
+  const venueNames = tourWithStops.stops.map((s: TourStop) => s.events?.venue_name ?? null);
+  const mapsUrl = buildMapsDirectionsUrl(venueNames, 'Salvador, Bahia');
+  const firstVenue = venueNames.find(Boolean);
+  const mapEmbedUrl = firstVenue
+    ? `https://maps.google.com/maps?q=${encodeURIComponent(firstVenue + ', Salvador, Bahia')}&output=embed&z=14`
+    : `https://maps.google.com/maps?q=${encodeURIComponent('Salvador, Bahia')}&output=embed&z=13`;
+
   return (
     <div className="min-h-screen bg-zinc-50">
-      {/* Hero */}
+      {/* Hero com Collage */}
       <div className="relative h-72 md:h-96 bg-zinc-900">
-        {tour.image_url ? (
-          <img
-            src={tour.image_url}
-            alt={tour.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-zinc-700">
-            <MapPin size={64} />
-          </div>
-        )}
+        <TourImageCollage images={stopImages} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         
         <Link
@@ -227,6 +277,67 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
             </div>
           )}
         </div>
+
+        {/* Mapa do Roteiro */}
+        {tourWithStops.stops && tourWithStops.stops.length > 0 && (
+          <div className="mt-10">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
+                <MapPin size={24} className="text-violet-600" />
+                Mapa do Roteiro
+              </h2>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition-colors text-sm font-medium"
+              >
+                <Navigation size={16} />
+                Ver rota no Google Maps
+              </a>
+            </div>
+
+            {/* Lista de paradas para navegação */}
+            <div className="bg-white rounded-xl border border-zinc-200 p-4 mb-4">
+              <p className="text-sm font-medium text-zinc-500 mb-3">Paradas do roteiro</p>
+              <div className="flex flex-col gap-2">
+                {tourWithStops.stops.map((stop: TourStop, i: number) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-violet-100 text-violet-700 text-xs font-bold flex items-center justify-center flex-shrink-0">
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-zinc-900 truncate">{stop.events?.venue_name || stop.events?.title}</p>
+                      {stop.horario && <p className="text-xs text-zinc-500">{stop.horario}</p>}
+                    </div>
+                    <a
+                      href={`https://www.google.com/maps/search/${encodeURIComponent((stop.events?.venue_name || stop.events?.title) + ', Salvador, Bahia')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-zinc-400 hover:text-violet-600 transition-colors flex-shrink-0"
+                    >
+                      <ExternalLink size={14} />
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Google Maps iframe */}
+            <div className="rounded-xl overflow-hidden border border-zinc-200 shadow-sm">
+              <iframe
+                src={mapEmbedUrl}
+                width="100%"
+                height="360"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mapa do roteiro"
+              />
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
         {tourWithStops.stops && tourWithStops.stops.length > 0 && (

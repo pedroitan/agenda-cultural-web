@@ -1,7 +1,39 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import Link from "next/link";
-import { MapPin, User, ArrowRight } from "lucide-react";
+import { MapPin, User, ArrowRight, Calendar } from "lucide-react";
 import { getCityConfig } from "@/config/cities";
+
+function getWeekendDates(): { label: string; satLabel: string; sunLabel: string } {
+  const now = new Date();
+  const bahia = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bahia' }));
+  const day = bahia.getDay();
+
+  let daysToSat = day === 0 ? 6 : day === 6 ? 0 : 6 - day;
+  const sat = new Date(bahia);
+  sat.setDate(bahia.getDate() + daysToSat);
+  const sun = new Date(sat);
+  sun.setDate(sat.getDate() + 1);
+
+  const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const monthsShort = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+  const satDay = sat.getDate();
+  const sunDay = sun.getDate();
+  const satMonth = months[sat.getMonth()];
+  const sunMonth = months[sun.getMonth()];
+  const satMonthShort = monthsShort[sat.getMonth()];
+  const sunMonthShort = monthsShort[sun.getMonth()];
+
+  const label = sat.getMonth() === sun.getMonth()
+    ? `${satDay} e ${sunDay} de ${satMonth}`
+    : `${satDay} de ${satMonthShort} e ${sunDay} de ${sunMonthShort}`;
+
+  return {
+    label,
+    satLabel: `Sábado, ${satDay} de ${satMonth}`,
+    sunLabel: `Domingo, ${sunDay} de ${sunMonth}`,
+  };
+}
 
 type TourStop = {
   order_index: number;
@@ -80,6 +112,7 @@ function TourImageCollage({ stops, fallback }: { stops: TourStop[]; fallback: st
 export default async function RoteirosPage() {
   const supabase = getSupabaseServerClient();
   const cityConfig = getCityConfig();
+  const weekend = getWeekendDates();
 
   if (!supabase) {
     return (
@@ -122,13 +155,24 @@ export default async function RoteirosPage() {
           >
             ← Voltar para Home
           </Link>
+          <div className="flex items-center gap-2 text-white/70 text-sm font-medium mb-2">
+            <Calendar size={16} />
+            <span>{weekend.label}</span>
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Roteiros Curados
+            Roteiros do Fim de Semana
           </h1>
           <p className="text-lg text-white/90 max-w-2xl">
-            Descubra {cityConfig.name} através de roteiros pensados por curadores locais.
-            Múltiplos eventos conectados com horário, trajeto e experiência completa.
+            Selecionamos os melhores roteiros para você curtir {cityConfig.name} neste fim de semana.
+            Arte, cultura, gastronomia e muito mais — com horário, trajeto e experiência completa.
           </p>
+          <div className="flex flex-wrap gap-3 mt-6 text-sm text-white/80">
+            <span className="bg-white/20 rounded-full px-3 py-1">{weekend.satLabel}</span>
+            <span className="bg-white/20 rounded-full px-3 py-1">{weekend.sunLabel}</span>
+            {tours.length > 0 && (
+              <span className="bg-white/20 rounded-full px-3 py-1">{tours.length} {tours.length === 1 ? 'roteiro' : 'roteiros'} disponíveis</span>
+            )}
+          </div>
         </div>
       </div>
 
