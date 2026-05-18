@@ -196,8 +196,7 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.6, maxOutputTokens: 8192 },
-      thinkingConfig: { thinkingBudget: 0 },
+      generationConfig: { temperature: 0.6, maxOutputTokens: 8192, thinkingConfig: { thinkingBudget: 0 } },
     }),
   });
 
