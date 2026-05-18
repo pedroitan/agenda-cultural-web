@@ -122,7 +122,6 @@ export default async function TourDetailPage({ params }: { params: Promise<{ id:
     .from("tours")
     .select("*")
     .eq("id", id)
-    .eq("is_published", true)
     .maybeSingle();
 
   if (!tour) {

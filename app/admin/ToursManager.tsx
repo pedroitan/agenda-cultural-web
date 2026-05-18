@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Plus, Edit, Trash2, MapPin, Clock, ArrowRight, Sparkles } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Clock, ArrowRight, Sparkles, Eye } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -279,6 +279,15 @@ export default function ToursManager() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <a
+                          href={`/roteiros/${tour.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-violet-600 transition-colors"
+                          title="Visualizar página"
+                        >
+                          <Eye size={16} />
+                        </a>
                         <button
                           onClick={() => handleEdit(tour)}
                           className="text-gray-400 hover:text-gray-600 transition-colors"
