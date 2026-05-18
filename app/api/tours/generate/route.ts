@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-2.0-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
 type EventForTour = {
@@ -206,24 +206,36 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
   }
 
   const gemData = await gemRes.json();
-  // gemini-2.5-flash is a thinking model: parts[0] may be internal thought (thought:true),
-  // actual output is in the subsequent parts. Filter and join non-thought text parts.
+  // Support both regular models and thinking models (parts may include thought:true)
   const allParts: any[] = gemData.candidates?.[0]?.content?.parts || [];
   const rawText: string = allParts
     .filter((p: any) => !p.thought && typeof p.text === "string")
     .map((p: any) => p.text as string)
     .join("") || "";
 
-  const jsonMatch = rawText.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) {
-    return NextResponse.json({ error: "Gemini não retornou JSON", raw: rawText.slice(0, 500) }, { status: 500 });
+  // Robust JSON extraction: handle markdown fences, raw arrays, or objects with array values
+  function extractJsonArray(text: string): any[] | null {
+    // Strip markdown code fences
+    const stripped = text.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
+    // Try direct array match
+    const arrMatch = stripped.match(/\[\s*\{[\s\S]*\}\s*\]/);
+    if (arrMatch) {
+      try { return JSON.parse(arrMatch[0]); } catch {}
+    }
+    // Try full parse (model might return just the array)
+    try {
+      const parsed = JSON.parse(stripped);
+      if (Array.isArray(parsed)) return parsed;
+      // Object wrapping array: { roteiros: [...] } or { tours: [...] }
+      const arrVal = Object.values(parsed).find((v) => Array.isArray(v));
+      if (arrVal) return arrVal as any[];
+    } catch {}
+    return null;
   }
 
-  let roteiros: any[];
-  try {
-    roteiros = JSON.parse(jsonMatch[0]);
-  } catch {
-    return NextResponse.json({ error: "JSON inválido do Gemini", raw: rawText.slice(0, 500) }, { status: 500 });
+  const roteiros = extractJsonArray(rawText);
+  if (!roteiros) {
+    return NextResponse.json({ error: "Gemini não retornou JSON", raw: rawText.slice(0, 800) }, { status: 500 });
   }
 
   // ─── 5. Salvar no banco ───────────────────────────────────────────────────
