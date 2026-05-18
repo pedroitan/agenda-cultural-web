@@ -152,11 +152,17 @@ export default function ToursManager() {
   };
 
   const togglePublished = async (tour: Tour) => {
-    await fetch("/api/tours/admin", {
+    const newStatus = !tour.is_published;
+    const res = await fetch("/api/tours/admin", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: tour.id, is_published: !tour.is_published }),
+      body: JSON.stringify({ id: tour.id, is_published: newStatus }),
     });
+    if (!res.ok) {
+      const d = await res.json();
+      alert(`Erro: ${d.error}`);
+      return;
+    }
     fetchTours();
   };
 
