@@ -125,13 +125,16 @@ export default function ToursManager() {
       return;
     }
 
-    if (selectedTour) {
-      await supabase
-        .from("tours")
-        .update(formData)
-        .eq("id", selectedTour.id);
-    } else {
-      await supabase.from("tours").insert([formData]);
+    const body = selectedTour ? { id: selectedTour.id, ...formData } : formData;
+    const res = await fetch("/api/tours/admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const d = await res.json();
+      alert(`Erro: ${d.error}`);
+      return;
     }
 
     handleCloseModal();

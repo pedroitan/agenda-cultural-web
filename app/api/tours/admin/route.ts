@@ -25,6 +25,26 @@ export async function GET() {
   return NextResponse.json(data || []);
 }
 
+export async function POST(request: Request) {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) {
+    return NextResponse.json({ error: "Supabase não configurado" }, { status: 500 });
+  }
+
+  const body = await request.json();
+  const { id, ...fields } = body;
+
+  if (id) {
+    const { error } = await supabase.from("tours").update(fields).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  } else {
+    const { error } = await supabase.from("tours").insert([fields]);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}
+
 export async function PATCH(request: Request) {
   const supabase = getSupabaseServerClient();
   if (!supabase) {
