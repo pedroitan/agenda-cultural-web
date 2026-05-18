@@ -138,7 +138,12 @@ async function extractEventsFromImage(
     }
 
     const data = await response.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    // gemini-2.5-flash thinking model: filter out thought parts, join real output
+    const allParts: any[] = data.candidates?.[0]?.content?.parts || []
+    const text = allParts
+      .filter((p: any) => !p.thought && typeof p.text === 'string')
+      .map((p: any) => p.text as string)
+      .join('') || ''
     
     console.log('📝 Gemini response length:', text.length)
 

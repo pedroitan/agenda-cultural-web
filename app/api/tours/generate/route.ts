@@ -206,7 +206,13 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
   }
 
   const gemData = await gemRes.json();
-  const rawText: string = gemData.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  // gemini-2.5-flash is a thinking model: parts[0] may be internal thought (thought:true),
+  // actual output is in the subsequent parts. Filter and join non-thought text parts.
+  const allParts: any[] = gemData.candidates?.[0]?.content?.parts || [];
+  const rawText: string = allParts
+    .filter((p: any) => !p.thought && typeof p.text === "string")
+    .map((p: any) => p.text as string)
+    .join("") || "";
 
   const jsonMatch = rawText.match(/\[[\s\S]*\]/);
   if (!jsonMatch) {
