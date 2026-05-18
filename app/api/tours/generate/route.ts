@@ -206,12 +206,22 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
   }
 
   const gemData = await gemRes.json();
+  console.log('[tours/generate] Gemini response structure:', JSON.stringify(gemData, null, 2).slice(0, 2000));
+
   // Support both regular models and thinking models (parts may include thought:true)
   const allParts: any[] = gemData.candidates?.[0]?.content?.parts || [];
+  console.log('[tours/generate] Parts count:', allParts.length);
+  allParts.forEach((p: any, i: number) => {
+    console.log(`[tours/generate] Part ${i}:`, p.thought ? 'THOUGHT' : 'OUTPUT', typeof p.text === 'string' ? p.text.slice(0, 100) : 'no text');
+  });
+
   const rawText: string = allParts
     .filter((p: any) => !p.thought && typeof p.text === "string")
     .map((p: any) => p.text as string)
     .join("") || "";
+
+  console.log('[tours/generate] Extracted text length:', rawText.length);
+  console.log('[tours/generate] First 500 chars:', rawText.slice(0, 500));
 
   // Robust JSON extraction: handle markdown fences, raw arrays, or objects with array values
   function extractJsonArray(text: string): any[] | null {
@@ -235,7 +245,7 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
 
   const roteiros = extractJsonArray(rawText);
   if (!roteiros) {
-    return NextResponse.json({ error: "Gemini não retornou JSON", raw: rawText.slice(0, 800) }, { status: 500 });
+    return NextResponse.json({ error: "Gemini não retornou JSON", raw: rawText.slice(0, 1000), partsCount: allParts.length }, { status: 500 });
   }
 
   // ─── 5. Salvar no banco ───────────────────────────────────────────────────
