@@ -89,14 +89,15 @@ export default function ToursManager() {
 
   const fetchTours = async () => {
     setLoading(true);
-    const city = process.env.NEXT_PUBLIC_CITY || "salvador";
-    const { data } = await supabase
-      .from("tours")
-      .select("*")
-      .eq("city", city)
-      .order("created_at", { ascending: false });
-    setTours(data || []);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/tours/admin");
+      const data = await res.json();
+      setTours(Array.isArray(data) ? data : []);
+    } catch {
+      setTours([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchEvents = async () => {
@@ -139,12 +140,20 @@ export default function ToursManager() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este roteiro?")) return;
-    await supabase.from("tours").delete().eq("id", id);
+    await fetch("/api/tours/admin", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
     fetchTours();
   };
 
   const togglePublished = async (tour: Tour) => {
-    await supabase.from("tours").update({ is_published: !tour.is_published }).eq("id", tour.id);
+    await fetch("/api/tours/admin", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: tour.id, is_published: !tour.is_published }),
+    });
     fetchTours();
   };
 
