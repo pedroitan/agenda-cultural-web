@@ -182,104 +182,72 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     return icons[source] ?? '📋';
   };
 
-  return (
-    <AdminLayout>
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Total de Eventos</p>
-          <p className="text-3xl font-bold text-gray-900">{totalEvents || 0}</p>
-          <p className="text-xs text-green-600 mt-1 font-medium">Todos ativos</p>
+  const statsCards = (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Total de Eventos</p>
+        <p className="text-3xl font-bold text-gray-900">{totalEvents || 0}</p>
+        <p className="text-xs text-green-600 mt-1 font-medium">Todos ativos</p>
+      </div>
+      <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Eventos Futuros</p>
+        <p className="text-3xl font-bold text-gray-900">{futureEvents || 0}</p>
+        <p className="text-xs text-blue-600 mt-1 font-medium">Próximos dias</p>
+      </div>
+      {counts.map((c) => (
+        <div key={c.source} className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
+            {sourceIcon(c.source)} {sourceLabel(c.source)}
+          </p>
+          <p className="text-3xl font-bold text-gray-900">{c.count}</p>
+          <p className="text-xs text-violet-600 mt-1 font-medium">eventos</p>
         </div>
-        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">Eventos Futuros</p>
-          <p className="text-3xl font-bold text-gray-900">{futureEvents || 0}</p>
-          <p className="text-xs text-blue-600 mt-1 font-medium">Próximos 30 dias</p>
+      ))}
+    </div>
+  );
+
+  const analyticsCards = (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <a
+        href="https://dash.cloudflare.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-white text-sm font-medium">Cloudflare Analytics</p>
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
         </div>
-        {counts.map((c) => (
-          <div key={c.source} className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
-              {sourceIcon(c.source)} {sourceLabel(c.source)}
-            </p>
-            <p className="text-3xl font-bold text-gray-900">{c.count}</p>
-            <p className="text-xs text-violet-600 mt-1 font-medium">eventos</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Analytics Overview */}
-      <h2 id="analytics" className="text-xl font-semibold mb-4 text-gray-900">Analytics & Métricas</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <a
-          href="https://dash.cloudflare.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-white text-sm font-medium">Cloudflare Analytics</p>
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </div>
-          <p className="text-white text-2xl font-bold mb-1">Web Analytics</p>
-          <p className="text-orange-100 text-xs">Tráfego, origem, performance</p>
-        </a>
-
-        <a
-          href="https://vercel.com/pedroitans-projects/agenda-cultural-web/analytics"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all shadow-sm"
-        >
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-white text-sm font-medium">Vercel Analytics</p>
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </div>
-          <p className="text-white text-2xl font-bold mb-1">Core Web Vitals</p>
-          <p className="text-gray-300 text-xs">Performance detalhada</p>
-        </a>
-
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-white text-sm font-medium">Engajamento</p>
-          </div>
-          <RealtimeClickCounter initialTotal={totalClicks} />
+        <p className="text-white text-2xl font-bold mb-1">Web Analytics</p>
+        <p className="text-orange-100 text-xs">Tráfego, origem, performance</p>
+      </a>
+      <a
+        href="https://vercel.com/pedroitans-projects/agenda-cultural-web/analytics"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all shadow-sm"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-white text-sm font-medium">Vercel Analytics</p>
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
         </div>
+        <p className="text-white text-2xl font-bold mb-1">Core Web Vitals</p>
+        <p className="text-gray-300 text-xs">Performance detalhada</p>
+      </a>
+      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
+        <p className="text-white text-sm font-medium mb-2">Engajamento</p>
+        <RealtimeClickCounter initialTotal={totalClicks} />
       </div>
+    </div>
+  );
 
-      {/* Top Clicked Events — updates in realtime */}
-      <RealtimeTopClicked initialTop={topClicked ?? []} />
-
-      {/* Pending Events */}
-      <div id="eventos-pendentes">
-        <PendingEvents />
-      </div>
-
-      {/* Active Events */}
-      <div id="eventos-aprovados">
-        <ActiveEvents />
-      </div>
-
-      {/* Event Submissions */}
-      <div id="submissoes-eventos">
-        <EventSubmissions />
-      </div>
-
-      {/* Ads Manager */}
-      <div id="anuncios">
-        <AdsManager />
-      </div>
-
-      {/* Tours Manager */}
-      <div id="roteiros">
-        <ToursManager />
-      </div>
-
-      {/* Latest Scrape by Source */}
-      <h2 id="scrapes-fonte" className="text-xl font-semibold mb-4 text-gray-900">Último Scrape por Fonte</h2>
+  const scrapesSection = (
+    <>
+      <h3 className="text-base font-semibold mb-4 text-gray-700">Último Scrape por Fonte</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {Array.from(latestBySource.values()).map((run) => (
           <div
@@ -290,13 +258,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           >
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-lg font-semibold capitalize text-gray-900">{run.source}</h3>
-              <span
-                className={`px-2 py-1 rounded text-xs ${
-                  run.status === "success"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
+              <span className={`px-2 py-1 rounded text-xs ${run.status === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                 {run.status}
               </span>
             </div>
@@ -324,8 +286,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
         ))}
       </div>
 
-      {/* Recent Scrape Runs */}
-      <h2 id="historico-scrapes" className="text-xl font-semibold mb-4 text-gray-900">Histórico de Scrapes</h2>
+      <h3 className="text-base font-semibold mb-4 text-gray-700">Histórico de Scrapes</h3>
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50">
@@ -343,20 +304,10 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
             {(scrapeRuns || []).map((run: ScrapeRun) => (
               <tr key={run.id} className="border-t border-gray-200 hover:bg-gray-50">
                 <td className="px-4 py-3 capitalize text-gray-900">{run.source}</td>
-                <td className="px-4 py-3 text-gray-500 text-sm">
-                  {formatDate(run.started_at)}
-                </td>
-                <td className="px-4 py-3 text-gray-500 text-sm">
-                  {formatDuration(run.started_at, run.ended_at)}
-                </td>
+                <td className="px-4 py-3 text-gray-500 text-sm">{formatDate(run.started_at)}</td>
+                <td className="px-4 py-3 text-gray-500 text-sm">{formatDuration(run.started_at, run.ended_at)}</td>
                 <td className="px-4 py-3">
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      run.status === "success"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
+                  <span className={`px-2 py-1 rounded text-xs ${run.status === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {run.status}
                   </span>
                 </td>
@@ -368,6 +319,30 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </>
+  );
+
+  return (
+    <AdminLayout
+      cityName={cityConfig.name}
+      homeContent={
+        <>
+          {statsCards}
+          <h3 className="text-base font-semibold mb-4 text-gray-700">Analytics & Métricas</h3>
+          {analyticsCards}
+          <RealtimeTopClicked initialTop={topClicked ?? []} />
+        </>
+      }
+      eventosContent={
+        <>
+          <PendingEvents />
+          <ActiveEvents />
+          <EventSubmissions />
+        </>
+      }
+      roteirosContent={<ToursManager />}
+      anunciosContent={<AdsManager />}
+      scrapesContent={scrapesSection}
+    />
   );
 }
