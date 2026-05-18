@@ -59,6 +59,16 @@ export default function HappeningNow({ events }: { events: Event[] }) {
             <Link
               key={event.id}
               href={`/event/${event.id}`}
+              onClick={() => {
+                try {
+                  const key = `ev_${event.id}`;
+                  if (!localStorage.getItem(key)) {
+                    navigator.sendBeacon?.(`/api/events/${event.id}/view`) ||
+                      fetch(`/api/events/${event.id}/view`, { method: 'POST', keepalive: true });
+                    localStorage.setItem(key, '1');
+                  }
+                } catch {}
+              }}
               className="flex-shrink-0 w-64 cursor-pointer group"
             >
               <div className="relative w-full aspect-[16/9] bg-zinc-100 overflow-hidden rounded-lg transition-all group-hover:shadow-md group-hover:-translate-y-0.5">

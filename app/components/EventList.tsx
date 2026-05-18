@@ -29,6 +29,20 @@ function formatEventDate(dateStr: string): { date: string; time: string | null }
   };
 }
 
+function trackEventClick(eventId: string) {
+  const key = `ev_${eventId}`;
+  try {
+    if (localStorage.getItem(key)) return;
+    const url = `/api/events/${eventId}/view`;
+    if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+      navigator.sendBeacon(url);
+    } else {
+      fetch(url, { method: 'POST', keepalive: true });
+    }
+    localStorage.setItem(key, '1');
+  } catch {}
+}
+
 export default function EventList({ events }: { events: EventRow[] }) {
   if (events.length === 0) {
     return (
@@ -51,6 +65,7 @@ export default function EventList({ events }: { events: EventRow[] }) {
           <Link
             key={ev.id}
             href={`/event/${ev.id}`}
+            onClick={() => trackEventClick(ev.id)}
             className="group flex flex-col"
           >
             {/* Image — landscape 16:9 */}
