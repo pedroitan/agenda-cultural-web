@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Plus, Edit, Trash2, Eye, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Plus, Edit, Trash2, MapPin, Clock, ArrowRight, Sparkles } from "lucide-react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,6 +50,29 @@ export default function ToursManager() {
   const [showModal, setShowModal] = useState(false);
   const [showStopsModal, setShowStopsModal] = useState(false);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [genResult, setGenResult] = useState<{ count: number; events_analyzed: number; nearby_pairs: number } | null>(null);
+
+  const handleGenerate = async () => {
+    if (!confirm("Gerar roteiros com IA para o fim de semana? Os roteiros ficarão como rascunho para revisão.")) return;
+    setGenerating(true);
+    setGenResult(null);
+    try {
+      const res = await fetch("/api/tours/generate", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setGenResult({ count: data.generated, events_analyzed: data.events_analyzed, nearby_pairs: data.nearby_pairs_found });
+        fetchTours();
+      } else {
+        alert(`Erro: ${data.error}`);
+      }
+    } catch {
+      alert("Erro ao gerar roteiros");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const [formData, setFormData] = useState({
     title: "",
     curator_name: "",
@@ -168,16 +191,34 @@ export default function ToursManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-xl font-semibold text-gray-900">Gerenciar Roteiros</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition-colors"
-        >
-          <Plus size={16} />
-          Novo Roteiro
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-4 py-2 rounded-lg hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Sparkles size={16} />
+            {generating ? "Gerando..." : "Gerar com IA"}
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Plus size={16} />
+            Novo Roteiro
+          </button>
+        </div>
       </div>
+
+      {genResult && (
+        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          ✅ <strong>{genResult.count} roteiros gerados</strong> a partir de {genResult.events_analyzed} eventos
+          {genResult.nearby_pairs > 0 && ` · ${genResult.nearby_pairs} pares próximos identificados por GPS`}.
+          Revise e publique abaixo.
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center py-8 text-gray-500">Carregando...</div>
