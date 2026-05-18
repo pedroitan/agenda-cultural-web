@@ -220,7 +220,12 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const images = formData.getAll("images") as File[]
     const channelName = formData.get("channelName") as string
+    const channelLogoUrl = formData.get("channelLogoUrl") as string | null
     const channelLogo = formData.get("channelLogo") as File | null
+
+    // Determine city from env or default
+    const citySlug = process.env.NEXT_PUBLIC_CITY || 'salvador'
+    const cityName = citySlug === 'sao-paulo' ? 'São Paulo' : citySlug === 'rio-de-janeiro' ? 'Rio de Janeiro' : 'Salvador'
 
     if (!images || images.length === 0) {
       return NextResponse.json({ error: "Nenhuma imagem fornecida" }, { status: 400 })
@@ -230,13 +235,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Nome do canal é obrigatório" }, { status: 400 })
     }
 
-    // Upload channel logo to Supabase Storage if provided
-    let logoUrl = null
-    if (channelLogo) {
+    // Resolve logo URL: prefer direct URL, fallback to file upload
+    let logoUrl: string | null = channelLogoUrl?.trim() || null
+
+    if (!logoUrl && channelLogo) {
       const logoBuffer = Buffer.from(await channelLogo.arrayBuffer())
       const logoFileName = `instagram-logos/${channelName.replace('@', '')}-${Date.now()}.${channelLogo.type.split('/')[1]}`
       
-      const { data: logoData, error: logoError } = await supabase.storage
+      const { error: logoError } = await supabase.storage
         .from('event-images')
         .upload(logoFileName, logoBuffer, {
           contentType: channelLogo.type,
@@ -299,7 +305,7 @@ export async function POST(request: NextRequest) {
           external_id: externalId,
           title: ev.title,
           start_datetime: startDatetime,
-          city: 'Salvador',
+          city: cityName,
           venue_name: ev.venue || undefined,
           price_text: ev.price !== 'Consulte' ? ev.price : undefined,
           category,

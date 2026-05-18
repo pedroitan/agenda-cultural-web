@@ -6,6 +6,7 @@ import Link from "next/link"
 export default function InstagramVisionPage() {
   const [images, setImages] = useState<File[]>([])
   const [channelName, setChannelName] = useState("@agendaalternativasalvador")
+  const [channelLogoUrl, setChannelLogoUrl] = useState("")
   const [channelLogo, setChannelLogo] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{ success: boolean; message: string; events?: any[] } | null>(null)
@@ -97,8 +98,10 @@ export default function InstagramVisionPage() {
       // Add channel info
       formData.append("channelName", channelName)
       
-      // Add channel logo if provided
-      if (channelLogo) {
+      // Add channel logo URL if provided (preferred over file upload)
+      if (channelLogoUrl.trim()) {
+        formData.append("channelLogoUrl", channelLogoUrl.trim())
+      } else if (channelLogo) {
         formData.append("channelLogo", channelLogo)
       }
 
@@ -139,6 +142,7 @@ export default function InstagramVisionPage() {
         const logoInput = document.getElementById("logo") as HTMLInputElement
         if (imageInput) imageInput.value = ""
         if (logoInput) logoInput.value = ""
+        // Keep channelLogoUrl so user doesn't have to re-paste it
       } else {
         setResult({
           success: false,
@@ -194,23 +198,43 @@ export default function InstagramVisionPage() {
             </div>
 
             <div>
-              <label htmlFor="logo" className="block text-sm font-medium text-zinc-700">
-                Logo do Canal (opcional)
+              <label htmlFor="logoUrl" className="block text-sm font-medium text-zinc-700">
+                URL da Foto de Perfil do Canal
               </label>
               <input
-                type="file"
-                id="logo"
-                accept="image/*"
-                onChange={handleLogoChange}
-                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm text-black file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                type="url"
+                id="logoUrl"
+                value={channelLogoUrl}
+                onChange={(e) => setChannelLogoUrl(e.target.value)}
+                placeholder="https://instagram.com/... (cole a URL da foto de perfil)"
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm text-black placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <p className="mt-1 text-xs text-zinc-500">
-                Esta imagem será usada como miniatura dos eventos extraídos
+                Clique direito na foto de perfil do canal no Instagram → "Copiar endereço da imagem"
               </p>
-              {channelLogo && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-green-600">
-                  <span>✓</span>
-                  <span>{channelLogo.name}</span>
+              {channelLogoUrl && (
+                <div className="mt-2 flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={channelLogoUrl} alt="logo" className="w-10 h-10 rounded-full object-cover border border-zinc-200" />
+                  <span className="text-sm text-green-600">✓ URL configurada</span>
+                </div>
+              )}
+              {!channelLogoUrl && (
+                <div className="mt-3">
+                  <label htmlFor="logo" className="block text-xs text-zinc-500 mb-1">Ou faça upload do arquivo:</label>
+                  <input
+                    type="file"
+                    id="logo"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm text-black file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {channelLogo && (
+                    <div className="mt-1 flex items-center gap-2 text-sm text-green-600">
+                      <span>✓</span>
+                      <span>{channelLogo.name}</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
