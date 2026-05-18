@@ -2,10 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import HappeningNow from './HappeningNow';
 import EventFilters from './EventFilters';
 import EventList from './EventList';
-import AdBanner from './AdBanner';
 
 type EventRow = {
   id: string;
@@ -46,20 +44,6 @@ export default function PageClient({
   const [categoria, setCategoria] = useState(initialCategoria || 'Todos');
   const [data, setData] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-
-  // IDs dos eventos que aparecem no HappeningNow (com imagem, nas últimas 2h)
-  const happeningNowIds = useMemo(() => {
-    const now = new Date();
-    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
-    return new Set(
-      events
-        .filter(e => {
-          const start = new Date(e.start_datetime);
-          return start >= twoHoursAgo && start <= now && !!e.image_url;
-        })
-        .map(e => e.id)
-    );
-  }, [events]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -107,11 +91,8 @@ export default function PageClient({
       );
     }
 
-    // Excluir eventos já exibidos no HappeningNow
-    filtered = filtered.filter(e => !happeningNowIds.has(e.id));
-
     return filtered;
-  }, [events, categoria, data, busca, happeningNowIds]);
+  }, [events, categoria, data, busca]);
 
   const handleCategoriaChange = (cat: string) => {
     setCategoria(cat);
@@ -125,13 +106,32 @@ export default function PageClient({
 
   return (
     <>
-      {/* Header com search no menu superior — estilo Sympla */}
       <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white shadow-sm">
-        <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3">
-          <h1 className="shrink-0 text-sm font-bold text-zinc-900 hidden sm:block">
+        {/* Linha 1: nome + botões de ação */}
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 pt-3 pb-2">
+          <h1 className="shrink-0 text-sm font-bold text-zinc-900 hidden sm:block mr-auto">
             Agenda Cultural {cityName}
           </h1>
-          {/* Search bar — centralizada, proeminente */}
+          <div className="flex-1 sm:flex-none" />
+          <Link
+            href="/roteiros"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 text-violet-700 px-3 py-1.5 text-sm font-medium hover:bg-violet-100 transition-colors whitespace-nowrap"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+            <span className="hidden sm:inline">Roteiros do Fim de Semana</span>
+            <span className="sm:hidden">Roteiros</span>
+          </Link>
+          <Link
+            href="/adicionar-evento"
+            className="shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-3 py-1.5 rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-sm text-sm whitespace-nowrap"
+          >
+            + Adicionar Evento
+          </Link>
+        </div>
+        {/* Linha 2: busca + filtros */}
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 pb-3">
           <div className="relative flex-1">
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400"
@@ -142,57 +142,44 @@ export default function PageClient({
             </svg>
             <input
               type="text"
-              placeholder={`O que você quer curtir hoje ${cityPreposition} ${cityName}?`}
+              placeholder={`Buscar evento ${cityPreposition} ${cityName}...`}
               value={busca}
               onChange={(e) => handleBuscaChange(e.target.value)}
-              onFocus={() => setShowFilters(true)}
-              onBlur={() => { if (!busca) setTimeout(() => setShowFilters(false), 200); }}
               className="w-full rounded-full border border-zinc-200 bg-zinc-50 pl-9 pr-4 py-2 text-sm focus:bg-white focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-100 transition-all"
             />
           </div>
-          <Link
-            href="/adicionar-evento"
-            className="shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-3 py-2 rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-sm text-sm whitespace-nowrap"
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+              showFilters
+                ? 'bg-violet-600 border-violet-600 text-white'
+                : 'bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50'
+            }`}
           >
-            + Adicionar Evento
-          </Link>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+            </svg>
+            Filtros
+            {(categoria !== 'Todos' || data) && (
+              <span className="ml-0.5 bg-white text-violet-700 rounded-full w-4 h-4 text-xs flex items-center justify-center font-bold">
+                {(categoria !== 'Todos' ? 1 : 0) + (data ? 1 : 0)}
+              </span>
+            )}
+          </button>
         </div>
       </header>
 
       <main className="mx-auto w-full max-w-7xl px-4 py-6">
-        <HappeningNow events={events} />
-        
-        {/* Roteiros do Fim de Semana */}
-        <div className="mb-6">
-          <Link
-            href="/roteiros"
-            className="group relative inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all hover:shadow-lg hover:scale-[1.02]"
-          >
-            <span>Roteiros do Fim de Semana</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        
-        {/* Banner Principal */}
-        {/* <AdBanner type="banner" position="top" className="mb-6" /> */}
-        
-        <EventFilters
-          categoria={categoria}
-          data={data}
-          onCategoriaChange={handleCategoriaChange}
-          onDataChange={setData}
-          showOnMobile={showFilters}
-        />
-        
-        {/* Banner entre filtros e lista */}
-        {/* <AdBanner type="featured" position="between_events" className="mb-6" /> */}
-        
+        {showFilters && (
+          <EventFilters
+            categoria={categoria}
+            data={data}
+            onCategoriaChange={handleCategoriaChange}
+            onDataChange={setData}
+            showOnMobile={showFilters}
+          />
+        )}
         <EventList events={filteredEvents} />
-        
-        {/* Banner no final */}
-        {/* <AdBanner type="banner" position="bottom" className="mt-6" /> */}
       </main>
     </>
   );
