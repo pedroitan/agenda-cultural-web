@@ -5,6 +5,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 
 // Marcador SVG customizado (gradiente violeta/fuchsia, combinando com o site)
 const createCustomIcon = (color = "#9333ea") => {
@@ -94,7 +96,25 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
     );
   }
 
-  const validEvents = events.filter(e => e.latitude && e.longitude);
+  const rawValid = events.filter(e => e.latitude && e.longitude);
+
+  // Adicionar jitter para eventos com coordenadas idênticas (mesmo local/bairro)
+  // para que apareçam como marcadores distintos no mapa
+  const coordCount: Record<string, number> = {};
+  const validEvents = rawValid.map((event) => {
+    const key = `${event.latitude?.toFixed(4)},${event.longitude?.toFixed(4)}`;
+    coordCount[key] = (coordCount[key] || 0) + 1;
+    const idx = coordCount[key] - 1;
+    if (idx === 0) return event;
+    // Espalha em espiral ~100m de raio
+    const angle = (idx * 137.5 * Math.PI) / 180; // golden angle
+    const radius = 0.0005 + idx * 0.0003;
+    return {
+      ...event,
+      latitude: event.latitude! + Math.cos(angle) * radius,
+      longitude: event.longitude! + Math.sin(angle) * radius,
+    };
+  });
 
   if (validEvents.length === 0) {
     return (
