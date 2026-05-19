@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -131,50 +132,52 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
           subdomains="abcd"
         />
         <MapCenter events={validEvents} zoom={zoom} />
-        {validEvents.map((event) => (
-          <Marker
-            key={event.id}
-            position={[event.latitude!, event.longitude!] as [number, number]}
-            icon={createCustomIcon()}
-          >
-            <Popup className="custom-popup">
-              <div className="min-w-[220px]">
-                {event.image_url && (
-                  <img
-                    src={event.image_url}
-                    alt={event.title}
-                    className="w-full h-32 object-cover rounded-t-lg -m-3 mb-2"
-                    style={{ width: "calc(100% + 24px)", maxWidth: "none" }}
-                  />
-                )}
-                <div className="px-1 pt-1">
-                  <h3 className="font-bold text-sm mb-1 text-zinc-900 leading-tight">{event.title}</h3>
-                  <p className="text-xs text-zinc-600 mb-2 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    </svg>
-                    {event.venue_name || "Local a confirmar"}
-                  </p>
-                  <p className="text-xs text-zinc-500 mb-3">
-                    {new Date(event.start_datetime).toLocaleDateString('pt-BR', {
-                      weekday: 'short',
-                      day: 'numeric',
-                      month: 'short',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                  <a
-                    href={`/event/${event.id}`}
-                    className="inline-block w-full text-center bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-semibold py-2 px-3 rounded-lg hover:from-violet-700 hover:to-fuchsia-700 transition-all no-underline"
-                  >
-                    Ver detalhes →
-                  </a>
+        <MarkerClusterGroup chunkedLoading>
+          {validEvents.map((event) => (
+            <Marker
+              key={event.id}
+              position={[event.latitude!, event.longitude!] as [number, number]}
+              icon={createCustomIcon()}
+            >
+              <Popup className="custom-popup">
+                <div className="min-w-[220px]">
+                  {event.image_url && (
+                    <img
+                      src={event.image_url}
+                      alt={event.title}
+                      className="w-full h-32 object-cover rounded-t-lg -m-3 mb-2"
+                      style={{ width: "calc(100% + 24px)", maxWidth: "none" }}
+                    />
+                  )}
+                  <div className="px-1 pt-1">
+                    <h3 className="font-bold text-sm mb-1 text-zinc-900 leading-tight">{event.title}</h3>
+                    <p className="text-xs text-zinc-600 mb-2 flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                      </svg>
+                      {event.venue_name || "Local a confirmar"}
+                    </p>
+                    <p className="text-xs text-zinc-500 mb-3">
+                      {new Date(event.start_datetime).toLocaleDateString('pt-BR', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                    <a
+                      href={`/event/${event.id}`}
+                      className="inline-block w-full text-center bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-semibold py-2 px-3 rounded-lg hover:from-violet-700 hover:to-fuchsia-700 transition-all no-underline"
+                    >
+                      Ver detalhes →
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );
