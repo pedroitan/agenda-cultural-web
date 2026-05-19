@@ -32,13 +32,21 @@ export default async function DistritoComercioPage() {
     );
   }
 
-  const { data: events, error } = await supabase
+  // Filtrar por venue_name contendo palavras-chave do Distrito do Comércio
+  const districtKeywords = ["Pelourinho", "Terreiro de Jesus", "Rua Chile", "Centro Histórico", "Sé", "Comércio", "Baixa dos Sapateiros", "Largo do Pelourinho", "Praça da Sé"];
+
+  const { data: allEvents, error } = await supabase
     .from("events")
     .select("*")
-    .eq("district", "comercio")
     .eq("is_active", true)
     .gt("start_datetime", new Date().toISOString())
     .order("start_datetime", { ascending: true });
+
+  // Filtrar por venue_name contendo palavras-chave (case-insensitive)
+  const events = (allEvents || []).filter((ev) => {
+    const venue = (ev.venue_name || "").toLowerCase();
+    return districtKeywords.some((keyword) => venue.includes(keyword.toLowerCase()));
+  });
 
   if (error) {
     console.error("Erro ao buscar eventos do distrito:", error);
