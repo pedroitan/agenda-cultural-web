@@ -49,27 +49,23 @@ function formatEventForPrompt(ev: EventForTour): string {
 function getWeekendRange(): { start: Date; end: Date; label: string } {
   const now = new Date();
   const nowBRT = new Date(now.getTime() - 3 * 60 * 60 * 1000);
-  const dow = nowBRT.getDay(); // 0=Dom...6=Sáb
+  const dow = nowBRT.getDay(); // 0=Dom, 6=Sáb
 
-  // Days until/since last Friday
-  const daysToFri =
-    dow === 0 ? -2 :
-    dow === 6 ? -1 :
-    dow === 5 ? 0 :
-    5 - dow;
+  // Days until next Saturday (if already Saturday, 0; if Sunday, 6)
+  const daysToSat = dow === 6 ? 0 : (6 - dow);
 
-  const fri = new Date(nowBRT);
-  fri.setDate(fri.getDate() + daysToFri);
-  fri.setHours(0, 0, 0, 0);
+  const sat = new Date(nowBRT);
+  sat.setDate(nowBRT.getDate() + daysToSat);
+  sat.setHours(0, 0, 0, 0);
 
-  const sun = new Date(fri);
-  sun.setDate(sun.getDate() + 2);
+  const sun = new Date(sat);
+  sun.setDate(sat.getDate() + 1);
   sun.setHours(23, 59, 59, 999);
 
   const fmt = (d: Date) =>
     d.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
-  return { start: fri, end: sun, label: `${fmt(fri)} a ${fmt(sun)}` };
+  return { start: sat, end: sun, label: `${fmt(sat)} e ${fmt(sun)}` };
 }
 
 export async function POST() {
