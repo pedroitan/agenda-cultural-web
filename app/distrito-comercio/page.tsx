@@ -32,19 +32,18 @@ export default async function DistritoComercioPage() {
     );
   }
 
-  // Palavras-chave do Distrito do Comércio com regex para evitar falsos positivos
-  // (ex: "Sé" não deve coincidir com "José")
-  const districtPatterns = [
-    /pelourinho/i,
-    /terreiro de jesus/i,
-    /rua chile/i,
-    /centro histórico/i,
-    /centro historico/i,
-    /\bsé\b/i,
-    /baixa dos sapateiros/i,
-    /largo do pelourinho/i,
-    /praça da sé/i,
-    /praca da se/i,
+  // Padrões e coordenadas de fallback para cada área do Distrito do Comércio
+  const districtPatterns: { pattern: RegExp; lat: number; lng: number }[] = [
+    { pattern: /terreiro de jesus/i,   lat: -12.9741, lng: -38.5072 },
+    { pattern: /largo do pelourinho/i, lat: -12.9735, lng: -38.5083 },
+    { pattern: /pelourinho/i,          lat: -12.9732, lng: -38.5089 },
+    { pattern: /rua chile/i,           lat: -12.9705, lng: -38.5107 },
+    { pattern: /centro histórico/i,    lat: -12.9730, lng: -38.5050 },
+    { pattern: /centro historico/i,    lat: -12.9730, lng: -38.5050 },
+    { pattern: /praça da sé/i,         lat: -12.9712, lng: -38.5030 },
+    { pattern: /praca da se/i,         lat: -12.9712, lng: -38.5030 },
+    { pattern: /\bsé\b/i,              lat: -12.9712, lng: -38.5030 },
+    { pattern: /baixa dos sapateiros/i,lat: -12.9720, lng: -38.5010 },
   ];
 
   const { data: allEvents, error } = await supabase
@@ -54,11 +53,19 @@ export default async function DistritoComercioPage() {
     .gt("start_datetime", new Date().toISOString())
     .order("start_datetime", { ascending: true });
 
-  // Filtrar por venue_name usando regex com word boundaries
-  const events = (allEvents || []).filter((ev) => {
-    const venue = ev.venue_name || "";
-    return districtPatterns.some((pattern) => pattern.test(venue));
-  });
+  // Filtrar e enriquecer com coordenadas de fallback se necessário
+  const events = (allEvents || [])
+    .map((ev) => {
+      const venue = ev.venue_name || "";
+      const match = districtPatterns.find(({ pattern }) => pattern.test(venue));
+      if (!match) return null;
+      // Se não tem coordenadas, usar as do bairro correspondente
+      if (!ev.latitude || !ev.longitude) {
+        return { ...ev, latitude: match.lat, longitude: match.lng };
+      }
+      return ev;
+    })
+    .filter(Boolean);
 
   if (error) {
     console.error("Erro ao buscar eventos do distrito:", error);
