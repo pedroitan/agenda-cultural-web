@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import EventList from "../components/EventList";
+import EventMap from "../components/EventMap";
 import HappeningNow from "../components/HappeningNow";
 import Link from "next/link";
 
@@ -74,6 +75,12 @@ export default async function DistritoComercioPage() {
 
       {/* Conteúdo */}
       <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Mapa com marcadores dos eventos */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-zinc-900 mb-4">Mapa de Eventos</h2>
+          <EventMap events={events || []} height="400px" />
+        </div>
+
         <HappeningNow events={events || []} />
         <EventList events={events || []} />
       </div>
