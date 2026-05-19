@@ -32,8 +32,20 @@ export default async function DistritoComercioPage() {
     );
   }
 
-  // Filtrar por venue_name contendo palavras-chave do Distrito do Comércio
-  const districtKeywords = ["Pelourinho", "Terreiro de Jesus", "Rua Chile", "Centro Histórico", "Sé", "Baixa dos Sapateiros", "Largo do Pelourinho", "Praça da Sé"];
+  // Palavras-chave do Distrito do Comércio com regex para evitar falsos positivos
+  // (ex: "Sé" não deve coincidir com "José")
+  const districtPatterns = [
+    /pelourinho/i,
+    /terreiro de jesus/i,
+    /rua chile/i,
+    /centro histórico/i,
+    /centro historico/i,
+    /\bsé\b/i,
+    /baixa dos sapateiros/i,
+    /largo do pelourinho/i,
+    /praça da sé/i,
+    /praca da se/i,
+  ];
 
   const { data: allEvents, error } = await supabase
     .from("events")
@@ -42,10 +54,10 @@ export default async function DistritoComercioPage() {
     .gt("start_datetime", new Date().toISOString())
     .order("start_datetime", { ascending: true });
 
-  // Filtrar por venue_name contendo palavras-chave (case-insensitive)
+  // Filtrar por venue_name usando regex com word boundaries
   const events = (allEvents || []).filter((ev) => {
-    const venue = (ev.venue_name || "").toLowerCase();
-    return districtKeywords.some((keyword) => venue.includes(keyword.toLowerCase()));
+    const venue = ev.venue_name || "";
+    return districtPatterns.some((pattern) => pattern.test(venue));
   });
 
   if (error) {
