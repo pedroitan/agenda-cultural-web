@@ -9,17 +9,20 @@ import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 
 // Marcador SVG customizado (gradiente violeta/fuchsia, combinando com o site)
-const createCustomIcon = (color = "#9333ea") => {
+const createCustomIcon = () => {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">
       <defs>
         <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#c026d3;stop-opacity:1" />
+          <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
         </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000066"/>
+        </filter>
       </defs>
-      <path d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26C32 7.163 24.837 0 16 0z" fill="url(#grad)" stroke="white" stroke-width="2"/>
-      <circle cx="16" cy="16" r="6" fill="white"/>
+      <path d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26C32 7.163 24.837 0 16 0z" fill="url(#grad)" filter="url(#shadow)"/>
+      <circle cx="16" cy="16" r="5" fill="white" opacity="0.95"/>
     </svg>
   `;
   return L.divIcon({
@@ -27,7 +30,30 @@ const createCustomIcon = (color = "#9333ea") => {
     className: "custom-marker",
     iconSize: [32, 42],
     iconAnchor: [16, 42],
-    popupAnchor: [0, -42],
+    popupAnchor: [0, -46],
+  });
+};
+
+// Cluster icon com gradiente roxo
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createClusterCustomIcon = (cluster: any) => {
+  const count = cluster.getChildCount();
+  const size = count < 10 ? 36 : count < 20 ? 42 : 48;
+  return L.divIcon({
+    html: `
+      <div style="
+        width:${size}px;height:${size}px;
+        background:linear-gradient(135deg,#9333ea,#c026d3);
+        border-radius:50%;
+        border:3px solid rgba(255,255,255,0.8);
+        display:flex;align-items:center;justify-content:center;
+        color:white;font-weight:700;font-size:${count < 10 ? 14 : 12}px;
+        box-shadow:0 2px 12px rgba(147,51,234,0.6);
+        font-family:system-ui,sans-serif;
+      ">${count}</div>
+    `,
+    className: "",
+    iconSize: L.point(size, size, true),
   });
 };
 
@@ -145,14 +171,14 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={!singleEvent}
       >
-        {/* CartoDB Voyager - muito mais bonito que OSM padrão, gratuito */}
+        {/* CartoDB Dark Matter - tema escuro elegante */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           subdomains="abcd"
         />
         <MapCenter events={validEvents} zoom={zoom} />
-        <MarkerClusterGroup chunkedLoading>
+        <MarkerClusterGroup chunkedLoading iconCreateFunction={createClusterCustomIcon}>
           {validEvents.map((event) => (
             <Marker
               key={event.id}
