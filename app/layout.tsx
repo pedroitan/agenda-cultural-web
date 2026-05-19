@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { getCityConfig } from "@/config/cities";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 const city = getCityConfig();
@@ -55,6 +56,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={inter.className}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
