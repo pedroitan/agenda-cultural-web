@@ -145,7 +145,7 @@ export async function POST() {
       : "\n(Sem coordenadas GPS suficientes — use bairros como referência principal)";
 
   const prompt = `Você é um curador cultural especialista em ${cityConfig.name}.
-Crie EXATAMENTE 3 roteiros de fim de semana otimizados para conforto e proximidade.
+Crie até 3 roteiros de fim de semana. Cada roteiro deve ter um PERFIL DE PÚBLICO claro e todos os eventos devem ser coerentes com esse perfil.
 
 PERÍODO: ${label}
 
@@ -153,34 +153,49 @@ EVENTOS DISPONÍVEIS (${events.length} eventos):
 ${eventLines}
 ${nearbySection}
 
-REGRAS OBRIGATÓRIAS — leia com atenção:
-1. PROXIMIDADE GEOGRÁFICA (PRIORIDADE MÁXIMA)
-   - Todos os eventos de um roteiro devem estar no MESMO BAIRRO ou em bairros adjacentes
-   - Distância máxima entre quaisquer dois eventos do roteiro: 2 km
-   - Use os pares computados acima como guia quando disponíveis
+═══════════════════════════════════════════
+REGRA 1 — PERFIL DE PÚBLICO (MAIS IMPORTANTE)
+═══════════════════════════════════════════
+Cada roteiro deve se encaixar em UM destes perfis:
+- "familia" → eventos para pais com filhos pequenos, teatro infantil, parques, atividades educativas, horário diurno
+- "jovem-adulto" → shows, baladas, bares, música ao vivo, noite, eventos 18+
+- "cultura" → museus, exposições, teatro adulto, ópera, cinema, arte
+- "casual-dia" → feiras, mercados, gastronomia, lazer ao ar livre, passeios
 
-2. SEQUÊNCIA TEMPORAL CONFORTÁVEL
-   - Ordene os eventos do mais cedo para o mais tarde
-   - Intervalo mínimo entre o fim de um evento e início do próximo: 30 minutos (tempo de deslocamento)
-   - Prefira blocos coerentes: manhã (9h-13h), tarde (13h-18h), noite (18h+)
+REGRAS DE COERÊNCIA DE PÚBLICO (PROIBIÇÕES):
+❌ NUNCA misture "familia" com "jovem-adulto" no mesmo roteiro
+❌ NUNCA coloque teatro infantil junto com shows de rock, bares ou eventos noturnos
+❌ NUNCA misture eventos para crianças com eventos adultos/18+
+❌ Se um evento é claramente noturno (começa após 20h), não misture com eventos matinais para família
+✅ Dentro do mesmo perfil, categorias COMPLEMENTARES são bem-vindas (ex: show + bar = ok para jovem-adulto; teatro adulto + exposição = ok para cultura)
 
-3. TAMANHO DO ROTEIRO
-   - Mínimo 2 eventos, máximo 4 eventos por roteiro
+═══════════════════════════════════════════
+REGRA 2 — PROXIMIDADE GEOGRÁFICA
+═══════════════════════════════════════════
+- Todos os eventos de um roteiro: mesmo bairro ou bairros adjacentes (máx 2 km)
+- Use os pares computados acima como guia
 
-4. DIVERSIDADE
-   - Crie roteiros para dias diferentes quando possível (Sexta, Sábado, Domingo)
-   - Misture categorias complementares (ex: show + gastronomia)
-   - Não repita o mesmo evento em roteiros diferentes
+═══════════════════════════════════════════
+REGRA 3 — SEQUÊNCIA TEMPORAL
+═══════════════════════════════════════════
+- Ordene do mais cedo para o mais tarde
+- Mínimo 30 min de intervalo entre eventos (deslocamento)
+- Não ultrapasse 8h de duração total por roteiro
 
-5. CUSTO
-   - Prefira incluir pelo menos 1 evento gratuito quando disponível no bairro
+═══════════════════════════════════════════
+REGRA 4 — DIVERSIDADE ENTRE ROTEIROS
+═══════════════════════════════════════════
+- Crie roteiros com perfis DIFERENTES entre si (não crie 2 roteiros "jovem-adulto")
+- Não repita o mesmo evento em roteiros diferentes
+- Mínimo 2, máximo 4 eventos por roteiro
 
 Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
 [
   {
     "title": "Título curto e atrativo (máx 60 chars)",
-    "description": "2 frases descrevendo o passeio, destacando o bairro e o clima",
-    "day": "Sexta" | "Sábado" | "Domingo",
+    "description": "2 frases descrevendo o passeio e o perfil de quem vai aproveitar",
+    "perfil": "familia" | "jovem-adulto" | "cultura" | "casual-dia",
+    "day": "Sábado" | "Domingo",
     "neighborhood": "Nome do bairro principal",
     "event_ids": ["uuid-do-evento-1", "uuid-do-evento-2"]
   }
@@ -261,7 +276,7 @@ Retorne SOMENTE JSON válido (sem markdown), com este formato exato:
         title: String(r.title || "Roteiro do Fim de Semana").slice(0, 120),
         description: String(r.description || "").slice(0, 500),
         curator_name: `Agenda Cultural ${cityConfig.name}`,
-        curator_bio: `Roteiro gerado por IA para ${r.day || "o fim de semana"} — ${r.neighborhood || ""}`.trim(),
+        curator_bio: `Roteiro gerado por IA para ${r.day || "o fim de semana"} — ${r.neighborhood || ""}${r.perfil ? ` · Perfil: ${r.perfil}` : ""}`.trim(),
         city: cityConfig.slug,
         is_published: false,
       })
