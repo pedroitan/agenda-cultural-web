@@ -33,7 +33,7 @@ export default async function DistritoComercioPage() {
   }
 
   // Filtrar por venue_name contendo palavras-chave do Distrito do Comércio
-  const districtKeywords = ["Pelourinho", "Terreiro de Jesus", "Rua Chile", "Centro Histórico", "Sé", "Comércio", "Baixa dos Sapateiros", "Largo do Pelourinho", "Praça da Sé"];
+  const districtKeywords = ["Pelourinho", "Terreiro de Jesus", "Rua Chile", "Centro Histórico", "Sé", "Baixa dos Sapateiros", "Largo do Pelourinho", "Praça da Sé"];
 
   const { data: allEvents, error } = await supabase
     .from("events")
