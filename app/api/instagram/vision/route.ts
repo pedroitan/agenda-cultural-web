@@ -271,11 +271,13 @@ export async function POST(request: NextRequest) {
     const allEvents: any[] = []
     const errors: string[] = []
     let lastEventDate: string | undefined
+    const perImage: { name: string; extracted: number; saved: number; skipped: number; error?: string }[] = []
 
     // Process images sequentially
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
       console.log(`Processing image ${i + 1}/${images.length}: ${image.name}`)
+      const imgStats = { name: image.name, extracted: 0, saved: 0, skipped: 0 }
 
       const imageBuffer = Buffer.from(await image.arrayBuffer())
       const mimeType = image.type
@@ -284,17 +286,14 @@ export async function POST(request: NextRequest) {
       const result = await extractEventsFromImage(imageBuffer, mimeType, lastEventDate)
 
       if (result.error) {
-        const errorMsg = `Image ${i + 1}: ${result.error}`
+        const errorMsg = `Image ${i + 1} (${image.name}): ${result.error}`
         console.error(errorMsg)
         errors.push(errorMsg)
+        perImage.push({ ...imgStats, error: result.error })
         continue
       }
 
-      if (result.events.length === 0) {
-        console.log(`No events found in image ${i + 1}`)
-        continue
-      }
-
+      imgStats.extracted = result.events.length
       console.log(`Extracted ${result.events.length} events from image ${i + 1}`)
 
       // Process each extracted event
@@ -302,6 +301,7 @@ export async function POST(request: NextRequest) {
         const startDatetime = parseInstagramDate(ev.date, ev.time)
         if (!startDatetime) {
           console.log(`Invalid date format: ${ev.date} ${ev.time}`)
+          imgStats.skipped++
           continue
         }
 
@@ -310,7 +310,7 @@ export async function POST(request: NextRequest) {
         const isFree = ev.price.toLowerCase().includes('grátis') || ev.price.toLowerCase().includes('gratuito')
 
         const eventData = {
-          source: channelName, // Use channel name as source
+          source: channelName,
           external_id: externalId,
           title: ev.title,
           start_datetime: startDatetime,
@@ -320,7 +320,7 @@ export async function POST(request: NextRequest) {
           category,
           is_free: isFree,
           url: `https://www.instagram.com/${channelName.replace('@', '')}/`,
-          image_url: logoUrl || undefined, // Use channel logo as event image
+          image_url: logoUrl || undefined,
           raw_payload: ev,
         }
 
@@ -333,6 +333,7 @@ export async function POST(request: NextRequest) {
 
         if (existing) {
           console.log(`  ⏭️  Event already exists: ${ev.title}`)
+          imgStats.skipped++
           continue
         }
 
@@ -344,12 +345,16 @@ export async function POST(request: NextRequest) {
 
         if (error) {
           console.error('Error inserting event:', error)
+          imgStats.skipped++
         } else {
           allEvents.push(data[0])
-          lastEventDate = ev.date // Update for next image
+          imgStats.saved++
+          lastEventDate = ev.date
           console.log(`  ✅ Saved: ${ev.title}`)
         }
       }
+
+      perImage.push(imgStats)
     }
 
     // Collect debug info
@@ -357,6 +362,7 @@ export async function POST(request: NextRequest) {
       imagesProcessed: images.length,
       geminiApiConfigured: !!GEMINI_API_KEY,
       totalEventsExtracted: allEvents.length,
+      perImage,
       errors: errors.length > 0 ? errors : undefined,
     }
 

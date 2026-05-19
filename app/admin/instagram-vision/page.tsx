@@ -120,7 +120,15 @@ export default function InstagramVisionPage() {
           message += `\n\n📊 Debug Info:`
           message += `\n- Imagens processadas: ${data.debug.imagesProcessed}`
           message += `\n- Gemini API configurada: ${data.debug.geminiApiConfigured ? 'Sim' : 'Não'}`
-          message += `\n- Total de eventos: ${data.debug.totalEventsExtracted}`
+          message += `\n- Total de eventos salvos: ${data.debug.totalEventsExtracted}`
+          
+          if (data.debug.perImage && data.debug.perImage.length > 0) {
+            message += `\n\n🖼️ Por imagem:`
+            data.debug.perImage.forEach((img: any, idx: number) => {
+              const status = img.error ? `❌ erro: ${img.error}` : `extraídos: ${img.extracted} | salvos: ${img.saved} | pulados: ${img.skipped}`
+              message += `\n  ${idx + 1}. ${img.name} → ${status}`
+            })
+          }
           
           if (data.debug.errors && data.debug.errors.length > 0) {
             message += `\n\n❌ Erros encontrados:`
