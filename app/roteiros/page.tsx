@@ -2,6 +2,7 @@ import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import Link from "next/link";
 import { MapPin, User, ArrowRight, Calendar } from "lucide-react";
 import { getCityConfig } from "@/config/cities";
+import { headers } from "next/headers";
 
 function getWeekendDates(): { label: string; satLabel: string; sunLabel: string } {
   const now = new Date();
@@ -110,6 +111,7 @@ function TourImageCollage({ stops, fallback }: { stops: TourStop[]; fallback: st
 }
 
 export default async function RoteirosPage() {
+  headers(); // força dynamic rendering e impede cache CDN
   const supabase = getSupabaseServerClient();
   const cityConfig = getCityConfig();
   const weekend = getWeekendDates();
