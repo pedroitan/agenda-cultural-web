@@ -171,10 +171,10 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={!singleEvent}
       >
-        {/* CartoDB Dark Matter - tema escuro elegante */}
+        {/* CartoDB Voyager - clean e bonito */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           subdomains="abcd"
         />
         <MapCenter events={validEvents} zoom={zoom} />
