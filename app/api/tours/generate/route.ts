@@ -96,7 +96,18 @@ export async function POST() {
     return NextResponse.json({ error: evErr.message }, { status: 500 });
   }
 
-  const events = (rawEvents || []) as EventForTour[];
+  // Deduplicar por título normalizado + data + local (mesmo evento de fontes diferentes)
+  const seen = new Set<string>();
+  const events = ((rawEvents || []) as EventForTour[]).filter((ev) => {
+    const key = [
+      ev.title.toLowerCase().replace(/\s+/g, " ").trim(),
+      ev.start_datetime.slice(0, 16), // YYYY-MM-DDTHH:MM
+      (ev.venue_name || "").toLowerCase().trim(),
+    ].join("|");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 
   if (events.length < 3) {
     return NextResponse.json(
