@@ -126,7 +126,11 @@ async function extractEventsFromImage(
               }
             }
           ]
-        }]
+        }],
+        generationConfig: {
+          maxOutputTokens: 4096,
+          thinkingConfig: { thinkingBudget: 0 }
+        }
       })
     })
 
@@ -363,9 +367,10 @@ export async function POST(request: NextRequest) {
       debug: debugInfo,
     })
   } catch (error) {
-    console.error("Error processing images:", error)
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error("Error processing images:", msg)
     return NextResponse.json(
-      { error: "Erro ao processar imagens" },
+      { error: "Erro ao processar imagens", details: msg },
       { status: 500 }
     )
   }
