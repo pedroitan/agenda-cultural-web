@@ -168,6 +168,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       elcabong: 'El Cabong',
       instagram: 'Instagram',
       manual_submission: 'Submissão Manual',
+      salvadordabahia: 'Salvador da Bahia',
     };
     return labels[source] ?? source.charAt(0).toUpperCase() + source.slice(1);
   };
@@ -178,6 +179,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       elcabong: '🎵',
       instagram: '📸',
       manual_submission: '✍️',
+      salvadordabahia: '🌴',
     };
     return icons[source] ?? '📋';
   };
