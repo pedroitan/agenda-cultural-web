@@ -115,6 +115,13 @@ export default function PageClient({
     updateURL(categoria, q);
   };
 
+  const handleBuscaKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white shadow-sm">
@@ -152,10 +159,11 @@ export default function PageClient({
                 d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
             <input
-              type="text"
+              type="search"
               placeholder={`Buscar evento ${cityPreposition} ${cityName}...`}
               value={busca}
               onChange={(e) => handleBuscaChange(e.target.value)}
+              onKeyDown={handleBuscaKeyDown}
               className="w-full rounded-full border border-zinc-200 bg-zinc-50 pl-9 pr-4 py-2 text-sm focus:bg-white focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-100 transition-all"
             />
           </div>
