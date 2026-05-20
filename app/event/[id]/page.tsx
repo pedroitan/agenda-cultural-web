@@ -122,7 +122,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
     <div className="min-h-screen bg-zinc-50">
       <TrackPageView eventId={event.id} />
       {/* Hero Full-Bleed */}
-      <div className="relative w-full h-64 md:h-96 lg:h-[500px] bg-zinc-900">
+      <div className="relative w-full h-64 md:h-96 lg:h-[560px] xl:h-[640px] bg-zinc-900">
         {event.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -274,7 +274,10 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         {event.description && (
           <div className="bg-white rounded-xl p-6 border border-zinc-200 mb-8">
             <h2 className="font-semibold text-zinc-900 mb-4">Sobre o evento</h2>
-            <p className="text-zinc-700 whitespace-pre-wrap">{event.description}</p>
+            <div
+              className="text-zinc-700 prose prose-sm max-w-none [&_strong]:font-semibold [&_b]:font-semibold [&_em]:italic [&_p]:mb-2 [&_br]:block [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1"
+              dangerouslySetInnerHTML={{ __html: event.description }}
+            />
           </div>
         )}
 
