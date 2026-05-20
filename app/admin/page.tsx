@@ -121,23 +121,15 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     .eq("city", cityConfig.slug)
     .gt("start_datetime", new Date().toISOString());
 
-  // Get top clicked events (filtered by city)
-  const { data: topClicked } = await supabase
-    .from("events")
-    .select("id, title, click_count, source, start_datetime, url")
-    .eq("city", cityConfig.slug)
-    .gt("click_count", 0)
-    .order("click_count", { ascending: false })
-    .limit(10);
-
-  // Get total clicks (with deduplication like frontend, filtered by city)
+  // Get all events with clicks for both total + top10 (one query, both deduplicated)
   const { data: clickStats } = await supabase
     .from("events")
-    .select("id, title, venue_name, start_datetime, click_count, url")
-    .eq("city", cityConfig.slug);
-  
-  // Deduplicate by title + date + venue (same logic as frontend)
-  const grouped = new Map<string, number>();
+    .select("id, title, venue_name, start_datetime, click_count, source, url, city")
+    .eq("city", cityConfig.slug)
+    .gt("click_count", 0);
+
+  // Deduplicate by title + date + venue — keep event with highest click_count per group
+  const groupedEvents = new Map<string, any>();
   (clickStats || []).forEach((e: any) => {
     const titleNormalized = e.title
       .toLowerCase()
@@ -146,13 +138,18 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     const dateKey = dateMatch ? `${dateMatch[2]}-${dateMatch[3]}` : '';
     const venueKey = (e.venue_name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const key = `${titleNormalized}-${dateKey}-${venueKey}`;
-    
-    // Keep the highest click_count for duplicates
-    const current = grouped.get(key) || 0;
-    grouped.set(key, Math.max(current, e.click_count || 0));
+
+    const existing = groupedEvents.get(key);
+    if (!existing || (e.click_count || 0) > (existing.click_count || 0)) {
+      groupedEvents.set(key, e);
+    }
   });
-  
-  const totalClicks = Array.from(grouped.values()).reduce((sum, count) => sum + count, 0);
+
+  const dedupedEvents = Array.from(groupedEvents.values());
+  const totalClicks = dedupedEvents.reduce((sum, e) => sum + (e.click_count || 0), 0);
+  const topClicked = dedupedEvents
+    .sort((a, b) => (b.click_count || 0) - (a.click_count || 0))
+    .slice(0, 10);
 
   // Group scrape runs by source to get latest for each
   const latestBySource = new Map<string, ScrapeRun>();

@@ -4,15 +4,11 @@ import { useEffect } from "react";
 
 export default function TrackPageView({ eventId }: { eventId: string }) {
   useEffect(() => {
-    const key = `ev_${eventId}`;
-    try {
-      if (localStorage.getItem(key)) return;
-      fetch(`/api/events/${eventId}/view`, { method: "POST" })
-        .then((res) => {
-          if (res.ok) localStorage.setItem(key, "1");
-        })
-        .catch(() => {});
-    } catch {}
+    // Server-side dedup via httpOnly cookie + bot/prefetch filtering
+    fetch(`/api/events/${eventId}/view`, {
+      method: "POST",
+      credentials: "include",
+    }).catch(() => {});
   }, [eventId]);
 
   return null;
