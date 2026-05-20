@@ -206,37 +206,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
   );
 
   const analyticsCards = (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <a
-        href="https://dash.cloudflare.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 hover:from-orange-600 hover:to-orange-700 transition-all shadow-sm"
-      >
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-white text-sm font-medium">Cloudflare Analytics</p>
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </div>
-        <p className="text-white text-2xl font-bold mb-1">Web Analytics</p>
-        <p className="text-orange-100 text-xs">Tráfego, origem, performance</p>
-      </a>
-      <a
-        href="https://vercel.com/pedroitans-projects/agenda-cultural-web/analytics"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 hover:from-gray-900 hover:to-gray-700 transition-all shadow-sm"
-      >
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-white text-sm font-medium">Vercel Analytics</p>
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </div>
-        <p className="text-white text-2xl font-bold mb-1">Core Web Vitals</p>
-        <p className="text-gray-300 text-xs">Performance detalhada</p>
-      </a>
+    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-8">
       <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
         <p className="text-white text-sm font-medium mb-2">Engajamento</p>
         <RealtimeClickCounter initialTotal={totalClicks} />
