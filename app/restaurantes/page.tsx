@@ -21,6 +21,24 @@ export const revalidate = 3600 // Cache for 1 hour
 export default async function RestaurantesPage() {
   const supabase = getSupabaseServerClient()
 
+  // Check if Supabase is configured
+  if (!supabase) {
+    return (
+      <div className="min-h-screen bg-zinc-50 text-zinc-950 p-8 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Supabase não configurado</h1>
+          <p className="text-zinc-600 mb-4">
+            Crie um arquivo <code className="bg-zinc-200 px-2 py-1 rounded">.env.local</code> com:
+          </p>
+          <pre className="bg-zinc-200 p-4 rounded text-left text-sm">
+{`SUPABASE_URL=https://ifocsakyvzkqdhrfmgbz.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
+          </pre>
+        </div>
+      </div>
+    )
+  }
+
   const { data: restaurants, error } = await supabase
     .from("restaurants")
     .select("*")
