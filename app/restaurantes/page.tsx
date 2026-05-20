@@ -1,6 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer"
 import Link from "next/link"
-import EventMap from "../components/EventMap"
+import EventMap from "../components/EventMapWrapper"
 
 type RestaurantRow = {
   id: string
