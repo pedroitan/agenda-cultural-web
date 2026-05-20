@@ -79,6 +79,17 @@ export default function PageClient({
           const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
           return eventDate >= fourHoursAgo && eventDate < nextMonth;
         });
+      } else if (data.startsWith('date:')) {
+        // Specific date filter: date:YYYY-MM-DD
+        const selectedDateStr = data.replace('date:', '');
+        const [year, month, day] = selectedDateStr.split('-').map(Number);
+        const selectedDate = new Date(year, month - 1, day);
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+        filtered = filtered.filter((e) => {
+          const eventDate = new Date(e.start_datetime);
+          return eventDate >= selectedDate && eventDate < nextDay;
+        });
       }
     }
 

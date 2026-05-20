@@ -70,7 +70,7 @@ export default function EventFilters({
       </div>
 
       {/* Date filter */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap items-center">
         {dateFilters.map((df) => (
           <button
             key={df.value}
@@ -84,6 +84,20 @@ export default function EventFilters({
             {df.label}
           </button>
         ))}
+
+        {/* Date picker */}
+        <div className="relative">
+          <input
+            type="date"
+            value={data.startsWith('date:') ? data.replace('date:', '') : ''}
+            onChange={(e) => onDataChange(e.target.value ? `date:${e.target.value}` : '')}
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
+              data.startsWith('date:')
+                ? "bg-zinc-900 text-white"
+                : "bg-white border border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
+            }`}
+          />
+        </div>
       </div>
     </div>
   );
