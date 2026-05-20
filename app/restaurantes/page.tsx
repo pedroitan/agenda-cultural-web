@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer"
 import Link from "next/link"
+import EventMap from "../components/EventMap"
 
 type RestaurantRow = {
   id: string
@@ -14,6 +15,8 @@ type RestaurantRow = {
   hours: string | null
   instagram_url: string | null
   source: string
+  latitude: number | null
+  longitude: number | null
 }
 
 export const revalidate = 3600 // Cache for 1 hour
@@ -51,6 +54,27 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
 
   const restaurantsList = (restaurants as RestaurantRow[]) || []
 
+  // Coordenadas de fallback por bairro
+  const neighborhoodCoordinates: Record<string, { lat: number; lng: number }> = {
+    "Rio Vermelho": { lat: -12.9928, lng: -38.3517 },
+    "Horto Florestal": { lat: -12.9767, lng: -38.4656 },
+    "Barra": { lat: -12.9886, lng: -38.3517 },
+    "Centro Histórico": { lat: -12.9730, lng: -38.5050 },
+    "Comércio": { lat: -12.9712, lng: -38.5030 },
+    "Caminho das Árvores": { lat: -12.9464, lng: -38.3989 },
+    "Pituba": { lat: -12.9811, lng: -38.4567 },
+    "Outros": { lat: -12.9714, lng: -38.5014 },
+  }
+
+  // Enricher restaurantes com coordenadas de fallback se necessário
+  const restaurantsWithCoords = restaurantsList.map((restaurant) => {
+    if (restaurant.latitude && restaurant.longitude) {
+      return restaurant
+    }
+    const coords = neighborhoodCoordinates[restaurant.neighborhood || "Outros"] || neighborhoodCoordinates["Outros"]
+    return { ...restaurant, latitude: coords.lat, longitude: coords.lng }
+  })
+
   // Group by neighborhood
   const groupedByNeighborhood = restaurantsList.reduce((acc, restaurant) => {
     const neighborhood = restaurant.neighborhood || "Outros"
@@ -80,6 +104,20 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       </div>
 
       <main className="mx-auto max-w-6xl px-4 py-8">
+        {/* Mapa com marcadores dos restaurantes */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-zinc-900 mb-4">Mapa de Restaurantes</h2>
+          <EventMap events={restaurantsWithCoords.map(r => ({
+            id: r.id,
+            title: r.name,
+            venue_name: r.address || r.neighborhood,
+            latitude: r.latitude,
+            longitude: r.longitude,
+            start_datetime: new Date().toISOString(),
+            image_url: null,
+          }))} height="400px" />
+        </div>
+
         <div className="mb-8 flex items-center justify-between">
           <p className="text-zinc-600">
             {restaurantsList.length} restaurantes encontrados
