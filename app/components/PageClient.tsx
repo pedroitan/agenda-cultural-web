@@ -132,13 +132,23 @@ export default function PageClient({
           </h1>
           <div className="flex-1 sm:flex-none" />
           <Link
+            href="/restaurantes"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-orange-200 bg-orange-50 text-orange-700 px-3 py-1.5 text-sm font-medium hover:bg-orange-100 transition-colors whitespace-nowrap"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="hidden sm:inline">Restaurantes</span>
+            <span className="sm:hidden">🍽️</span>
+          </Link>
+          <Link
             href="/roteiros"
             className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 text-violet-700 px-3 py-1.5 text-sm font-medium hover:bg-violet-100 transition-colors whitespace-nowrap"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
-            <span className="hidden sm:inline">Roteiros do Fim de Semana</span>
+            <span className="hidden sm:inline">Roteiros</span>
             <span className="sm:hidden">Roteiros</span>
           </Link>
           <Link
