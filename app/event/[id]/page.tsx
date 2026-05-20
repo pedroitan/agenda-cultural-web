@@ -18,6 +18,10 @@ type EventRow = {
   description: string | null;
   latitude: number | null;
   longitude: number | null;
+  performers: string | null;
+  duration: string | null;
+  age_restriction: string | null;
+  organizer: string | null;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -235,6 +239,36 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             {event.is_free ? "Grátis" : event.price_text || "Consulte preço"}
           </span>
         </div>
+
+        {/* Additional Info Cards */}
+        {(event.performers || event.duration || event.age_restriction || event.organizer) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {event.performers && (
+              <div className="bg-white rounded-xl p-6 border border-zinc-200">
+                <h3 className="font-semibold text-zinc-900 mb-2">Atratores</h3>
+                <p className="text-zinc-700">{event.performers}</p>
+              </div>
+            )}
+            {event.duration && (
+              <div className="bg-white rounded-xl p-6 border border-zinc-200">
+                <h3 className="font-semibold text-zinc-900 mb-2">Duração</h3>
+                <p className="text-zinc-700">{event.duration}</p>
+              </div>
+            )}
+            {event.age_restriction && (
+              <div className="bg-white rounded-xl p-6 border border-zinc-200">
+                <h3 className="font-semibold text-zinc-900 mb-2">Classificação</h3>
+                <p className="text-zinc-700">{event.age_restriction}</p>
+              </div>
+            )}
+            {event.organizer && (
+              <div className="bg-white rounded-xl p-6 border border-zinc-200">
+                <h3 className="font-semibold text-zinc-900 mb-2">Organização</h3>
+                <p className="text-zinc-700">{event.organizer}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Description */}
         {event.description && (
