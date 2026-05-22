@@ -132,9 +132,9 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
     coordCount[key] = (coordCount[key] || 0) + 1;
     const idx = coordCount[key] - 1;
     if (idx === 0) return event;
-    // Espalha em espiral ~100m de raio
+    // Espalha em espiral com raio maior (~200m) para melhor visualização
     const angle = (idx * 137.5 * Math.PI) / 180; // golden angle
-    const radius = 0.0005 + idx * 0.0003;
+    const radius = 0.001 + idx * 0.0005; // Aumentado de 0.0005 para 0.001
     return {
       ...event,
       latitude: event.latitude! + Math.cos(angle) * radius,
@@ -178,7 +178,14 @@ export default function EventMap({ events, height = "500px", zoom, singleEvent =
           subdomains="abcd"
         />
         <MapCenter events={validEvents} zoom={zoom} />
-        <MarkerClusterGroup chunkedLoading iconCreateFunction={createClusterCustomIcon}>
+        <MarkerClusterGroup 
+          chunkedLoading 
+          iconCreateFunction={createClusterCustomIcon}
+          maxClusterRadius={60} // Aumentado de 50 (padrão) para 60 - clusters menores
+          spiderfyOnMaxZoom={true}
+          showCoverageOnHover={false}
+          zoomToBoundsOnClick={true}
+        >
           {validEvents.map((event) => (
             <Marker
               key={event.id}
