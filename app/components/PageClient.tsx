@@ -49,7 +49,12 @@ export default function PageClient({
     let filtered = events;
 
     if (categoria && categoria !== 'Todos') {
-      filtered = filtered.filter((e) => e.category === categoria);
+      if (categoria === 'Shows e Festas') {
+        // Filtra tanto Shows quanto Festas
+        filtered = filtered.filter((e) => e.category === 'Shows' || e.category === 'Festas');
+      } else {
+        filtered = filtered.filter((e) => e.category === categoria);
+      }
     }
 
     if (data) {
