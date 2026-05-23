@@ -50,8 +50,12 @@ export default function PageClient({
 
     if (categoria && categoria !== 'Todos') {
       if (categoria === 'Shows e Festas') {
-        // Filtra tanto Shows quanto Festas
-        filtered = filtered.filter((e) => e.category === 'Shows' || e.category === 'Festas');
+        // Filtra tanto Shows quanto Festas quanto "Shows e Festas" (legado)
+        filtered = filtered.filter((e) => 
+          e.category === 'Shows' || 
+          e.category === 'Festas' || 
+          e.category === 'Shows e Festas'
+        );
       } else {
         filtered = filtered.filter((e) => e.category === categoria);
       }
