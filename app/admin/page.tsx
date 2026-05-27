@@ -6,6 +6,7 @@ import AdminLayout from "./AdminLayout";
 import EventSubmissions from "./EventSubmissions";
 import AdsManager from "./AdsManager";
 import ToursManager from "./ToursManager";
+import ScraperButtons from "./ScraperButtons";
 import { getCityConfig } from "@/config/cities";
 
 export const dynamic = "force-dynamic";
@@ -216,6 +217,11 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
 
   const scrapesSection = (
     <>
+      <h3 className="text-base font-semibold mb-4 text-gray-700">Rodar Scrapers</h3>
+      <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm mb-8">
+        <ScraperButtons />
+      </div>
+
       <h3 className="text-base font-semibold mb-4 text-gray-700">Último Scrape por Fonte</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {Array.from(latestBySource.values()).map((run) => (
