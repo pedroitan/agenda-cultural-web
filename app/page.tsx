@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import PageClient from "./components/PageClient";
+import Highlights from "./components/Highlights";
 import Link from "next/link";
 import { getCityConfig } from "@/config/cities";
 
@@ -226,6 +227,8 @@ export default async function Home({
           fetchPriority="high"
         />
       </div>
+
+      <Highlights />
 
       <PageClient
         events={dedupedEvents}
