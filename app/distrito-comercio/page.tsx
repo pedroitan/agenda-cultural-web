@@ -34,16 +34,16 @@ export default async function DistritoComercioPage() {
 
   // Padrões e coordenadas de fallback para cada área do Distrito do Comércio
   const districtPatterns: { pattern: RegExp; lat: number; lng: number }[] = [
-    { pattern: /terreiro de jesus/i,   lat: -12.9741, lng: -38.5072 },
-    { pattern: /largo do pelourinho/i, lat: -12.9735, lng: -38.5083 },
-    { pattern: /pelourinho/i,          lat: -12.9732, lng: -38.5089 },
-    { pattern: /rua chile/i,           lat: -12.9705, lng: -38.5107 },
+    { pattern: /terreiro de jesus/i,   lat: -12.9744, lng: -38.5066 },
+    { pattern: /largo do pelourinho/i, lat: -12.9736, lng: -38.5081 },
+    { pattern: /pelourinho/i,          lat: -12.9733, lng: -38.5088 },
+    { pattern: /rua chile/i,           lat: -12.9702, lng: -38.5105 },
     { pattern: /centro histórico/i,    lat: -12.9730, lng: -38.5050 },
     { pattern: /centro historico/i,    lat: -12.9730, lng: -38.5050 },
-    { pattern: /praça da sé/i,         lat: -12.9712, lng: -38.5030 },
-    { pattern: /praca da se/i,         lat: -12.9712, lng: -38.5030 },
-    { pattern: /\bsé\b/i,              lat: -12.9712, lng: -38.5030 },
-    { pattern: /baixa dos sapateiros/i,lat: -12.9720, lng: -38.5010 },
+    { pattern: /praça da sé/i,         lat: -12.9714, lng: -38.5028 },
+    { pattern: /praca da se/i,         lat: -12.9714, lng: -38.5028 },
+    { pattern: /\bsé\b/i,              lat: -12.9714, lng: -38.5028 },
+    { pattern: /baixa dos sapateiros/i,lat: -12.9722, lng: -38.5008 },
   ];
 
   const { data: allEvents, error } = await supabase
@@ -59,11 +59,19 @@ export default async function DistritoComercioPage() {
       const venue = ev.venue_name || "";
       const match = districtPatterns.find(({ pattern }) => pattern.test(venue));
       if (!match) return null;
-      // Se não tem coordenadas, usar as do bairro correspondente
-      if (!ev.latitude || !ev.longitude) {
-        return { ...ev, latitude: match.lat, longitude: match.lng };
+
+      // Validar coordenadas existentes (remover fora de Salvador)
+      if (ev.latitude && ev.longitude) {
+        // Bounding box de Salvador: lat -13.0 a -12.8, lng -38.6 a -38.3
+        if (ev.latitude < -13.0 || ev.latitude > -12.8 || ev.longitude < -38.6 || ev.longitude > -38.3) {
+          // Coordenadas inválidas, usar fallback
+          return { ...ev, latitude: match.lat, longitude: match.lng };
+        }
+        return ev;
       }
-      return ev;
+
+      // Se não tem coordenadas, usar as do bairro correspondente
+      return { ...ev, latitude: match.lat, longitude: match.lng };
     })
     .filter(Boolean);
 
