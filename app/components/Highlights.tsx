@@ -74,17 +74,8 @@ export default function Highlights() {
               href={highlight.href}
               className="flex-shrink-0 flex flex-col items-center gap-2 group"
             >
-              <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-violet-500 transition-colors">
-                <img
-                  src={highlight.image}
-                  alt={highlight.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  onError={(e) => {
-                    // Fallback to emoji if image fails to load
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-violet-500 to-fuchsia-500 text-3xl">${highlight.emoji}</div>`;
-                  }}
-                />
+              <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-violet-500 transition-colors bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                <span className="text-3xl">{highlight.emoji}</span>
               </div>
               <span className="text-xs md:text-sm text-zinc-600 group-hover:text-violet-600 transition-colors font-medium">
                 {highlight.name}
