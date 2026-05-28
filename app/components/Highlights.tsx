@@ -39,6 +39,13 @@ const HIGHLIGHTS = [
     emoji: '🌟',
   },
   {
+    id: 'saojoao',
+    name: 'São João',
+    href: '/categoria/forro-salvador',
+    image: '/highlights-saojoao.png',
+    emoji: '🎉',
+  },
+  {
     id: 'distrito',
     name: 'Distrito',
     href: '/distrito-comercio',
