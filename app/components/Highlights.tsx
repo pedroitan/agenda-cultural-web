@@ -39,6 +39,13 @@ const HIGHLIGHTS = [
     emoji: '🌟',
   },
   {
+    id: 'distrito',
+    name: 'Distrito',
+    href: '/distrito-comercio',
+    image: '/highlights-distrito.png',
+    emoji: '🏛️',
+  },
+  {
     id: 'roteiros',
     name: 'Roteiros',
     href: '/roteiros',
