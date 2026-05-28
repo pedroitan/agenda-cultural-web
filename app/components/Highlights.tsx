@@ -40,7 +40,7 @@ const HIGHLIGHTS = [
   },
   {
     id: 'saojoao',
-    name: 'São João',
+    name: 'Forró',
     href: '/categoria/forro-salvador',
     image: '/highlights-saojoao.png',
     emoji: '🎉',
