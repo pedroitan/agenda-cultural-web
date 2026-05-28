@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 300; // 5 minutos
 
 // Mapeamento de slugs para categorias e SEO
-const CATEGORY_MAP: Record<string, { category: string | null; title: string; description: string; keywords: string }> = {
+const CATEGORY_MAP: Record<string, { category: string | null; tags?: string[]; title: string; description: string; keywords: string }> = {
   "teatro-salvador": {
     category: "Teatro",
     title: "Teatro em Salvador - Peças e Espetáculos | Agenda Cultural",
@@ -46,7 +46,8 @@ const CATEGORY_MAP: Record<string, { category: string | null; title: string; des
     keywords: "eventos crianças salvador, atividades infantis salvador, teatro infantil salvador, diversão kids salvador"
   },
   "forro-salvador": {
-    category: "Shows e Festas",
+    category: null, // Filtra por tags
+    tags: ["são joão", "forró"],
     title: "Forró e São João em Salvador | Agenda Cultural",
     description: "Confira os melhores eventos de forró e São João em Salvador. Arrastões, quadrilhas, festas juninas e muito mais.",
     keywords: "forró salvador, são joão salvador, festas juninas salvador, quadrilhas salvador, arrastão forró salvador"
@@ -107,7 +108,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
     );
   }
 
-  // Filtrar eventos por categoria ou is_free
+  // Filtrar eventos por categoria, tags ou is_free
   let query = supabase
     .from("events")
     .select("*")
@@ -117,6 +118,9 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
 
   if (config.category) {
     query = query.eq("category", config.category);
+  } else if (config.tags && config.tags.length > 0) {
+    // Filtrar por tags (usando contains para array)
+    query = query.contains("tags", config.tags);
   } else if (slug === "eventos-gratuitos-salvador") {
     query = query.eq("is_free", true);
   }
