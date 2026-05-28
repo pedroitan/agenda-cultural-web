@@ -44,6 +44,12 @@ const CATEGORY_MAP: Record<string, { category: string | null; title: string; des
     title: "Eventos para Crianças em Salvador | Agenda Cultural",
     description: "Os melhores eventos infantis em Salvador: teatro, oficinas, shows para crianças, atividades recreativas e muito mais.",
     keywords: "eventos crianças salvador, atividades infantis salvador, teatro infantil salvador, diversão kids salvador"
+  },
+  "forro-salvador": {
+    category: "Shows e Festas",
+    title: "Forró e São João em Salvador | Agenda Cultural",
+    description: "Confira os melhores eventos de forró e São João em Salvador. Arrastões, quadrilhas, festas juninas e muito mais.",
+    keywords: "forró salvador, são joão salvador, festas juninas salvador, quadrilhas salvador, arrastão forró salvador"
   }
 };
 
