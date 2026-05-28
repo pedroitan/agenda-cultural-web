@@ -108,7 +108,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
     );
   }
 
-  // Filtrar eventos por categoria, tags ou is_free
+  // Filtrar eventos por categoria, texto (tags) ou is_free
   let query = supabase
     .from("events")
     .select("*")
@@ -119,8 +119,12 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
   if (config.category) {
     query = query.eq("category", config.category);
   } else if (config.tags && config.tags.length > 0) {
-    // Filtrar por tags (usando contains para array)
-    query = query.contains("tags", config.tags);
+    // Filtrar por texto no título/descrição (para eventos existentes sem tags)
+    // Ou por tags array (para novos eventos com tags)
+    const orConditions = config.tags.map(tag =>
+      `title.ilike.%${tag}%,description.ilike.%${tag}%,tags.cs.{${tag}}`
+    ).join(',');
+    query = query.or(orConditions);
   } else if (slug === "eventos-gratuitos-salvador") {
     query = query.eq("is_free", true);
   }
