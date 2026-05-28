@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import EventList from "../../components/EventList";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CategorySearch from "../../components/CategorySearch";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300; // 5 minutos
@@ -158,7 +159,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
       {/* Conteúdo */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {events && events.length > 0 ? (
-          <EventList events={events} />
+          <CategorySearch events={events} />
         ) : (
           <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
             <h2 className="text-xl font-semibold mb-2">Nenhum evento encontrado</h2>
