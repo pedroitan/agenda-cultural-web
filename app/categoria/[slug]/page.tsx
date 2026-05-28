@@ -16,7 +16,8 @@ const CATEGORY_MAP: Record<string, { category: string | null; tags?: string[]; t
     keywords: "teatro salvador, peças salvador, espetáculos salvador, teatro infantil salvador, agenda teatral salvador"
   },
   "shows-salvador": {
-    category: "Shows",
+    category: null, // Filtra por tags
+    tags: ["show", "música", "festival", "concerto"],
     title: "Shows em Salvador - Música Ao Vivo | Agenda Cultural",
     description: "Descubra os melhores shows em Salvador: rock, pop, samba, reggae, forró e muito mais. Agenda completa de shows e apresentações ao vivo.",
     keywords: "shows salvador, música ao vivo salvador, shows salvador hoje, concertos salvador, agenda shows salvador"
