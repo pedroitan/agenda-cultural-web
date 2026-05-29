@@ -13,6 +13,7 @@ const categories: { label: string; icon: LucideIcon }[] = [
   { label: "Bem-estar",      icon: Heart },
   { label: "Games e Geek",   icon: Gamepad2 },
   { label: "Religioso",      icon: Church },
+  { label: "Copa do Mundo",  icon: Gamepad2 },
 ];
 
 const dateFilters = [
@@ -20,6 +21,7 @@ const dateFilters = [
   { label: "Hoje", value: "today" },
   { label: "Esta semana", value: "week" },
   { label: "Este mês", value: "month" },
+  { label: "Copa do Mundo", value: "worldcup" },
 ];
 
 type EventFiltersProps = {

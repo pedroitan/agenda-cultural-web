@@ -16,7 +16,15 @@ type EventRow = {
   is_free: boolean;
   category: string | null;
   url: string;
+  tags?: string[];
 };
+
+// Datas dos jogos da Copa do Mundo 2026 (ajustar conforme calendário oficial)
+const WORLD_CUP_MATCH_DATES = [
+  "2026-06-14", "2026-06-17", "2026-06-20", "2026-06-23",
+  "2026-06-26", "2026-06-29", "2026-07-02", "2026-07-05",
+  "2026-07-08", "2026-07-12", "2026-07-19",
+];
 
 function updateURL(categoria: string, q: string) {
   const params = new URLSearchParams();
@@ -52,10 +60,19 @@ export default function PageClient({
     if (categoria && categoria !== 'Todos') {
       if (categoria === 'Shows e Festas') {
         // Filtra tanto Shows quanto Festas quanto "Shows e Festas" (legado)
-        filtered = filtered.filter((e) => 
-          e.category === 'Shows' || 
-          e.category === 'Festas' || 
+        filtered = filtered.filter((e) =>
+          e.category === 'Shows' ||
+          e.category === 'Festas' ||
           e.category === 'Shows e Festas'
+        );
+      } else if (categoria === 'Copa do Mundo') {
+        // Filtra por tags ou texto relacionado à Copa do Mundo
+        filtered = filtered.filter((e) =>
+          e.category === 'Copa do Mundo' ||
+          e.title?.toLowerCase().includes('copa') ||
+          e.title?.toLowerCase().includes('world cup') ||
+          e.title?.toLowerCase().includes('futebol') ||
+          e.tags?.some((tag: string) => tag.toLowerCase().includes('copa') || tag.toLowerCase().includes('world cup'))
         );
       } else {
         filtered = filtered.filter((e) => e.category === categoria);
@@ -89,6 +106,11 @@ export default function PageClient({
           const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
           return eventDate >= fourHoursAgo && eventDate < nextMonth;
         });
+      } else if (data === 'worldcup') {
+        // Filtrar eventos nos dias de jogos da Copa do Mundo
+        filtered = filtered.filter((e) =>
+          WORLD_CUP_MATCH_DATES.some((date) => e.start_datetime.startsWith(date))
+        );
       } else if (data.startsWith('date:')) {
         // Specific date filter: date:YYYY-MM-DD
         const selectedDateStr = data.replace('date:', '');

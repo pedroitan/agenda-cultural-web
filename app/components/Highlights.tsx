@@ -46,6 +46,13 @@ const HIGHLIGHTS = [
     emoji: '🎉',
   },
   {
+    id: 'copa',
+    name: 'Copa do Mundo',
+    href: '/categoria/copa-do-mundo-salvador',
+    image: '/highlights-copa.png',
+    emoji: '🏆',
+  },
+  {
     id: 'distrito',
     name: 'Distrito',
     href: '/distrito-comercio',
