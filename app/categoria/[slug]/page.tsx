@@ -123,8 +123,9 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
   } else if (config.tags && config.tags.length > 0) {
     // Filtrar por texto no título/descrição (para eventos existentes sem tags)
     // Ou por tags array (para novos eventos com tags)
+    // Ou por category (para eventos com categoria exata)
     const orConditions = config.tags.map(tag =>
-      `title.ilike.%${tag}%,description.ilike.%${tag}%,tags.cs.{${tag}}`
+      `title.ilike.%${tag}%,description.ilike.%${tag}%,tags.cs.{${tag}},category.eq.${tag.charAt(0).toUpperCase() + tag.slice(1)}`
     ).join(',');
     query = query.or(orConditions);
   } else if (slug === "eventos-gratuitos-salvador") {
