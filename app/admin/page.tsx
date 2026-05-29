@@ -9,6 +9,7 @@ import ToursManager from "./ToursManager";
 import ScraperButtons from "./ScraperButtons";
 import { getCityConfig } from "@/config/cities";
 import { getClickStats } from "@/lib/clickStats";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -235,6 +236,12 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
             {run.error_message && (
               <p className="mt-3 text-red-600 text-sm truncate">{run.error_message}</p>
             )}
+            <Link
+              href={`/admin/events/${run.source}`}
+              className="mt-4 inline-flex items-center gap-1.5 text-sm text-violet-600 hover:text-violet-700 font-medium"
+            >
+              Ver eventos desta fonte →
+            </Link>
           </div>
         ))}
       </div>
