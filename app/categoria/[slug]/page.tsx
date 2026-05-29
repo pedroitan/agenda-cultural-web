@@ -124,9 +124,18 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
     // Filtrar por texto no título/descrição (para eventos existentes sem tags)
     // Ou por tags array (para novos eventos com tags)
     // Ou por category (para eventos com categoria exata)
-    const orConditions = config.tags.map(tag =>
-      `title.ilike.%${tag}%,description.ilike.%${tag}%,tags.cs.{${tag}},category.eq.${tag.charAt(0).toUpperCase() + tag.slice(1)}`
-    ).join(',');
+    const orConditions = config.tags.map(tag => {
+      const categoryMatch = tag === 'show' ? 'Shows' : tag === 'festival' ? 'Festivais' : tag === 'concerto' ? 'Shows' : null;
+      const conditions = [
+        `title.ilike.%${tag}%`,
+        `description.ilike.%${tag}%`,
+        `tags.cs.{${tag}}`
+      ];
+      if (categoryMatch) {
+        conditions.push(`category.eq.${categoryMatch}`);
+      }
+      return conditions.join(',');
+    }).join(',');
     query = query.or(orConditions);
   } else if (slug === "eventos-gratuitos-salvador") {
     query = query.eq("is_free", true);
