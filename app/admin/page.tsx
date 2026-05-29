@@ -8,6 +8,7 @@ import AdsManager from "./AdsManager";
 import ToursManager from "./ToursManager";
 import ScraperButtons from "./ScraperButtons";
 import { getCityConfig } from "@/config/cities";
+import { getClickStats } from "@/lib/clickStats";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -122,35 +123,12 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     .eq("city", cityConfig.slug)
     .gt("start_datetime", new Date().toISOString());
 
-  // Get all events with clicks for both total + top10 (one query, both deduplicated)
-  const { data: clickStats } = await supabase
-    .from("events")
-    .select("id, title, venue_name, start_datetime, click_count, source, url, city")
-    .eq("city", cityConfig.slug)
-    .gt("click_count", 0);
-
-  // Deduplicate by title + date + venue — keep event with highest click_count per group
-  const groupedEvents = new Map<string, any>();
-  (clickStats || []).forEach((e: any) => {
-    const titleNormalized = e.title
-      .toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const dateMatch = e.start_datetime.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    const dateKey = dateMatch ? `${dateMatch[2]}-${dateMatch[3]}` : '';
-    const venueKey = (e.venue_name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const key = `${titleNormalized}-${dateKey}-${venueKey}`;
-
-    const existing = groupedEvents.get(key);
-    if (!existing || (e.click_count || 0) > (existing.click_count || 0)) {
-      groupedEvents.set(key, e);
-    }
-  });
-
-  const dedupedEvents = Array.from(groupedEvents.values());
-  const totalClicks = dedupedEvents.reduce((sum, e) => sum + (e.click_count || 0), 0);
-  const topClicked = dedupedEvents
-    .sort((a, b) => (b.click_count || 0) - (a.click_count || 0))
-    .slice(0, 10);
+  // Get click metrics: page clicks (click_count) + CTA ticket clicks (cta_click_count)
+  // Deduplicated by title + date + venue, paginated to avoid the 1000-row cap
+  const { totalClicks, totalCta: totalCtaClicks, topClicked } = await getClickStats(
+    supabase,
+    cityConfig.slug
+  );
 
   // Group scrape runs by source to get latest for each
   const latestBySource = new Map<string, ScrapeRun>();
@@ -207,11 +185,11 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
   );
 
   const analyticsCards = (
-    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-8">
-      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
-        <p className="text-white text-sm font-medium mb-2">Engajamento</p>
-        <RealtimeClickCounter initialTotal={totalClicks} />
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      <RealtimeClickCounter
+        initialTotal={totalClicks}
+        initialCtaTotal={totalCtaClicks}
+      />
     </div>
   );
 
@@ -301,22 +279,22 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     <AdminLayout
       cityName={cityConfig.name}
       homeContent={
-        <>
+        <div key="home">
           {statsCards}
           <h3 className="text-base font-semibold mb-4 text-gray-700">Analytics & Métricas</h3>
           {analyticsCards}
           <RealtimeTopClicked initialTop={topClicked ?? []} />
-        </>
+        </div>
       }
       eventosContent={
-        <>
+        <div key="eventos">
           <PendingEvents />
           <ActiveEvents />
           <EventSubmissions />
-        </>
+        </div>
       }
-      roteirosContent={<ToursManager />}
-      anunciosContent={<AdsManager />}
+      roteirosContent={<ToursManager key="roteiros" />}
+      anunciosContent={<AdsManager key="anuncios" />}
       scrapesContent={scrapesSection}
     />
   );

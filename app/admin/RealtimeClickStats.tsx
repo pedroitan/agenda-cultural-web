@@ -13,18 +13,22 @@ type TopEvent = {
 
 export function RealtimeClickCounter({
   initialTotal,
+  initialCtaTotal,
 }: {
   initialTotal: number;
+  initialCtaTotal: number;
 }) {
   const [totalClicks, setTotalClicks] = useState(initialTotal);
+  const [totalCta, setTotalCta] = useState(initialCtaTotal);
   const [live, setLive] = useState(false);
 
   useEffect(() => {
     const fetchTotal = async () => {
       try {
         const res = await fetch("/api/click-stats");
-        const { total } = await res.json();
-        setTotalClicks(total);
+        const { total, cta_total } = await res.json();
+        if (typeof total === "number") setTotalClicks(total);
+        if (typeof cta_total === "number") setTotalCta(cta_total);
       } catch {}
     };
 
@@ -44,15 +48,30 @@ export function RealtimeClickCounter({
     return () => { supabase.removeChannel(channel); };
   }, []);
 
+  const liveBadge = (
+    <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${live ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
+      {live ? "● ao vivo" : "○ ..."}
+    </span>
+  );
+
   return (
     <>
-      <div className="flex items-center gap-2 mb-1">
-        <p className="text-white text-2xl font-bold">{totalClicks}</p>
-        <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${live ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
-          {live ? "● ao vivo" : "○ ..."}
-        </span>
+      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 shadow-sm">
+        <p className="text-white text-sm font-medium mb-2">Cliques em Eventos</p>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-white text-2xl font-bold">{totalClicks}</p>
+          {liveBadge}
+        </div>
+        <p className="text-purple-100 text-xs">Aberturas da página do evento</p>
       </div>
-      <p className="text-purple-100 text-xs">Total de cliques em eventos</p>
+      <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg p-6 shadow-sm">
+        <p className="text-white text-sm font-medium mb-2">Cliques CTA Ingresso</p>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-white text-2xl font-bold">{totalCta}</p>
+          {liveBadge}
+        </div>
+        <p className="text-emerald-100 text-xs">Cliques no botão de ingresso</p>
+      </div>
     </>
   );
 }
