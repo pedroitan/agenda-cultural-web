@@ -4,12 +4,15 @@ import EventList from "../../components/EventList";
 import Link from "next/link";
 import { MapPin, Calendar } from "lucide-react";
 
-// Função para normalizar texto removendo acentos
+// Função para normalizar texto removendo acentos e caracteres especiais
 function normalizeText(text: string): string {
   return text
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^a-z0-9\s]/g, ' ') // Remove caracteres especiais (-, ,, etc.)
+    .replace(/\s+/g, ' ') // Normaliza espaços múltiplos
+    .trim();
 }
 
 export const dynamic = "force-dynamic";
