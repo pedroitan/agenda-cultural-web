@@ -29,6 +29,14 @@ const WORLD_CUP_MATCH_DATES = [
   "2026-07-15", "2026-07-18", "2026-07-19",
 ];
 
+// Função para normalizar texto removendo acentos
+function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
+}
+
 function updateURL(categoria: string, q: string) {
   const params = new URLSearchParams();
   if (categoria && categoria !== 'Todos') params.set('categoria', categoria);
@@ -150,11 +158,11 @@ export default function PageClient({
     }
 
     if (busca) {
-      const searchLower = busca.toLowerCase();
+      const searchNormalized = normalizeText(busca);
       filtered = filtered.filter(
         (e) =>
-          e.title.toLowerCase().includes(searchLower) ||
-          e.venue_name?.toLowerCase().includes(searchLower)
+          normalizeText(e.title).includes(searchNormalized) ||
+          (e.venue_name && normalizeText(e.venue_name).includes(searchNormalized))
       );
     }
 
