@@ -234,15 +234,22 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm mb-8">
       <h3 className="text-base font-semibold mb-4 text-gray-700">Top 10 Casas de Eventos</h3>
       <div className="space-y-3">
-        {topVenues.map(([venue, count], index) => (
-          <div key={venue} className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-500 w-6">#{index + 1}</span>
-              <span className="text-sm text-gray-900">{venue}</span>
-            </div>
-            <span className="text-sm font-semibold text-blue-600">{count} eventos</span>
-          </div>
-        ))}
+        {topVenues.map(([venue, count], index) => {
+          const slug = venue.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+          return (
+            <Link
+              key={venue}
+              href={`/local/${slug}`}
+              className="flex items-center justify-between hover:bg-gray-50 p-2 rounded transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-500 w-6">#{index + 1}</span>
+                <span className="text-sm text-gray-900">{venue}</span>
+              </div>
+              <span className="text-sm font-semibold text-blue-600">{count} eventos</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
