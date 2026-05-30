@@ -3,17 +3,7 @@ import { Metadata } from "next";
 import EventList from "../../components/EventList";
 import Link from "next/link";
 import { MapPin, Calendar } from "lucide-react";
-
-// Função para normalizar texto removendo acentos e caracteres especiais
-function normalizeText(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-    .replace(/[^a-z0-9\s]/g, ' ') // Remove caracteres especiais (-, ,, etc.)
-    .replace(/\s+/g, ' ') // Normaliza espaços múltiplos
-    .trim();
-}
+import { slugToNormalized } from "@/lib/venueSlug";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300; // 5 minutos
@@ -65,7 +55,7 @@ export default async function VenuePage({ params }: Props) {
     );
   }
 
-  // Converter slug para nome do local normalizado (sem acentos)
+  // Converter slug para nome do local (para exibição)
   const venueName = slug.replace(/-/g, ' ');
 
   // Buscar todos os eventos ativos
@@ -78,13 +68,16 @@ export default async function VenuePage({ params }: Props) {
 
   // Filtrar eventos por local usando normalização de texto
   // Usa igualdade exata normalizada (mesmo agrupamento do dashboard)
-  const normalizedSlug = normalizeText(venueName);
+  const normalizedSlug = slugToNormalized(slug);
   const venueEvents = (events as EventRow[] || []).filter(
     (e) => {
       if (!e.venue_name) return false;
-      return normalizeText(e.venue_name) === normalizedSlug;
+      return slugToNormalized(e.venue_name) === normalizedSlug;
     }
   );
+
+  // Nome do local para exibição (pega do primeiro evento, se houver)
+  const displayName = venueEvents[0]?.venue_name || venueName;
 
   // Agrupar eventos por data
   const eventsByDate = venueEvents.reduce((acc, event) => {
@@ -119,7 +112,7 @@ export default async function VenuePage({ params }: Props) {
           </Link>
           <div className="flex items-center gap-4 mb-4">
             <MapPin size={48} />
-            <h1 className="text-4xl md:text-5xl font-bold">{venueName}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold capitalize">{displayName}</h1>
           </div>
           <p className="text-lg text-white/90 max-w-2xl">
             Eventos culturais que acontecem neste local em Salvador

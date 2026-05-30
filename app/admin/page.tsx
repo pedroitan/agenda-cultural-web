@@ -9,6 +9,7 @@ import ToursManager from "./ToursManager";
 import ScraperButtons from "./ScraperButtons";
 import { getCityConfig } from "@/config/cities";
 import { getClickStats } from "@/lib/clickStats";
+import { venueToSlug } from "@/lib/venueSlug";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -236,7 +237,7 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
       <h3 className="text-base font-semibold mb-4 text-gray-700">Top 10 Casas de Eventos</h3>
       <div className="space-y-3">
         {topVenues.map(([venue, count], index) => {
-          const slug = venue.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+          const slug = venueToSlug(venue);
           return (
             <Link
               key={venue}
