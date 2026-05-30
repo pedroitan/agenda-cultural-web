@@ -4,6 +4,14 @@ import EventList from "../../components/EventList";
 import Link from "next/link";
 import { MapPin, Calendar } from "lucide-react";
 
+// Função para normalizar texto removendo acentos
+function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
+}
+
 export const dynamic = "force-dynamic";
 export const revalidate = 300; // 5 minutos
 
@@ -54,20 +62,25 @@ export default async function VenuePage({ params }: Props) {
     );
   }
 
-  // Converter slug para nome do local (slug pode ser parcial)
-  const venueName = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  // Converter slug para nome do local normalizado (sem acentos)
+  const venueName = slug.replace(/-/g, ' ');
 
-  // Buscar eventos que contenham o nome do local
+  // Buscar todos os eventos ativos
   const { data: events } = await supabase
     .from("events")
     .select("*")
     .eq("is_active", true)
     .gt("start_datetime", new Date().toISOString())
-    .ilike("venue_name", `%${venueName}%`)
     .order("start_datetime", { ascending: true });
 
+  // Filtrar eventos por local usando normalização de texto
   const venueEvents = (events as EventRow[] || []).filter(
-    (e) => e.venue_name?.toLowerCase().includes(venueName.toLowerCase())
+    (e) => {
+      if (!e.venue_name) return false;
+      const normalizedVenue = normalizeText(e.venue_name);
+      const normalizedSlug = normalizeText(venueName);
+      return normalizedVenue.includes(normalizedSlug);
+    }
   );
 
   // Agrupar eventos por data
