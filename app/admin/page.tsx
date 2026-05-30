@@ -131,6 +131,42 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     cityConfig.slug
   );
 
+  // Get top 10 venues by event count
+  const { data: venueData } = await supabase
+    .from("events")
+    .select("venue_name")
+    .eq("city", cityConfig.slug)
+    .eq("is_active", true)
+    .not("venue_name", "is", null);
+
+  const venueCounts = new Map<string, number>();
+  (venueData || []).forEach((e: { venue_name: string }) => {
+    const venue = e.venue_name || 'Sem local';
+    venueCounts.set(venue, (venueCounts.get(venue) || 0) + 1);
+  });
+
+  const topVenues = Array.from(venueCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  // Get category distribution
+  const { data: categoryData } = await supabase
+    .from("events")
+    .select("category")
+    .eq("city", cityConfig.slug)
+    .eq("is_active", true)
+    .not("category", "is", null);
+
+  const categoryCounts = new Map<string, number>();
+  (categoryData || []).forEach((e: { category: string }) => {
+    const cat = e.category || 'Outros';
+    categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+  });
+
+  const topCategories = Array.from(categoryCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+
   // Group scrape runs by source to get latest for each
   const latestBySource = new Map<string, ScrapeRun>();
   (scrapeRuns || []).forEach((run: ScrapeRun) => {
@@ -191,6 +227,40 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
         initialTotal={totalClicks}
         initialCtaTotal={totalCtaClicks}
       />
+    </div>
+  );
+
+  const venuesCard = (
+    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm mb-8">
+      <h3 className="text-base font-semibold mb-4 text-gray-700">Top 10 Casas de Eventos</h3>
+      <div className="space-y-3">
+        {topVenues.map(([venue, count], index) => (
+          <div key={venue} className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-500 w-6">#{index + 1}</span>
+              <span className="text-sm text-gray-900">{venue}</span>
+            </div>
+            <span className="text-sm font-semibold text-blue-600">{count} eventos</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const categoriesCard = (
+    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm mb-8">
+      <h3 className="text-base font-semibold mb-4 text-gray-700">Principais Categorias</h3>
+      <div className="space-y-3">
+        {topCategories.map(([category, count], index) => (
+          <div key={category} className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-500 w-6">#{index + 1}</span>
+              <span className="text-sm text-gray-900">{category}</span>
+            </div>
+            <span className="text-sm font-semibold text-purple-600">{count} eventos</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 
@@ -291,6 +361,10 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
           <h3 className="text-base font-semibold mb-4 text-gray-700">Analytics & Métricas</h3>
           {analyticsCards}
           <RealtimeTopClicked initialTop={topClicked ?? []} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {venuesCard}
+            {categoriesCard}
+          </div>
         </div>
       }
       eventosContent={

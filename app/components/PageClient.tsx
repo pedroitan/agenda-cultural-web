@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import EventFilters from './EventFilters';
 import EventList from './EventList';
@@ -56,6 +56,27 @@ export default function PageClient({
   const [categoria, setCategoria] = useState(initialCategoria || 'Todos');
   const [data, setData] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Persistir filtros no sessionStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedBusca = sessionStorage.getItem('filter_busca');
+      const savedCategoria = sessionStorage.getItem('filter_categoria');
+      const savedData = sessionStorage.getItem('filter_data');
+
+      if (savedBusca && !initialSearch) setBusca(savedBusca);
+      if (savedCategoria && !initialCategoria) setCategoria(savedCategoria);
+      if (savedData) setData(savedData);
+    }
+  }, [initialSearch, initialCategoria]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('filter_busca', busca);
+      sessionStorage.setItem('filter_categoria', categoria);
+      sessionStorage.setItem('filter_data', data);
+    }
+  }, [busca, categoria, data]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
