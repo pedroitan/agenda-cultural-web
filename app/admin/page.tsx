@@ -131,12 +131,13 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key`}
     cityConfig.slug
   );
 
-  // Get top 10 venues by event count
+  // Get top 10 venues by event count (apenas eventos futuros - mesmo filtro da página de local)
   const { data: venueData } = await supabase
     .from("events")
     .select("venue_name")
     .eq("city", cityConfig.slug)
     .eq("is_active", true)
+    .gt("start_datetime", new Date().toISOString())
     .not("venue_name", "is", null);
 
   const venueCounts = new Map<string, number>();

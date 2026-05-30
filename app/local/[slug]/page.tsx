@@ -77,12 +77,12 @@ export default async function VenuePage({ params }: Props) {
     .order("start_datetime", { ascending: true });
 
   // Filtrar eventos por local usando normalização de texto
+  // Usa igualdade exata normalizada (mesmo agrupamento do dashboard)
+  const normalizedSlug = normalizeText(venueName);
   const venueEvents = (events as EventRow[] || []).filter(
     (e) => {
       if (!e.venue_name) return false;
-      const normalizedVenue = normalizeText(e.venue_name);
-      const normalizedSlug = normalizeText(venueName);
-      return normalizedVenue.includes(normalizedSlug);
+      return normalizeText(e.venue_name) === normalizedSlug;
     }
   );
 
