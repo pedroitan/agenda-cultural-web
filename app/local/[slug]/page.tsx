@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabaseServer";
 import { Metadata } from "next";
 import EventList from "../../components/EventList";
+import EventMap from "../../components/EventMapWrapper";
 import Link from "next/link";
 import { MapPin, Calendar } from "lucide-react";
 import { slugToNormalized } from "@/lib/venueSlug";
@@ -39,6 +40,8 @@ type EventRow = {
   category: string | null;
   url: string;
   tags?: string[];
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export default async function VenuePage({ params }: Props) {
@@ -78,6 +81,11 @@ export default async function VenuePage({ params }: Props) {
 
   // Nome do local para exibição (pega do primeiro evento, se houver)
   const displayName = venueEvents[0]?.venue_name || venueName;
+
+  // Encontrar coordenadas do local (primeiro evento com lat/lng)
+  const eventWithLocation = venueEvents.find(
+    (e) => e.latitude != null && e.longitude != null
+  );
 
   // Agrupar eventos por data
   const eventsByDate = venueEvents.reduce((acc, event) => {
@@ -125,6 +133,22 @@ export default async function VenuePage({ params }: Props) {
 
       {/* Conteúdo */}
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {/* Mapa com localização do local */}
+        {eventWithLocation && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <MapPin className="text-blue-600" size={20} />
+              <h2 className="text-xl font-semibold text-gray-900">Localização</h2>
+            </div>
+            <EventMap
+              events={[eventWithLocation]}
+              height="400px"
+              zoom={16}
+              singleEvent
+            />
+          </div>
+        )}
+
         {Object.keys(eventsByDate).length > 0 ? (
           Object.entries(eventsByDate)
             .sort(([a], [b]) => a.localeCompare(b))
