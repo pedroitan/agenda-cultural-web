@@ -229,9 +229,9 @@ export default async function Home({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Desenvolvido por Itan Musictech"
-          className="absolute bottom-1.5 right-2 md:bottom-2.5 md:right-4 z-10 rounded bg-brand-graphite/40 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 text-[8px] md:text-[10px] leading-none text-white/70 transition-colors hover:text-white hover:bg-brand-graphite/60"
+          className="absolute bottom-1.5 right-2.5 md:bottom-2.5 md:right-4 z-10 text-[8px] md:text-[10px] leading-none text-white/60 [text-shadow:0_1px_2px_rgba(0,0,0,0.4)] transition-colors hover:text-white"
         >
-          Desenvolvido por <span className="font-bold lowercase tracking-[-0.03em] text-white/90">itan</span> musictech
+          Desenvolvido por <span className="font-bold lowercase tracking-[-0.03em]">itan</span> musictech
         </a>
         <picture>
           {cityConfig.headerImageMobile && (

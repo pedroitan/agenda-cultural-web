@@ -43,6 +43,7 @@ yarn-error.log*
 
 # brand source files (fonte da identidade visual; o site usa public/brand/)
 /public/ID Visual/
+/public/*.pptx
 
 # vercel
 .vercel
