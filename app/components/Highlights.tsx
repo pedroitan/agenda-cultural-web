@@ -7,7 +7,7 @@ const HIGHLIGHTS = [
   { id: 'teatro', name: 'Teatro', href: '/categoria/teatro-salvador', image: '/brand/destaques/teatro.png' },
   { id: 'gratuito', name: 'Gratuito', href: '/categoria/eventos-gratuitos-salvador', image: '/brand/destaques/gratuito.png' },
   { id: 'saojoao', name: 'Forró', href: '/categoria/forro-salvador', image: '/brand/destaques/forro.png' },
-  { id: 'distrito', name: 'Distrito', href: '/distrito-comercio', image: '/brand/destaques/distrito.png' },
+  { id: 'distrito', name: 'Distrito Comércio', href: '/distrito-comercio', image: '/brand/destaques/distrito.png' },
   { id: 'roteiros', name: 'Roteiros', href: '/roteiros', image: '/brand/destaques/roteiros.png' },
 ];
 
