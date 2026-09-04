@@ -237,17 +237,6 @@ export default function SobrePage() {
               </div>
             ))}
           </div>
-          <p className="text-sm text-zinc-500 mt-4">
-            Fontes atuais:{" "}
-            {city.footerSources.map((s, i) => (
-              <span key={s.url}>
-                {i > 0 && ", "}
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-700">{s.name}</a>
-              </span>
-            ))}
-            {" "}e perfis culturais da cidade. Os dados estão disponíveis na{" "}
-            <a href="/api/events" className="underline hover:text-zinc-700">API pública</a>.
-          </p>
         </section>
 
         {/* Mapeamento */}
