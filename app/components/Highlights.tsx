@@ -6,10 +6,7 @@ const HIGHLIGHTS = [
   { id: 'shows', name: 'Shows', href: '/categoria/shows-salvador', image: '/brand/destaques/shows.png' },
   { id: 'teatro', name: 'Teatro', href: '/categoria/teatro-salvador', image: '/brand/destaques/teatro.png' },
   { id: 'gratuito', name: 'Gratuito', href: '/categoria/eventos-gratuitos-salvador', image: '/brand/destaques/gratuito.png' },
-  { id: 'hoje', name: 'Hoje', href: '/eventos-salvador-hoje', image: '/brand/destaques/hoje.png' },
-  { id: 'fimdesemana', name: 'Fim de Semana', href: '/roteiros', image: '/brand/destaques/fim-de-semana.png' },
   { id: 'saojoao', name: 'Forró', href: '/categoria/forro-salvador', image: '/brand/destaques/forro.png' },
-  { id: 'copa', name: 'Copa do Mundo', href: '/categoria/copa-do-mundo-salvador', image: '/brand/destaques/copa.png' },
   { id: 'distrito', name: 'Distrito', href: '/distrito-comercio', image: '/brand/destaques/distrito.png' },
   { id: 'roteiros', name: 'Roteiros', href: '/roteiros', image: '/brand/destaques/roteiros.png' },
 ];
@@ -18,8 +15,6 @@ export default function Highlights() {
   return (
     <div className="w-full bg-white border-b border-zinc-200">
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <h2 className="text-lg font-semibold text-zinc-900 mb-4">Destaques</h2>
-        
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
           {HIGHLIGHTS.map((highlight) => (
             <Link
