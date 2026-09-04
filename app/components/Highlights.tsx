@@ -14,15 +14,15 @@ const HIGHLIGHTS = [
 export default function Highlights() {
   return (
     <div className="w-full bg-white border-b border-zinc-200">
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide justify-start md:justify-center">
+      <div className="max-w-6xl mx-auto px-4 py-4 md:py-6">
+        <div className="flex gap-3 md:gap-6 overflow-x-auto pb-2 scrollbar-hide justify-start md:justify-center">
           {HIGHLIGHTS.map((highlight) => (
             <Link
               key={highlight.id}
               href={highlight.href}
-              className="flex-shrink-0 flex flex-col items-center gap-2 group"
+              className="flex-shrink-0 flex flex-col items-center gap-1.5 group"
             >
-              <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-brand-orange transition-all group-hover:scale-105">
+              <div className="relative w-14 h-14 md:w-24 md:h-24 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-brand-orange transition-all group-hover:scale-105">
                 <img
                   src={highlight.image}
                   alt={highlight.name}
@@ -32,7 +32,7 @@ export default function Highlights() {
                   loading="lazy"
                 />
               </div>
-              <span className="text-xs md:text-sm text-zinc-600 group-hover:text-brand-orange transition-colors font-medium">
+              <span className="text-[10px] md:text-sm text-zinc-600 group-hover:text-brand-orange transition-colors font-medium text-center leading-tight">
                 {highlight.name}
               </span>
             </Link>

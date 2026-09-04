@@ -196,9 +196,9 @@ export default function PageClient({
           <div className="flex-1 sm:flex-none" />
           <Link
             href="/adicionar-evento"
-            className="shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-3 py-1.5 rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-sm text-sm whitespace-nowrap"
+            className="shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg font-medium hover:from-violet-700 hover:to-fuchsia-700 transition-all shadow-sm text-xs md:text-sm whitespace-nowrap"
           >
-            + Adicionar Evento
+            + Adicionar
           </Link>
         </div>
         {/* Linha 2: busca + filtros */}
