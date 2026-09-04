@@ -13,8 +13,13 @@ export const metadata: Metadata = {
   keywords: city.keywords,
   authors: [{ name: city.siteTitle.split(' -')[0] }],
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/brand/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
   },
+  manifest: '/manifest.webmanifest',
   openGraph: {
     title: city.ogTitle,
     description: city.ogDescription,

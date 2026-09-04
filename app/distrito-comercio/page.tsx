@@ -83,28 +83,32 @@ export default async function DistritoComercioPage() {
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Header customizado */}
-      <div className="relative">
-        <img
-          src="/distrito-comercio-header.jpg"
-          alt="Vista aérea do porto de Salvador e bairro do comércio"
-          className="w-full h-64 md:h-80 object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-900/80 to-orange-900/70">
-          <div className="max-w-6xl mx-auto px-4 py-12 h-full flex flex-col justify-center">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-            >
-              ← Voltar para Home
-            </Link>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Distrito do Comércio
-            </h1>
-            <p className="text-lg text-white/90 max-w-2xl">
-              Eventos no coração histórico de Salvador — Pelourinho, Terreiro de Jesus, 
-              Rua Chile e arredores. Descubra a cultura viva do centro da cidade.
-            </p>
-          </div>
+      <div className="relative overflow-hidden bg-brand-gradient text-white py-10 px-4 md:min-h-80 flex items-center">
+        <picture>
+          <source media="(max-width: 767px)" srcSet="/brand/header-distrito-mobile.webp" />
+          <img
+            src="/brand/header-distrito.webp"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-[20%_100%] md:object-right-bottom"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
+        <div className="relative max-w-6xl mx-auto w-full">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+          >
+            ← Voltar para Home
+          </Link>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
+            Distrito do<br className="md:hidden" /> Comércio
+          </h1>
+          <p className="text-base md:text-lg text-white/90 max-w-[17rem] md:max-w-xl">
+            Eventos no coração histórico de Salvador — Pelourinho, Terreiro de Jesus, 
+            Rua Chile e arredores. Descubra a cultura viva do centro da cidade.
+          </p>
         </div>
       </div>
 

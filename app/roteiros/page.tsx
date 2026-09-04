@@ -149,8 +149,19 @@ export default async function RoteirosPage() {
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+      <div className="relative overflow-hidden bg-brand-gradient text-white py-10 px-4">
+        <picture>
+          <source media="(max-width: 767px)" srcSet="/brand/header-roteiros-mobile.webp" />
+          <img
+            src="/brand/header-roteiros.webp"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-[30%_50%] md:object-left"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
+        <div className="relative max-w-6xl mx-auto">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -161,10 +172,10 @@ export default async function RoteirosPage() {
             <Calendar size={16} />
             <span>{weekend.label}</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Roteiros do Fim de Semana
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
+            Roteiros do<br />Fim de Semana
           </h1>
-          <p className="text-lg text-white/90 max-w-2xl">
+          <p className="text-base md:text-lg text-white/90 max-w-xs md:max-w-md">
             Selecionamos os melhores roteiros para você curtir {cityConfig.name} neste fim de semana.
             Arte, cultura, gastronomia e muito mais — com horário, trajeto e experiência completa.
           </p>

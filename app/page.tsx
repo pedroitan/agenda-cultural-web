@@ -218,14 +218,19 @@ export default async function Home({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       
       {/* Banner - full width on all devices, maximized */}
-      <div className="w-full bg-gradient-to-r from-purple-900 to-indigo-900">
-        <img
-          src={cityConfig.headerImage}
-          alt={cityConfig.siteTitle}
-          className="w-full h-32 md:h-48 lg:h-56 object-cover"
-          loading="eager"
-          fetchPriority="high"
-        />
+      <div className="w-full bg-brand-gradient">
+        <picture>
+          {cityConfig.headerImageMobile && (
+            <source media="(max-width: 767px)" srcSet={cityConfig.headerImageMobile} />
+          )}
+          <img
+            src={cityConfig.headerImage}
+            alt={cityConfig.siteTitle}
+            className="w-full h-auto md:max-h-72 object-cover"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
       </div>
 
       <Highlights />

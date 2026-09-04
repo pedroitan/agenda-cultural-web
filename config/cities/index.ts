@@ -10,6 +10,7 @@ export interface CityConfig {
   ogTitle: string
   ogDescription: string
   headerImage: string       // URL da imagem do header específica da cidade
+  headerImageMobile?: string // Versão mobile (opcional); usa headerImage se ausente
   footerSources: { name: string; url: string }[]
   footerVenues: string
   footerCopyright: string

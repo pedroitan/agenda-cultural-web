@@ -41,6 +41,9 @@ yarn-error.log*
 
 !.env.example
 
+# brand source files (fonte da identidade visual; o site usa public/brand/)
+/public/ID Visual/
+
 # vercel
 .vercel
 

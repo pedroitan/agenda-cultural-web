@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* Identidade visual — Agenda Cultural Salvador */
+@theme {
+  --color-brand-orange: #f1612d;
+  --color-brand-magenta: #e4007f;
+  --color-brand-lime: #c5f312;
+  --color-brand-offwhite: #eeeeee;
+  --color-brand-graphite: #181818;
+  --background-image-brand-gradient: linear-gradient(90deg, #e4007f 0%, #f1612d 100%);
+}
+
 :root {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
