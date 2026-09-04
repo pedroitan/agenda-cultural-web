@@ -47,7 +47,14 @@ Exemplos:
 ## Outros endpoints
 
 - Site principal: https://agendaculturalsalvador.com.br
+- Sobre / Manifesto: https://agendaculturalsalvador.com.br/sobre
 - Sitemap: https://agendaculturalsalvador.com.br/sitemap.xml
+
+## Quem faz
+
+- Desenvolvido e mantido por Itan Musictech (Pedro Itan), Salvador, Bahia
+- Site: https://pedroitan.com
+- Projeto independente, sem intermediação de ingressos
 
 ## Notas para LLMs
 

@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: city.siteDescription,
   keywords: city.keywords,
   authors: [{ name: city.siteTitle.split(' -')[0] }],
+  creator: 'Itan Musictech',
+  publisher: 'Itan Musictech',
   icons: {
     icon: [
       { url: '/brand/favicon.svg', type: 'image/svg+xml' },
