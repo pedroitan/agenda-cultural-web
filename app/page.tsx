@@ -257,61 +257,6 @@ export default async function Home({
         cityName={cityConfig.name}
         cityPreposition={cityConfig.preposition}
       />
-
-      <footer className="border-t border-zinc-200 bg-white mt-8">
-        <div className="mx-auto w-full max-w-5xl px-4 py-8 space-y-4 text-sm text-zinc-500">
-          <div>
-            <p className="font-medium text-zinc-700 mb-1">Sobre a {cityConfig.siteTitle.split(' -')[0]}</p>
-            <p>
-              A {cityConfig.siteTitle.split(' -')[0]} é um agregador de eventos culturais {cityConfig.preposition} {cityConfig.name}, {cityConfig.state}.
-              Reunimos shows, peças de teatro, exposições, festivais, eventos gastronômicos e muito mais
-              em um só lugar, com informações atualizadas diariamente.
-            </p>
-          </div>
-          <div>
-            <p className="font-medium text-zinc-700 mb-1">Principais espaços culturais {cityConfig.preposition} {cityConfig.name}</p>
-            <p>{cityConfig.footerVenues}</p>
-          </div>
-          <div>
-            <p className="font-medium text-zinc-700 mb-1">Categorias de eventos</p>
-            <div className="flex flex-wrap gap-2">
-              {cityConfig.categoryLinks.map((link, i) => (
-                <span key={link.href} className="flex items-center gap-2">
-                  {i > 0 && <span>·</span>}
-                  <Link href={link.href} className="underline hover:text-zinc-700">{link.label}</Link>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="font-medium text-zinc-700 mb-1">Páginas populares</p>
-            <div className="flex flex-wrap gap-2">
-              {cityConfig.popularLinks.map((link, i) => (
-                <span key={link.href} className="flex items-center gap-2">
-                  {i > 0 && <span>·</span>}
-                  <Link href={link.href} className="underline hover:text-zinc-700">{link.label}</Link>
-                </span>
-              ))}
-            </div>
-          </div>
-          <p className="text-xs text-zinc-400 pt-2">
-            © {new Date().getFullYear()} {cityConfig.footerCopyright} ·{" "}
-            <Link href="/sobre" className="underline hover:text-zinc-600">Sobre / Manifesto</Link> ·{" "}
-            <a href="/api/events" className="underline hover:text-zinc-600">API pública</a>
-          </p>
-          <p className="text-xs text-zinc-400">
-            Desenvolvido por{" "}
-            <a
-              href="https://pedroitan.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-zinc-500 hover:text-brand-orange transition-colors"
-            >
-              Itan Musictech
-            </a>
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
