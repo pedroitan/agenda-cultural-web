@@ -229,15 +229,9 @@ export default async function Home({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Desenvolvido por Itan Musictech"
-          className="group absolute bottom-2 right-2 md:bottom-4 md:right-5 z-10 flex flex-col items-end text-white rounded-md bg-brand-graphite/70 backdrop-blur-sm px-2.5 py-1.5 md:px-3.5 md:py-2 transition-colors hover:bg-brand-graphite/90"
+          className="absolute bottom-1.5 right-2 md:bottom-2.5 md:right-4 z-10 rounded bg-brand-graphite/40 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 text-[8px] md:text-[10px] leading-none text-white/70 transition-colors hover:text-white hover:bg-brand-graphite/60"
         >
-          <span className="w-full h-px bg-brand-gradient mb-1 origin-right transition-transform duration-300 group-hover:scale-x-110" />
-          <span className="text-[9px] md:text-[11px] uppercase tracking-[0.18em] text-white/85 leading-none">
-            Desenvolvido por
-          </span>
-          <span className="text-sm md:text-xl font-bold lowercase tracking-[-0.04em] leading-tight">
-            itan<span className="font-normal"> musictech</span>
-          </span>
+          Desenvolvido por <span className="font-bold lowercase tracking-[-0.03em] text-white/90">itan</span> musictech
         </a>
         <picture>
           {cityConfig.headerImageMobile && (
