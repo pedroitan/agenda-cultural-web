@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import EventFilters from './EventFilters';
 import EventList from './EventList';
-import { Utensils } from 'lucide-react';
 
 type EventRow = {
   id: string;
@@ -195,13 +194,6 @@ export default function PageClient({
             Agenda Cultural {cityName}
           </h1>
           <div className="flex-1 sm:flex-none" />
-          <Link
-            href="/restaurantes"
-            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-orange-200 bg-orange-50 text-orange-700 px-3 py-1.5 text-sm font-medium hover:bg-orange-100 transition-colors whitespace-nowrap"
-          >
-            <Utensils className="w-3.5 h-3.5" />
-            <span>Restaurantes</span>
-          </Link>
           <Link
             href="/roteiros"
             className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 text-violet-700 px-3 py-1.5 text-sm font-medium hover:bg-violet-100 transition-colors whitespace-nowrap"
