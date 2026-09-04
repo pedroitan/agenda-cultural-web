@@ -282,7 +282,19 @@ export default async function Home({
           </div>
           <p className="text-xs text-zinc-400 pt-2">
             © {new Date().getFullYear()} {cityConfig.footerCopyright} ·{" "}
+            <Link href="/sobre" className="underline hover:text-zinc-600">Sobre / Manifesto</Link> ·{" "}
             <a href="/api/events" className="underline hover:text-zinc-600">API pública</a>
+          </p>
+          <p className="text-xs text-zinc-400">
+            Desenvolvido por{" "}
+            <a
+              href="https://pedroitan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-zinc-500 hover:text-brand-orange transition-colors"
+            >
+              Itan Musictech
+            </a>
           </p>
         </div>
       </footer>

@@ -33,5 +33,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'hourly',
       priority: 1,
     },
+    {
+      url: `${baseUrl}/sobre`,
+      lastModified: new Date('2026-09-04'),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
   ]
 }
