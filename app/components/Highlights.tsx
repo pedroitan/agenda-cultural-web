@@ -15,7 +15,7 @@ export default function Highlights() {
   return (
     <div className="w-full bg-white border-b border-zinc-200">
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide justify-start md:justify-center">
           {HIGHLIGHTS.map((highlight) => (
             <Link
               key={highlight.id}

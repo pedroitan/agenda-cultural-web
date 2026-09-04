@@ -233,14 +233,14 @@ export default async function Home({
         >
           Desenvolvido por <span className="font-bold lowercase tracking-[-0.03em]">itan</span> musictech
         </a>
-        <picture>
+        <picture className="block aspect-[15/8] md:aspect-[2560/600]">
           {cityConfig.headerImageMobile && (
             <source media="(max-width: 767px)" srcSet={cityConfig.headerImageMobile} />
           )}
           <img
             src={cityConfig.headerImage}
             alt={cityConfig.siteTitle}
-            className="w-full h-auto md:max-h-72 object-cover"
+            className="w-full h-full object-cover object-center"
             loading="eager"
             fetchPriority="high"
           />
